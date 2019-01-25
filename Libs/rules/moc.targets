@@ -1,0 +1,319 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <PropertyPageSchema
+      Include="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).xml" />
+    <AvailableItemName
+      Include="ui">
+      <Targets>_ui</Targets>
+    </AvailableItemName>
+    <AvailableItemName
+      Include="moc">
+      <Targets>_moc</Targets>
+    </AvailableItemName>
+    <AvailableItemName
+      Include="res">
+      <Targets>_res</Targets>
+    </AvailableItemName>
+  </ItemGroup>
+  <UsingTask
+    TaskName="ui"
+    TaskFactory="XamlTaskFactory"
+    AssemblyName="Microsoft.Build.Tasks.v4.0">
+    <Task>$(MSBuildThisFileDirectory)$(MSBuildThisFileName).xml</Task>
+  </UsingTask>
+  <UsingTask
+    TaskName="moc"
+    TaskFactory="XamlTaskFactory"
+    AssemblyName="Microsoft.Build.Tasks.v4.0">
+    <Task>$(MSBuildThisFileDirectory)$(MSBuildThisFileName).xml</Task>
+  </UsingTask>
+  <UsingTask
+    TaskName="res"
+    TaskFactory="XamlTaskFactory"
+    AssemblyName="Microsoft.Build.Tasks.v4.0">
+    <Task>$(MSBuildThisFileDirectory)$(MSBuildThisFileName).xml</Task>
+  </UsingTask>
+  <Target
+    Name="_ui"
+    BeforeTargets="$(uiBeforeTargets)"
+    AfterTargets="$(uiAfterTargets)"
+    Condition="'@(ui)' != ''"
+    DependsOnTargets="$(uiDependsOn);ComputeuiOutput"
+    Outputs="%(ui.compileout)"
+    Inputs="%(ui.Identity);%(ui.AdditionalDependencies);$(MSBuildProjectFile)">
+    <ItemGroup
+      Condition="'@(SelectedFiles)' != ''">
+      <ui
+        Remove="@(ui)"
+        Condition="'%(Identity)' != '@(SelectedFiles)'" />
+    </ItemGroup>
+    <ItemGroup>
+      <ui_tlog
+        Include="%(ui.Outputs)"
+        Condition="'%(ui.Outputs)' != '' and '%(ui.ExcludedFromBuild)' != 'true'">
+        <Source>@(ui, '|')</Source>
+      </ui_tlog>
+    </ItemGroup>
+    <Message
+      Importance="High"
+      Text="%(ui.ExecutionDescription)" />
+    <WriteLinesToFile
+      Condition="'@(ui_tlog)' != '' and '%(ui_tlog.ExcludedFromBuild)' != 'true'"
+      File="$(IntDir)$(ProjectName).write.1.tlog"
+      Lines="^%(ui_tlog.Source);@(ui_tlog-&gt;'%(Fullpath)')" />
+    <ui
+      Condition="'@(ui)' != '' and '%(ui.ExcludedFromBuild)' != 'true'"
+      CommandLineTemplate="%(ui.CommandLineTemplate)"
+      tmppath="%(ui.tmppath)"
+      compileout="%(ui.compileout)"
+      AdditionalOptions="%(ui.AdditionalOptions)"
+      Inputs="%(ui.Identity)" />
+  </Target>
+  
+  <Target Name="UiCustomClean" DependsOnTargets="UiComputePaths">
+    <Delete Files="%(ui.compileout)"/>
+  </Target>
+  
+  <PropertyGroup>
+    <ComputeLinkInputsTargets>
+            $(ComputeLinkInputsTargets);
+            ComputeuiOutput;
+    </ComputeLinkInputsTargets>
+    <ComputeLibInputsTargets>
+            $(ComputeLibInputsTargets);
+            ComputeuiOutput;
+    </ComputeLibInputsTargets>
+    <CleanDependsOn>
+      $(CleanDependsOn);
+      UiComputePaths;
+      UiCustomClean
+    </CleanDependsOn>
+  </PropertyGroup>
+
+  <Target
+    Name="UiComputePaths"
+    Condition="'@(ui)' != ''">
+
+    <ItemGroup>
+      <ui Condition="'%(ui.tmppath)' == '1'">
+        <compileout>$(ProjectDir)tmp\ui_%(Filename).h</compileout>
+      </ui>
+      <ui Condition="'%(ui.tmppath)' == '0'">
+        <compileout>%(RootDir)%(Directory)tmp\ui_%(Filename).h</compileout>
+      </ui>
+    </ItemGroup>
+  </Target>
+  
+  <Target
+    Name="ComputeuiOutput"
+    Condition="'@(ui)' != ''"
+    DependsOnTargets="UiComputePaths">
+   
+    <ItemGroup>
+      <uiDirsToMake
+        Condition="'@(ui)' != '' and '%(ui.ExcludedFromBuild)' != 'true'"
+        Include="%(ui.compileout)" />
+      <Link
+        Include="%(uiDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+      <Lib
+        Include="%(uiDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+      <ImpLib
+        Include="%(uiDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+    </ItemGroup>
+    <MakeDir
+      Directories="@(uiDirsToMake-&gt;'%(RootDir)%(Directory)')" />
+  </Target>
+  
+  <Target
+    Name="_moc"
+    BeforeTargets="$(mocBeforeTargets)"
+    AfterTargets="$(mocAfterTargets)"
+    Condition="'@(moc)' != ''"
+    DependsOnTargets="$(mocDependsOn);ComputemocOutput"
+    Outputs="%(moc.compileout)"
+    Inputs="%(moc.Identity);%(moc.AdditionalDependencies);$(MSBuildProjectFile)">
+    <ItemGroup
+      Condition="'@(SelectedFiles)' != ''">
+      <moc
+        Remove="@(moc)"
+        Condition="'%(Identity)' != '@(SelectedFiles)'" />
+    </ItemGroup>
+    <ItemGroup>
+      <moc_tlog
+        Include="%(moc.Outputs)"
+        Condition="'%(moc.Outputs)' != '' and '%(moc.ExcludedFromBuild)' != 'true'">
+        <Source>@(moc, '|')</Source>
+      </moc_tlog>
+    </ItemGroup>
+    <Message
+      Importance="High"
+      Text="%(moc.ExecutionDescription)" />
+    <WriteLinesToFile
+      Condition="'@(moc_tlog)' != '' and '%(moc_tlog.ExcludedFromBuild)' != 'true'"
+      File="$(IntDir)$(ProjectName).write.1.tlog"
+      Lines="^%(moc_tlog.Source);@(moc_tlog-&gt;'%(Fullpath)')" />
+    <moc
+      Condition="'@(moc)' != '' and '%(moc.ExcludedFromBuild)' != 'true'"
+      CommandLineTemplate="%(moc.CommandLineTemplate)"
+      stdafx="%(moc.stdafx)"
+      tmppath="%(moc.tmppath)"
+      compileout="%(moc.compileout)"
+      AdditionalOptions="%(moc.AdditionalOptions)"
+      Inputs="%(moc.Identity)" />
+  </Target>
+  
+  <Target Name="MocCustomClean" DependsOnTargets="MocComputePaths">
+    <Delete Files="%(moc.compileout)"/>
+  </Target>
+  
+  <PropertyGroup>
+    <ComputeLinkInputsTargets>
+            $(ComputeLinkInputsTargets);
+            ComputemocOutput;
+    </ComputeLinkInputsTargets>
+    <ComputeLibInputsTargets>
+            $(ComputeLibInputsTargets);
+            ComputemocOutput;
+    </ComputeLibInputsTargets>
+    <CleanDependsOn>
+      $(CleanDependsOn);
+      MocCustomClean
+    </CleanDependsOn>
+  </PropertyGroup>
+
+  <Target
+    Name="MocComputePaths"
+    Condition="'@(moc)' != ''">
+
+    <ItemGroup>
+      <moc Condition="'%(moc.tmppath)' == '1'">
+        <compileout>$(ProjectDir)tmp\moc_%(Filename).cpp</compileout>
+      </moc>
+      <moc Condition="'%(moc.tmppath)' == '0'">
+        <compileout>%(RootDir)%(Directory)tmp\moc_%(Filename).cpp</compileout>
+      </moc>
+    </ItemGroup>
+
+  </Target>
+  
+  <Target
+    Name="ComputemocOutput"
+    Condition="'@(moc)' != ''"
+    DependsOnTargets="MocComputePaths">
+     
+    <ItemGroup>
+      <mocDirsToMake
+        Condition="'@(moc)' != '' and '%(moc.ExcludedFromBuild)' != 'true'"
+        Include="%(moc.compileout)" />
+      <Link
+        Include="%(mocDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+      <Lib
+        Include="%(mocDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+      <ImpLib
+        Include="%(mocDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+    </ItemGroup>
+    <MakeDir
+      Directories="@(mocDirsToMake-&gt;'%(RootDir)%(Directory)')" />
+  </Target>
+  <Target
+    Name="_res"
+    BeforeTargets="$(resBeforeTargets)"
+    AfterTargets="$(resAfterTargets)"
+    Condition="'@(res)' != ''"
+    DependsOnTargets="$(resDependsOn);ComputeresOutput"
+    Outputs="%(res.compileout)"
+    Inputs="%(res.Identity);%(res.AdditionalDependencies);$(MSBuildProjectFile)">
+    <ItemGroup
+      Condition="'@(SelectedFiles)' != ''">
+      <res
+        Remove="@(res)"
+        Condition="'%(Identity)' != '@(SelectedFiles)'" />
+    </ItemGroup>
+    <ItemGroup>
+      <res_tlog
+        Include="%(res.Outputs)"
+        Condition="'%(res.Outputs)' != '' and '%(res.ExcludedFromBuild)' != 'true'">
+        <Source>@(res, '|')</Source>
+      </res_tlog>
+    </ItemGroup>
+    <Message
+      Importance="High"
+      Text="%(res.ExecutionDescription)" />
+    <WriteLinesToFile
+      Condition="'@(res_tlog)' != '' and '%(res_tlog.ExcludedFromBuild)' != 'true'"
+      File="$(IntDir)$(ProjectName).write.1.tlog"
+      Lines="^%(res_tlog.Source);@(res_tlog-&gt;'%(Fullpath)')" />
+    <res
+      Condition="'@(res)' != '' and '%(res.ExcludedFromBuild)' != 'true'"
+      CommandLineTemplate="%(res.CommandLineTemplate)"
+      prefix="%(res.prefix)"
+      tmppath="%(res.tmppath)"
+      compileout="%(res.compileout)"
+      AdditionalOptions="%(res.AdditionalOptions)"
+      Inputs="%(res.Identity)" />
+  </Target>
+  
+  <Target Name="ResCustomClean" DependsOnTargets="ResComputePaths">
+    <Delete Files="%(res.compileout)"/>
+  </Target>
+  
+  <PropertyGroup>
+    <ComputeLinkInputsTargets>
+            $(ComputeLinkInputsTargets);
+            ComputeresOutput;
+          </ComputeLinkInputsTargets>
+    <ComputeLibInputsTargets>
+            $(ComputeLibInputsTargets);
+            ComputeresOutput;
+    </ComputeLibInputsTargets>
+    <CleanDependsOn>
+      $(CleanDependsOn);
+      ResCustomClean
+    </CleanDependsOn>
+  </PropertyGroup>
+
+  <Target
+    Name="ResComputePaths"
+    Condition="'@(res)' != ''">
+    
+    <ItemGroup>
+      <res Condition="'%(res.tmppath)' == '1'">
+        <compileout>$(ProjectDir)tmp\%(Filename).cpp</compileout>
+      </res>
+      <res Condition="'%(res.tmppath)' == '0'">
+        <compileout>%(RootDir)%(Directory)tmp\%(Filename).cpp</compileout>
+      </res>
+    </ItemGroup>
+    
+  </Target>
+  
+  <Target
+    Name="ComputeresOutput"
+    Condition="'@(res)' != ''"
+    DependsOnTargets="ResComputePaths">
+       
+    <ItemGroup>
+      <resDirsToMake
+        Condition="'@(res)' != '' and '%(res.ExcludedFromBuild)' != 'true'"
+        Include="%(res.compileout)" />
+      <Link
+        Include="%(resDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+      <Lib
+        Include="%(resDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+      <ImpLib
+        Include="%(resDirsToMake.Identity)"
+        Condition="'%(Extension)'=='.obj' or '%(Extension)'=='.res' or '%(Extension)'=='.rsc' or '%(Extension)'=='.lib'" />
+    </ItemGroup>
+    <MakeDir
+      Directories="@(resDirsToMake-&gt;'%(RootDir)%(Directory)')" />
+  </Target>
+</Project>

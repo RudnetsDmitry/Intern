@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup
+    Condition="'$(param_xmlBeforeTargets)' == '' and '$(param_xmlAfterTargets)' == '' and '$(ConfigurationType)' != 'Makefile'">
+    <param_xmlBeforeTargets>Midl</param_xmlBeforeTargets>
+    <param_xmlAfterTargets>CustomBuild</param_xmlAfterTargets>
+  </PropertyGroup>
+  <PropertyGroup>
+    <param_xmlDependsOn
+      Condition="'$(ConfigurationType)' != 'Makefile'">_SelectedFiles;$(param_xmlDependsOn)</param_xmlDependsOn>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <param_xml>
+      <enum>False</enum>
+      <enumPath></enumPath>
+      <data>False</data>
+      <dataPath></dataPath>
+      <DoSaveLoad>False</DoSaveLoad>
+      <DoCreateStrings>False</DoCreateStrings>
+      <tmppath>1</tmppath>
+      <CommandLineTemplate>$(SolutionDir)..\..\Libs\bin\testxsd.exe credo:param_wnd $(SolutionDir)PropertyEdit\main.xsd %(FullPath) &amp;&amp; cmd /c time /T &gt; $(IntDir)%(Filename).dummy &amp;&amp; $(SolutionDir)..\..\Libs\bin\mergeXml.exe %(FullPath) $(TargetDir)\res.xml</CommandLineTemplate>
+      <ExecutionDescription>param_xml'ing %(FullPath)...</ExecutionDescription>
+    </param_xml>
+  </ItemDefinitionGroup>
+</Project>

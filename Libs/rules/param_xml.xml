@@ -1,0 +1,190 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ProjectSchemaDefinitions xmlns="clr-namespace:Microsoft.Build.Framework.XamlTypes;assembly=Microsoft.Build.Framework" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:sys="clr-namespace:System;assembly=mscorlib" xmlns:transformCallback="Microsoft.Cpp.Dev10.ConvertPropertyCallback">
+  <Rule
+    Name="param_xml"
+    PageTemplate="tool"
+    DisplayName="param xml"
+    Order="200">
+    <Rule.DataSource>
+      <DataSource
+        Persistence="ProjectFile"
+        ItemType="param_xml" />
+    </Rule.DataSource>
+    <Rule.Categories>
+      <Category
+        Name="General">
+        <Category.DisplayName>
+          <sys:String>General</sys:String>
+        </Category.DisplayName>
+      </Category>
+      <Category
+        Name="Command Line"
+        Subtype="CommandLine">
+        <Category.DisplayName>
+          <sys:String>Command Line</sys:String>
+        </Category.DisplayName>
+      </Category>
+    </Rule.Categories>
+    <StringListProperty
+      Name="Inputs"
+      Category="Command Line"
+      IsRequired="true"
+      Switch=" ">
+      <StringListProperty.DataSource>
+        <DataSource
+          Persistence="ProjectFile"
+          ItemType="param_xml"
+          SourceType="Item" />
+      </StringListProperty.DataSource>
+    </StringListProperty>
+
+    <StringProperty
+      Name="enumPath"
+      HelpContext="0"
+      Switch="[value]"
+      Visible="False"
+      />
+    <BoolProperty
+      Name="enum"
+      Subcategory="ENUM options"
+      HelpContext="0"
+      DisplayName="enum generation"
+      Description="Сгенерировать enum для окна параметров"
+      />
+    
+    <StringProperty
+      Name="dataPath"
+      HelpContext="0"
+      Switch="[value]"
+      Visible="False"
+      />
+    <BoolProperty
+      Name="data"
+      Subcategory="DATA options"
+      HelpContext="0"
+      DisplayName="data generation"
+      Description="Сгенерировать data для окна параметров"
+      />
+    <BoolProperty
+      Name="DoSaveLoad"
+      Subcategory="DATA options"
+      HelpContext="0"
+      DisplayName="DoSaveLoad"
+      Description="Делать save/load"
+      Switch="generateSync=1" />
+    <BoolProperty
+      Name="DoCreateStrings"
+      Subcategory="ENUM options"
+      HelpContext="0"
+      DisplayName="DoCreateStrings"
+      Description="Создавать строковые описатели"
+      Switch="generateStrings=1" />
+    <StringProperty
+      Name="POPOID"
+      Subcategory="DATA options"
+      HelpContext="0"
+      DisplayName="POPO_ID"
+      Description="ID построения для которого будем делать save/load"
+      Switch="syncName=[value]" />
+    <EnumProperty
+      Name="tmppath"
+      HelpContext="0"
+      DisplayName="Путь для tmp"
+      Description="Использовать для tmp директорию файла или проекта">
+      <EnumValue
+        Name="0"
+        DisplayName="Использовать tmp директорию файла"
+        Switch="$(InputDir)" />
+      <EnumValue
+        Name="1"
+        DisplayName="Использовать tmp директорию проекта"
+        Switch="$(ProjectDir)" />
+    </EnumProperty>
+    <StringProperty
+      Name="CommandLineTemplate"
+      DisplayName="Command Line"
+      Visible="False"
+      IncludeInCommandLine="False" />
+    <DynamicEnumProperty
+      Name="param_xmlBeforeTargets"
+      Category="General"
+      EnumProvider="Targets"
+      IncludeInCommandLine="False">
+      <DynamicEnumProperty.DisplayName>
+        <sys:String>Execute Before</sys:String>
+      </DynamicEnumProperty.DisplayName>
+      <DynamicEnumProperty.Description>
+        <sys:String>Specifies the targets for the build customization to run before.</sys:String>
+      </DynamicEnumProperty.Description>
+      <DynamicEnumProperty.ProviderSettings>
+        <NameValuePair
+          Name="Exclude"
+          Value="^param_xmlBeforeTargets|^Compute" />
+      </DynamicEnumProperty.ProviderSettings>
+      <DynamicEnumProperty.DataSource>
+        <DataSource
+          Persistence="ProjectFile"
+          HasConfigurationCondition="true" />
+      </DynamicEnumProperty.DataSource>
+    </DynamicEnumProperty>
+    <DynamicEnumProperty
+      Name="param_xmlAfterTargets"
+      Category="General"
+      EnumProvider="Targets"
+      IncludeInCommandLine="False">
+      <DynamicEnumProperty.DisplayName>
+        <sys:String>Execute After</sys:String>
+      </DynamicEnumProperty.DisplayName>
+      <DynamicEnumProperty.Description>
+        <sys:String>Specifies the targets for the build customization to run after.</sys:String>
+      </DynamicEnumProperty.Description>
+      <DynamicEnumProperty.ProviderSettings>
+        <NameValuePair
+          Name="Exclude"
+          Value="^param_xmlAfterTargets|^Compute" />
+      </DynamicEnumProperty.ProviderSettings>
+      <DynamicEnumProperty.DataSource>
+        <DataSource
+          Persistence="ProjectFile"
+          ItemType=""
+          HasConfigurationCondition="true" />
+      </DynamicEnumProperty.DataSource>
+    </DynamicEnumProperty>
+    <StringListProperty
+      Name="Outputs"
+      DisplayName="Outputs"
+      Visible="False"
+      IncludeInCommandLine="False" />
+    <StringProperty
+      Name="ExecutionDescription"
+      DisplayName="Execution Description"
+      Visible="False"
+      IncludeInCommandLine="False" />
+    <StringListProperty
+      Name="AdditionalDependencies"
+      DisplayName="Additional Dependencies"
+      IncludeInCommandLine="False"
+      Visible="false" />
+    <StringProperty
+      Subtype="AdditionalOptions"
+      Name="AdditionalOptions"
+      Category="Command Line">
+      <StringProperty.DisplayName>
+        <sys:String>Additional Options</sys:String>
+      </StringProperty.DisplayName>
+      <StringProperty.Description>
+        <sys:String>Additional Options</sys:String>
+      </StringProperty.Description>
+    </StringProperty>
+  </Rule>
+  <ItemType
+    Name="param_xml"
+    DisplayName="param xml" />
+  <FileExtension
+    Name="*.dummy_ext_xml"
+    ContentType="param_xml" />
+  <ContentType
+    Name="param_xml"
+    DisplayName="param xml"
+    ItemType="param_xml" />
+</ProjectSchemaDefinitions>

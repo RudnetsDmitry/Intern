@@ -1,0 +1,8 @@
+boost
+build_scripts
+Qt_5.11
+.vs
+Debug
+tmp
+x64
+/Libs/vcpkg

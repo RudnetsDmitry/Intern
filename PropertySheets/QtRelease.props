@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets">
+    <Import Project="qt.props" />
+  </ImportGroup>
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <Link>
+      <AdditionalDependencies>Qt5Core.lib;Qt5Gui.lib;Qt5Widgets.lib;Qt5Xml.lib;Qt5Network.lib;Qt5Svg.lib;Qt5Charts.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "$(QtLibsPath)\bin\Qt5Core.dll" "$(TargetDir)"
+				xcopy /y /d "$(QtLibsPath)\bin\Qt5Gui.dll" "$(TargetDir)"
+				xcopy /y /d "$(QtLibsPath)\bin\Qt5Widgets.dll" "$(TargetDir)"
+				xcopy /y /d "$(QtLibsPath)\bin\Qt5Xml.dll" "$(TargetDir)"
+				xcopy /y /d "$(QtLibsPath)\bin\Qt5Network.dll" "$(TargetDir)"
+				xcopy /y /d "$(QtLibsPath)\bin\Qt5Svg.dll" "$(TargetDir)"
+				xcopy /y /d "$(QtLibsPath)\bin\Qt5Charts.dll" "$(TargetDir)"
+				</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+</Project>

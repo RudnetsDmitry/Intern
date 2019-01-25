@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup
+    Condition="'$(uiBeforeTargets)' == '' and '$(uiAfterTargets)' == '' and '$(ConfigurationType)' != 'Makefile'">
+    <uiBeforeTargets>Midl</uiBeforeTargets>
+    <uiAfterTargets>CustomBuild</uiAfterTargets>
+  </PropertyGroup>
+  <PropertyGroup>
+    <uiDependsOn
+      Condition="'$(ConfigurationType)' != 'Makefile'">_SelectedFiles;$(uiDependsOn)</uiDependsOn>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ui>
+      <tmppath>1</tmppath>
+      <compileout>%(RootDir)%(Directory)tmp\ui_%(Filename).h</compileout>
+      <CommandLineTemplate>$(SolutionDir)..\..\Libs\bin\uic %(FullPath) -o [compileout]</CommandLineTemplate>
+      <ExecutionDescription>Uic'ing %(FullPath)...</ExecutionDescription>
+    </ui>
+  </ItemDefinitionGroup>
+  <PropertyGroup
+    Condition="'$(mocBeforeTargets)' == '' and '$(mocAfterTargets)' == '' and '$(ConfigurationType)' != 'Makefile'">
+    <mocBeforeTargets>Midl</mocBeforeTargets>
+    <mocAfterTargets>CustomBuild</mocAfterTargets>
+  </PropertyGroup>
+  <PropertyGroup>
+    <mocDependsOn
+      Condition="'$(ConfigurationType)' != 'Makefile'">_SelectedFiles;$(mocDependsOn)</mocDependsOn>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <moc>
+      <stdafx>true</stdafx>
+      <tmppath>1</tmppath>
+      <compileout>%(RootDir)%(Directory)tmp\moc_%(Filename).cpp</compileout>
+      <CommandLineTemplate>$(SolutionDir)..\..\Libs\bin\moc.exe %(FullPath)  [stdafx] -f"%(FullPath)" -o [compileout]</CommandLineTemplate>
+      <ExecutionDescription>Moc'ing %(FullPath)...</ExecutionDescription>
+      <AdditionalDependencies>$(SolutionDir)..\..\Libs\bin\moc.exe; %(FullPath)</AdditionalDependencies>
+    </moc>
+  </ItemDefinitionGroup>
+  <PropertyGroup
+    Condition="'$(resBeforeTargets)' == '' and '$(resAfterTargets)' == '' and '$(ConfigurationType)' != 'Makefile'">
+    <resBeforeTargets>Midl</resBeforeTargets>
+    <resAfterTargets>CustomBuild</resAfterTargets>
+  </PropertyGroup>
+  <PropertyGroup>
+    <resDependsOn
+      Condition="'$(ConfigurationType)' != 'Makefile'">_SelectedFiles;$(resDependsOn)</resDependsOn>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <res>
+      <tmppath>1</tmppath>
+      <compileout>%(RootDir)%(Directory)tmp\%(Filename).cpp</compileout>
+      <CommandLineTemplate>$(SolutionDir)..\..\Libs\bin\rcc.exe %(FullPath) [prefix] -o [compileout]</CommandLineTemplate>
+      <ExecutionDescription>Rcc'ing %(FullPath)...</ExecutionDescription>
+    </res>
+  </ItemDefinitionGroup>
+</Project>
