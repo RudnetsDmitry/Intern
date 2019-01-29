@@ -2,7 +2,7 @@
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
  <PropertyGroup Label="UserMacros">
 	<LibsPath>$(SolutionDir)..\..\Libs</LibsPath>
-    <QtLibsPath>$(LibsPath)\Qt_5.11\5.12.0\msvc2017_64</QtLibsPath>
+    <QtLibsPath>$(LibsPath)\Qt</QtLibsPath>
   </PropertyGroup>  
   <PropertyGroup>
     <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
