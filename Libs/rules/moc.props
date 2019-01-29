@@ -2,7 +2,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup Label="UserMacros">
 		<LibsPath>$(SolutionDir)..\..\Libs</LibsPath>
-		<QtBinPath>$(LibsPath)\Qt_5.11\5.12.0\msvc2017_64\bin</QtBinPath>
+		<QtBinPath>$(LibsPath)\Qt\bin</QtBinPath>
 	</PropertyGroup>
   <PropertyGroup
     Condition="'$(uiBeforeTargets)' == '' and '$(uiAfterTargets)' == '' and '$(ConfigurationType)' != 'Makefile'">
