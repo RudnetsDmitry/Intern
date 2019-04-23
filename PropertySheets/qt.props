@@ -11,7 +11,8 @@
     <ClCompile>
 	  <LanguageStandard>stdcpp17</LanguageStandard>
 	  <AdditionalOptions>/bigobj /utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(QtLibsPath)\include;$(QtLibsPath)\include\QtWidgets;$(QtLibsPath)\include\QtSvg;$(QtLibsPath)\include\QtCore;$(QtLibsPath)\include\QtGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(QtLibsPath)\include;$(QtLibsPath)\include\QtWidgets;$(QtLibsPath)\include\QtSvg;$(QtLibsPath)\include\QtCore;
+	  $(QtLibsPath)\include\QtSql;$(QtLibsPath)\include\QtGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(QtLibsPath)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
