@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27428.2043
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Main", "Main\Main.vcxproj", "{CCFFC416-75FA-49D4-8A96-657A8222A061}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GaleryCore", "GaleryCore\GaleryCore.vcxproj", "{1AEC864D-F3F2-4383-A2B1-C84ED7916069}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,14 @@ Global
 		{CCFFC416-75FA-49D4-8A96-657A8222A061}.Release|x64.Build.0 = Release|x64
 		{CCFFC416-75FA-49D4-8A96-657A8222A061}.Release|x86.ActiveCfg = Release|Win32
 		{CCFFC416-75FA-49D4-8A96-657A8222A061}.Release|x86.Build.0 = Release|Win32
+		{1AEC864D-F3F2-4383-A2B1-C84ED7916069}.Debug|x64.ActiveCfg = Debug|x64
+		{1AEC864D-F3F2-4383-A2B1-C84ED7916069}.Debug|x64.Build.0 = Debug|x64
+		{1AEC864D-F3F2-4383-A2B1-C84ED7916069}.Debug|x86.ActiveCfg = Debug|Win32
+		{1AEC864D-F3F2-4383-A2B1-C84ED7916069}.Debug|x86.Build.0 = Debug|Win32
+		{1AEC864D-F3F2-4383-A2B1-C84ED7916069}.Release|x64.ActiveCfg = Release|x64
+		{1AEC864D-F3F2-4383-A2B1-C84ED7916069}.Release|x64.Build.0 = Release|x64
+		{1AEC864D-F3F2-4383-A2B1-C84ED7916069}.Release|x86.ActiveCfg = Release|Win32
+		{1AEC864D-F3F2-4383-A2B1-C84ED7916069}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
