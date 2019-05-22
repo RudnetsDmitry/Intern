@@ -39,6 +39,12 @@
     <ClInclude Include="SqlObjectsHolder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="AlbumModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PictureModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -54,6 +60,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SqlObjectsHolder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AlbumModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PictureModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

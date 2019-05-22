@@ -150,18 +150,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Album.h" />
+    <ClInclude Include="AlbumModel.h" />
     <ClInclude Include="GaleryCoreDecl.h" />
     <ClInclude Include="GaleryCoreExp.h" />
     <ClInclude Include="ObjectsHolderDecl.h" />
     <ClInclude Include="Picture.h" />
+    <ClInclude Include="PictureModel.h" />
     <ClInclude Include="SqlObjectsHolder.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Album.cpp" />
+    <ClCompile Include="AlbumModel.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Picture.cpp" />
+    <ClCompile Include="PictureModel.cpp" />
     <ClCompile Include="SqlObjectsHolder.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
