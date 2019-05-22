@@ -97,15 +97,18 @@ namespace gallery
 		}
 
 	public:
-		virtual void AddItem(Picture & item) override
+		virtual void AddItem(key_t const & key, Picture & item) override
 		{
 			QSqlQuery sqlQuery(m_db);
 			sqlQuery.prepare("INSERT INTO pictures (album_id, url) VALUES (:album_id, :url)");
-			sqlQuery.bindValue(":album_id", item.GetAlbumId());
+			sqlQuery.bindValue(":album_id", key);
 			sqlQuery.bindValue(":url", item.GetFileUrl());
 
 			if (sqlQuery.exec())
+			{
+				item.SetAlbumId(key);
 				item.SetId(sqlQuery.lastInsertId().toInt());
+			}
 		}
 
 		virtual void UpdateItem(Picture const & item) override
@@ -126,11 +129,20 @@ namespace gallery
 			sqlQuery.exec();
 		}
 
-		virtual std::vector<std::unique_ptr<item_t>> GetAllItems() override
+		virtual void RemoveAll(key_t const & key) override
+		{
+			QSqlQuery sqlQuery(m_db);
+			sqlQuery.prepare("DELETE FROM pictures WHERE album_id=(:album_id)");
+			sqlQuery.bindValue(":album_id", key);
+			sqlQuery.exec();
+		}
+
+		virtual std::vector<std::unique_ptr<item_t>> GetAllItems(key_t const & key) override
 		{
 			std::vector<std::unique_ptr<item_t>> items;
 
-			QSqlQuery query("SELECT * FROM pictures", m_db);
+			QSqlQuery query("SELECT * FROM pictures  WHERE album_id=(:album_id)", m_db);
+			query.bindValue(":album_id", key);
 			query.exec();
 
 			while (query.next())
