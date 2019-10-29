@@ -110,7 +110,7 @@ namespace gallery
 		switch (role)
 		{
 		case Roles::FilePathRole:
-			return picture->GetFileUrl().toString();
+			return picture->GetFileUrl().toLocalFile();
 		default:
 			return QVariant();
 		}

@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{f9bf78e4-46df-40b5-803f-7bec490fcb17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated">
+      <UniqueIdentifier>{d40b9fc9-d620-496c-9b22-31e3715e9f81}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GaleryGUIExp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AlbumListWidget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tmp\ui_AlbumListWidget.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="ThumbnailProxyModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tmp\ui_AlbumWidget.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="tmp\ui_PictureWidget.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="tmp\ui_GalleryWidget.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="MainWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tmp\ui_MainWindow.h">
+      <Filter>Generated</Filter>
+    </ClInclude>
+    <ClInclude Include="ExportFunctions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tmp\resource.cpp">
+      <Filter>Generated</Filter>
+    </ClCompile>
+    <ClCompile Include="AlbumListWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ThumbnailProxyModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AlbumWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tmp\moc_AlbumWidget.cpp">
+      <Filter>Generated</Filter>
+    </ClCompile>
+    <ClCompile Include="PictureWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tmp\moc_PictureWidget.cpp">
+      <Filter>Generated</Filter>
+    </ClCompile>
+    <ClCompile Include="GalleryWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tmp\moc_GalleryWidget.cpp">
+      <Filter>Generated</Filter>
+    </ClCompile>
+    <ClCompile Include="MainWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <res Include="res\resource.qrc">
+      <Filter>Resource Files</Filter>
+    </res>
+  </ItemGroup>
+  <ItemGroup>
+    <ui Include="UI\AlbumListWidget.ui">
+      <Filter>UI</Filter>
+    </ui>
+    <ui Include="UI\AlbumWidget.ui">
+      <Filter>UI</Filter>
+    </ui>
+    <ui Include="UI\PictureWidget.ui">
+      <Filter>UI</Filter>
+    </ui>
+    <ui Include="UI\GalleryWidget.ui">
+      <Filter>UI</Filter>
+    </ui>
+    <ui Include="UI\MainWindow.ui">
+      <Filter>UI</Filter>
+    </ui>
+  </ItemGroup>
+  <ItemGroup>
+    <moc Include="AlbumWidget.h">
+      <Filter>Header Files</Filter>
+    </moc>
+    <moc Include="PictureWidget.h">
+      <Filter>Header Files</Filter>
+    </moc>
+    <moc Include="GalleryWidget.h">
+      <Filter>Header Files</Filter>
+    </moc>
+  </ItemGroup>
+</Project>
