@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -23,37 +23,38 @@
     <ProjectGuid>{0950393A-5725-479C-9AE0-5725A8FA170D}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>GaleryGUI</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
+    <Import Project="..\..\..\Libs\rules\moc.props" />
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
@@ -65,6 +66,7 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\PropertySheets\QtDebug.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -147,20 +149,67 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AlbumListWidget.h" />
+    <moc Include="PictureWidget.h" />
+    <moc Include="GalleryWidget.h" />
+    <ClInclude Include="ExportFunctions.h" />
+    <ClInclude Include="MainWindow.h" />
+    <ClInclude Include="tmp\ui_GalleryWidget.h" />
+    <ClInclude Include="tmp\ui_MainWindow.h" />
+    <ClInclude Include="tmp\ui_PictureWidget.h" />
+    <moc Include="AlbumWidget.h" />
+    <ClInclude Include="GaleryGUIExp.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="ThumbnailProxyModel.h" />
+    <ClInclude Include="tmp\ui_AlbumListWidget.h" />
+    <ClInclude Include="tmp\ui_AlbumWidget.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AlbumListWidget.cpp" />
+    <ClCompile Include="AlbumWidget.cpp" />
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="GaleryGUI.cpp" />
+    <ClCompile Include="GalleryWidget.cpp" />
+    <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="PictureWidget.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="ThumbnailProxyModel.cpp" />
+    <ClCompile Include="tmp\moc_AlbumWidget.cpp" />
+    <ClCompile Include="tmp\moc_GalleryWidget.cpp" />
+    <ClCompile Include="tmp\moc_PictureWidget.cpp" />
+    <ClCompile Include="tmp\resource.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GaleryCore\GaleryCore.vcxproj">
+      <Project>{1aec864d-f3f2-4383-a2b1-c84ed7916069}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <res Include="res\resource.qrc">
+      <FileType>Document</FileType>
+    </res>
+  </ItemGroup>
+  <ItemGroup>
+    <ui Include="UI\AlbumListWidget.ui" />
+    <ui Include="UI\AlbumWidget.ui">
+      <SubType>Designer</SubType>
+    </ui>
+    <ui Include="UI\GalleryWidget.ui" />
+    <ui Include="UI\MainWindow.ui" />
+    <ui Include="UI\PictureWidget.ui" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\..\..\Libs\rules\moc.targets" />
   </ImportGroup>
 </Project>
