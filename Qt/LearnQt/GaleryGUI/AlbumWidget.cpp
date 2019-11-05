@@ -20,6 +20,7 @@
 #include <QDir>
 
 #include "tmp/ui_AlbumWidget.h"
+#include "PictureDelegate.h"
 
 
 namespace gallery
@@ -39,6 +40,7 @@ namespace gallery
 		m_ui->thumbnailListView->setResizeMode(QListView::Adjust);
 		m_ui->thumbnailListView->setFlow(QListView::LeftToRight);
 		m_ui->thumbnailListView->setWrapping(true);
+		m_ui->thumbnailListView->setItemDelegate(new PictureDelegate());
 
 		connect(m_ui->thumbnailListView, &QListView::doubleClicked,
 			this, &AlbumWidget::pictureActivated);
