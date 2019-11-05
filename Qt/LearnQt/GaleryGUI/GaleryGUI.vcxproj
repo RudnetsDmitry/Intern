@@ -154,6 +154,7 @@
     <moc Include="GalleryWidget.h" />
     <ClInclude Include="ExportFunctions.h" />
     <ClInclude Include="MainWindow.h" />
+    <ClInclude Include="PictureDelegate.h" />
     <ClInclude Include="tmp\ui_GalleryWidget.h" />
     <ClInclude Include="tmp\ui_MainWindow.h" />
     <ClInclude Include="tmp\ui_PictureWidget.h" />
@@ -171,6 +172,7 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="GalleryWidget.cpp" />
     <ClCompile Include="MainWindow.cpp" />
+    <ClCompile Include="PictureDelegate.cpp" />
     <ClCompile Include="PictureWidget.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

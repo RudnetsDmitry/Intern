@@ -109,6 +109,7 @@ namespace gallery
 		auto const & picture = m_impl->GetPictures()[index.row()];
 		switch (role)
 		{
+		case Qt::DisplayRole:
 		case Roles::FilePathRole:
 			return picture->GetFileUrl().toLocalFile();
 		default:
