@@ -12,7 +12,9 @@
 	  <LanguageStandard>stdcpp17</LanguageStandard>
 	  <AdditionalOptions>/bigobj /utf-8 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalIncludeDirectories>$(QtLibsPath)\include;$(QtLibsPath)\include\QtWidgets;$(QtLibsPath)\include\QtSvg;$(QtLibsPath)\include\QtCore;
-	  $(QtLibsPath)\include\QtSql;$(QtLibsPath)\include\QtGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+	  $(QtLibsPath)\include\QtSql;$(QtLibsPath)\include\QtGui;$(QtLibsPath)\include\QtQuickWidgets;$(QtLibsPath)\include\QtQuickTest;
+	  $(QtLibsPath)\include\QtQuickTemplates2;$(QtLibsPath)\include\QtQuickShapes;$(QtLibsPath)\include\QtQuickParticles;
+	  $(QtLibsPath)\include\QtQuickControls2;$(QtLibsPath)\include\QtQuick;$(QtLibsPath)\include\QtQmlDebug;$(QtLibsPath)\include\QtQml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(QtLibsPath)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
