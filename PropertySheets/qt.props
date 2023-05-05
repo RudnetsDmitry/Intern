@@ -1,27 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup Label="UserMacros">
-    <LibsPath>$(SolutionDir)..\..\Libs</LibsPath>
-    <QtLibsPath>$(LibsPath)\Qt</QtLibsPath>
-    <QtChartsLibsPath>$(LibsPath)\QtCharts</QtChartsLibsPath>
-  </PropertyGroup>
+ <PropertyGroup Label="UserMacros">
+	<LibsPath>D:\Develop\Libs\vcpkg\installed\x64-windows</LibsPath>
+	<LibsDebugPath>$(LibsPath)\debug</LibsDebugPath>
+    <QtIncludePath>$(LibsPath)\include\Qt6</QtIncludePath>
+  </PropertyGroup>  
   <PropertyGroup>
     <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalOptions>/bigobj /utf-8 /Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories>$(QtLibsPath)\include;$(QtLibsPath)\include\QtWidgets;$(QtLibsPath)\include\QtSvg;$(QtLibsPath)\include\QtCore;
-	  $(QtLibsPath)\include\QtSql;$(QtLibsPath)\include\QtGui;$(QtLibsPath)\include\QtQuickWidgets;$(QtLibsPath)\include\QtQuickTest;
-	  $(QtLibsPath)\include\QtQuickTemplates2;$(QtLibsPath)\include\QtQuickShapes;$(QtLibsPath)\include\QtQuickParticles;
-	  $(QtLibsPath)\include\QtQuickControls2;$(QtLibsPath)\include\QtQuick;$(QtLibsPath)\include\QtQmlDebug;$(QtLibsPath)\include\QtQml;
-	  $(QtLibsPath)\include\QtOpenGL;
-	  $(QtChartsLibsPath)\include;
-	  %(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+	  <LanguageStandard>stdcpp17</LanguageStandard>
+	  <AdditionalOptions>/Zc:__cplusplus /bigobj /utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(QtIncludePath);$(QtIncludePath)\QtWidgets;$(QtIncludePath)\QtSvg;$(QtIncludePath)\QtCore;
+	  $(QtIncludePath)\QtSql;$(QtIncludePath)\QtGui;$(QtIncludePath)\QtCharts;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(QtLibsPath)\lib;$(QtChartsLibsPath)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(LibsPath)\lib;$(LibsPath)\debug\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
 </Project>

@@ -2,10 +2,13 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
-    <LibsPath>$(SolutionDir)..\Libs</LibsPath>
-    <BoostLibsPath>$(LibsPath)\boost\boost_dir</BoostLibsPath>
+    <LibsPath>D:\Develop\Libs\vcpkg\installed\x64-windows</LibsPath>
+    <!-- <BoostLibsPath>$(LibsPath)\boost\boost_dir</BoostLibsPath> -->
   </PropertyGroup>
-  <PropertyGroup />
+  <PropertyGroup>
+    <OutDir>$(SolutionDir)..\bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\intermediate\$(Platform)\$(Configuration)\</IntDir>
+  </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile />
     <ClCompile>
@@ -15,15 +18,15 @@
   <ItemDefinitionGroup>
     <ClCompile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-	  <AdditionalOptions>/bigobj /utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/bigobj /utf-8 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <BuildMacro Include="LibsPath">
       <Value>$(LibsPath)</Value>
     </BuildMacro>
-    <BuildMacro Include="BoostLibsPath">
-      <Value>$(BoostLibsPath)</Value>
-    </BuildMacro>
+    <!-- <BuildMacro Include="BoostLibsPath"> -->
+    <!-- <Value>$(BoostLibsPath)</Value> -->
+    <!-- </BuildMacro> -->
   </ItemGroup>
 </Project>
