@@ -1,4 +1,4 @@
-#include "CpuWidget.h"
+﻿#include "CpuWidget.h"
 #include "SystemInfo.h"
 
 #include <QtCharts/QpieSeries>
@@ -7,7 +7,7 @@ namespace qt_learn
 {
 	CpuWidget::CpuWidget(QWidget* parent /*= 0*/)
 		: base_t(parent)
-		, m_series(new QtCharts::QPieSeries(this))
+		, m_series(new QPieSeries(this))
 	{
 		m_series->setHoleSize(0.35);
 		m_series->append("Load", 30.0);

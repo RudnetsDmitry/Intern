@@ -47,11 +47,9 @@
     <ClCompile Include="tmp\moc_QmlTestWindow.cpp">
       <Filter>Generated</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="main.qml">
-      <Filter>Resource Files</Filter>
-    </None>
+    <ClCompile Include="QmlApplicationImpl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <res Include="resource.qrc">
@@ -64,8 +62,8 @@
     </moc>
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="mainToolbar.qml">
+    <None Include="main1.qml">
       <Filter>Resource Files</Filter>
-    </Xml>
+    </None>
   </ItemGroup>
 </Project>

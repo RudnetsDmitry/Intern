@@ -1,11 +1,9 @@
-#pragma once
+﻿#pragma once
 #include "SysInfoWidget.h"
 
 class QWidget;
-namespace QtCharts
-{
-	class QLineSeries;
-}
+class QLineSeries;
+
 
 namespace qt_learn
 {
@@ -17,7 +15,7 @@ namespace qt_learn
 	private:
 		virtual void updateSeriesImpl() override;
 	private:
-		QtCharts::QLineSeries * m_series;
+		QLineSeries * m_series;
 		long long m_pointPositionX;
 	};
 }

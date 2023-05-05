@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <QtWidgets/QWidget>
 #include <QtCharts/QChartView>
 #include <QTimer>
@@ -15,13 +15,13 @@ namespace qt_learn
 			int startDelayMs = 500,
 			int updateSeriesDelayMs = 500);
 	protected:
-		QtCharts::QChartView& chartView();
+		QChartView& chartView();
 	protected slots:
 		void updateSeries();
 	private:
 		virtual void updateSeriesImpl() = 0;
 	private:
 		QTimer m_refreshTimer;
-		QtCharts::QChartView m_chartView;
+		QChartView m_chartView;
 	};
 }

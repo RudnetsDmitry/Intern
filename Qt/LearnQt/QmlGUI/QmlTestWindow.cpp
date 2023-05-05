@@ -17,7 +17,8 @@
 #include <QQmlApplicationEngine>
 #include <limits>
 #include <QApplication>
-
+#include <QBoxLayout>
+#include <QFrame>
 
 namespace qml_gui
 {
@@ -33,16 +34,33 @@ namespace qml_gui
 		resize(927, 644);
 
 		//m_engine->addImportPath(QStringLiteral("qrc:/"));
-		m_engine->load(QUrl(QStringLiteral("qrc:/main.qml")));
+		m_engine->load(QUrl(QStringLiteral("qrc:/main1.qml")));
 		auto const& rootObjects = m_engine->rootObjects();
 		if (rootObjects.isEmpty())
 			return;
 
 		auto qmlWidget = qobject_cast<QWindow*>(rootObjects.at(0));
-		QWidget* container = QWidget::createWindowContainer(qmlWidget, this);
+		QWidget* container = QWidget::createWindowContainer(qmlWidget);
+		container->setMinimumSize(qmlWidget->size().width(), qmlWidget->size().height() + 30);
+
+		QFrame * centerWidget = new QFrame();
+		centerWidget->setFrameShape(QFrame::WinPanel);
+		QVBoxLayout* vbox = new QVBoxLayout();
+		vbox->setContentsMargins(5, 5, 5, 5);
+
+		QFrame* innerWidget = new QFrame();
+		innerWidget->setFrameShape(QFrame::Panel);
+
+		QVBoxLayout* innervbox = new QVBoxLayout();
+		innervbox->setContentsMargins(20, 40, 20, 20);
+		innervbox->addWidget(container);
+		innerWidget->setLayout(innervbox);
+
+		vbox->addWidget(innerWidget);
+		centerWidget->setLayout(vbox);
 		
-		setCentralWidget(container);
-		
+		setCentralWidget(centerWidget);
+
 		QMetaObject::connectSlotsByName(this);
 	}
 
@@ -50,5 +68,7 @@ namespace qml_gui
 	{
 		return new QmlTestWindow();
 	}
+
+	
 
 }
