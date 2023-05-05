@@ -1,0 +1,14 @@
+# Header line:
+# %Project start date%Project description
+%10-10-2000%GanttChart Task - Main arrows are Just Plain Wrong
+
+# Task lines:
+# number:type:startdate:expenddate:enddate:after:complete:Task description
+
+ 1:task:20-10-2000:21-10-2000:21-10-2000:0:0:After Matrix Task - Main
+ 2:main:20-10-2000:21-10-2000:21-10-2000:1:0:Depends
+ 3:main:23-10-2000:24-10-2000:24-10-2000:1:0:Depends
+ 4:main:26-10-2000:27-10-2000:27-10-2000:1:0:Depends
+ 5:main:29-10-2000:30-10-2000:30-10-2000:1:0:Depends
+ 6:main:01-11-2000:02-11-2000:02-11-2000:1:0:Depends
+

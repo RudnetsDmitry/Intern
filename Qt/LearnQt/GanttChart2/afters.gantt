@@ -1,0 +1,30 @@
+# Header line:
+# %Project start date%Project description
+%10-09-2000%Displaying Of Dependency Arrows, Part I
+
+# Task lines:
+# number:type:startdate:expenddate:enddate:after:complete:Task description
+ 1:main:18-09-2000:24-09-2000:27-09-2000:0:0:Display GanttChart arrows properly
+ 2:task:18-09-2000:24-09-2000:24-09-2000:1:0:Change task begin / end arrow colours
+ 3:task:26-09-2000:27-09-2000:27-09-2000:2:0:Trace through code
+ 4:mile:27-09-2000:27-09-2000:27-09-2000:3:0:Attain understanding
+ 5:task:01-10-2000:03-10-2000:03-10-2000:0:0:One task on top of
+ 6:task:01-10-2000:03-10-2000:03-10-2000:5:0:another
+ 7:mile:03-10-2000:03-10-2000:03-10-2000:0:0:Attain understanding
+ 8:task:01-10-2000:03-10-2000:03-10-2000:0:0:This task starts one day before
+ 9:task:02-10-2000:04-10-2000:04-10-2000:8:0:this one
+10:mile:04-10-2000:04-10-2000:04-10-2000:0:0:Attain understanding
+11:task:01-10-2000:03-10-2000:03-10-2000:0:0:This task starts two days before
+12:task:03-10-2000:06-10-2000:06-10-2000:11:0:this one
+13:mile:07-10-2000:07-10-2000:07-10-2000:0:0:Attain understanding
+14:task:01-10-2000:03-10-2000:03-10-2000:0:0:This task starts three days before
+15:task:04-10-2000:07-10-2000:07-10-2000:14:0:this one
+16:mile:08-10-2000:08-10-2000:08-10-2000:0:0:Attain understanding
+17:task:01-10-2000:03-10-2000:03-10-2000:0:0:This task starts four days before
+18:task:05-10-2000:08-10-2000:08-10-2000:17:0:this one
+19:mile:09-10-2000:09-10-2000:09-10-2000:0:0:Attain understanding
+20:task:01-10-2000:03-10-2000:03-10-2000:0:0:This task starts five days before
+21:task:06-10-2000:09-10-2000:09-10-2000:20:0:this one
+22:task:11-10-2000:15-10-2000:15-10-2000:20:0:another dependency
+23:task:16-10-2000:19-10-2000:19-10-2000:20:0:yet another dependency
+

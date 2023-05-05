@@ -1,4 +1,4 @@
-#include "MemWidget.h"
+﻿#include "MemWidget.h"
 #include "SystemInfo.h"
 
 #include <QtCharts/QAreaSeries>
@@ -8,8 +8,6 @@ namespace qt_learn
 {
 	const int CHART_X_RANGE_COUNT = 50;
 	const int CHART_X_RANGE_MAX = CHART_X_RANGE_COUNT - 1;
-
-	using namespace QtCharts;
 
 	namespace
 	{

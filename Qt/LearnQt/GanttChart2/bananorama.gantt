@@ -1,0 +1,22 @@
+##################################################
+#                                                #
+#  QtGantt input file for the kBackpage project  #
+#  sample file (by Gunnstein Lye)                #
+##################################################
+
+# Header line:
+# %Project start date%Procject description
+%01-01-2000%Bananorama: Bananer til folket!
+
+# Task lines:
+# number:type:startdate:enddate:after:during:Task description
+ 1:main:05-01-2000:05-01-2000:27-03-2000:0:0: 1. Bananorama
+ 2:task:06-01-2000:06-01-2000:21-01-2000:0:25: 2. Kjøpe bananer
+ 3:mile:01-02-2000:01-02-2000:          :2:0: 3. Alle bananer handlet inn
+ 4:task:05-02-2000:05-02-2000:25-02-2000:3:0: 4. Skrelle bananer
+ 5:task:20-01-2000:20-01-2000:21-02-2000:0:0: 5. Utrede bananimplementasjoner
+ 6:mile:25-02-2000:25-02-2000:          :0:0: 6. Planlegging ferdig
+ 7:main:26-02-2000:26-02-2000:27-03-2000:6:0: 7. Tilberede bananer
+ 8:task:26-02-2000:26-02-2000:08-03-2000:0:0: 8. Spise bananer
+ 9:task:05-03-2000:05-03-2000:27-03-2000:0:0: 9. Få folk til å skli på bananskall
+10:mile:27-03-2000:27-03-2000:          :0:0:10. Alle bananer spist opp

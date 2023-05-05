@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29519.87
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32811.315
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Main", "Main\Main.vcxproj", "{CCFFC416-75FA-49D4-8A96-657A8222A061}"
 EndProject
@@ -10,6 +10,12 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GaleryGUI", "GaleryGUI\GaleryGUI.vcxproj", "{0950393A-5725-479C-9AE0-5725A8FA170D}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QmlGUI", "QmlGUI\QmlGUI.vcxproj", "{4146F0D3-BE28-4966-82DA-9B1ED3C9C6F2}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenGL_example", "OpenGL_example\OpenGL_example.vcxproj", "{85EBAF2B-A58B-4757-A322-7FE536D8611F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GanttChart", "GanttChart\GanttChart.vcxproj", "{A882B560-43A6-442A-862D-814E4C13B9DD}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GanttChart2", "GanttChart2\GanttChart2.vcxproj", "{8C89B7C4-46AE-4EA1-A9FE-FE5F1FB4E944}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +57,30 @@ Global
 		{4146F0D3-BE28-4966-82DA-9B1ED3C9C6F2}.Release|x64.Build.0 = Release|x64
 		{4146F0D3-BE28-4966-82DA-9B1ED3C9C6F2}.Release|x86.ActiveCfg = Release|Win32
 		{4146F0D3-BE28-4966-82DA-9B1ED3C9C6F2}.Release|x86.Build.0 = Release|Win32
+		{85EBAF2B-A58B-4757-A322-7FE536D8611F}.Debug|x64.ActiveCfg = Debug|x64
+		{85EBAF2B-A58B-4757-A322-7FE536D8611F}.Debug|x64.Build.0 = Debug|x64
+		{85EBAF2B-A58B-4757-A322-7FE536D8611F}.Debug|x86.ActiveCfg = Debug|Win32
+		{85EBAF2B-A58B-4757-A322-7FE536D8611F}.Debug|x86.Build.0 = Debug|Win32
+		{85EBAF2B-A58B-4757-A322-7FE536D8611F}.Release|x64.ActiveCfg = Release|x64
+		{85EBAF2B-A58B-4757-A322-7FE536D8611F}.Release|x64.Build.0 = Release|x64
+		{85EBAF2B-A58B-4757-A322-7FE536D8611F}.Release|x86.ActiveCfg = Release|Win32
+		{85EBAF2B-A58B-4757-A322-7FE536D8611F}.Release|x86.Build.0 = Release|Win32
+		{A882B560-43A6-442A-862D-814E4C13B9DD}.Debug|x64.ActiveCfg = Debug|x64
+		{A882B560-43A6-442A-862D-814E4C13B9DD}.Debug|x64.Build.0 = Debug|x64
+		{A882B560-43A6-442A-862D-814E4C13B9DD}.Debug|x86.ActiveCfg = Debug|Win32
+		{A882B560-43A6-442A-862D-814E4C13B9DD}.Debug|x86.Build.0 = Debug|Win32
+		{A882B560-43A6-442A-862D-814E4C13B9DD}.Release|x64.ActiveCfg = Release|x64
+		{A882B560-43A6-442A-862D-814E4C13B9DD}.Release|x64.Build.0 = Release|x64
+		{A882B560-43A6-442A-862D-814E4C13B9DD}.Release|x86.ActiveCfg = Release|Win32
+		{A882B560-43A6-442A-862D-814E4C13B9DD}.Release|x86.Build.0 = Release|Win32
+		{8C89B7C4-46AE-4EA1-A9FE-FE5F1FB4E944}.Debug|x64.ActiveCfg = Debug|x64
+		{8C89B7C4-46AE-4EA1-A9FE-FE5F1FB4E944}.Debug|x64.Build.0 = Debug|x64
+		{8C89B7C4-46AE-4EA1-A9FE-FE5F1FB4E944}.Debug|x86.ActiveCfg = Debug|Win32
+		{8C89B7C4-46AE-4EA1-A9FE-FE5F1FB4E944}.Debug|x86.Build.0 = Debug|Win32
+		{8C89B7C4-46AE-4EA1-A9FE-FE5F1FB4E944}.Release|x64.ActiveCfg = Release|x64
+		{8C89B7C4-46AE-4EA1-A9FE-FE5F1FB4E944}.Release|x64.Build.0 = Release|x64
+		{8C89B7C4-46AE-4EA1-A9FE-FE5F1FB4E944}.Release|x86.ActiveCfg = Release|Win32
+		{8C89B7C4-46AE-4EA1-A9FE-FE5F1FB4E944}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

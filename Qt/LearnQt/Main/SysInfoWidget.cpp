@@ -1,4 +1,4 @@
-#include "SysInfoWidget.h"
+﻿#include "SysInfoWidget.h"
 #include <QtWidgets/QBoxLayout>
 
 namespace qt_learn
@@ -23,7 +23,7 @@ namespace qt_learn
 		QTimer::singleShot(startDelayMs, [this] {m_refreshTimer.start(); });
 	}
 
-	QtCharts::QChartView & SysInfoWidget::chartView()
+	QChartView & SysInfoWidget::chartView()
 	{
 		return m_chartView;
 	}

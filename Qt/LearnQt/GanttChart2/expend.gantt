@@ -1,0 +1,23 @@
+# Header line:
+# %Project start date%Project description
+%03-05-2000%Multiple dependencies
+
+# Task lines:
+# number:type:startdate:expenddate:enddate:after:complete:Task description
+ 1:main:05-05-2000:23-05-2000:09-06-2000:0:0:Solve world problems
+ 2:task:05-05-2000:18-05-2000:18-05-2000:6:5:Distribute wealth
+ 3:task:05-05-2000:08-05-2000:11-05-2000:0:25:Grow lots of crops
+ 4:task:18-05-2000:23-05-2000:25-05-2000:2:50:Book planes/convoys
+ 5:task:18-05-2000:21-05-2000:21-05-2000:4:75:Deliver crops to poor
+ 6:task:07-05-2000:10-05-2000:25-05-2000:0:75:Create get rich quick scheme
+ 7:task:10-05-2000:11-05-2000:13-05-2000:6:75:Pursuade backers
+ 8:task:12-05-2000:19-05-2000:15-05-2000:7:75:Hire publicist
+ 9:task:14-05-2000:15-05-2000:17-05-2000:8:75:TV appeals
+10:task:18-05-2000:20-05-2000:23-05-2000:9:75:Fly out with food
+11:mile:23-05-2000:23-05-2000:          :0:0:A Milestone
+12:task:23-05-2000:24-05-2000:25-05-2000:0:0:OVERFLOW ONTO TOP LINE OF SCREEN, this description is very long to check that the QListView middle column is being truncated correctly
+13:task:28-05-2000:15-06-2000:15-06-2000:0:0:Extend the tasks horizontally
+14:task:18-06-2000:25-06-2000:25-06-2000:0:0:more of those tasks
+15:task:30-06-2000:30-07-2000:30-07-2000:0:0:this is a month long
+16:task:01-08-2000:30-08-2000:30-08-2000:0:0:All of August
+

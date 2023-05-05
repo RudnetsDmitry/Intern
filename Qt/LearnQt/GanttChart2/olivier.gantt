@@ -1,0 +1,23 @@
+##################################################
+#                                                #
+#  QtGantt input file for the kBackpage project  #
+#  sample file (by Gunnstein Lye)                #
+##################################################
+
+# Header line:
+# %Project start date%Procject description
+%25-08-2000%Evolution de QtGantt
+
+# Task lines:
+# number:type:startdate:enddate:after:during:Task description
+ 1:main:01-09-2000:01-09-2000:13-09-2000:0:0: 1. Evolution du produit
+ 2:task:01-09-2000:01-09-2000:05-09-2000:0:4: 2. Documentation et test
+ 3:task:06-09-2000:06-09-2000:13-09-2000:2:5: 3. Développement de l'editionde tache
+ 4:mile:13-09-2000:13-09-2000:          :3:0: 4. Publication des sources
+ :main:13-09-2000:25-09-2000:0:0: . Abscence
+ 5:main:25-09-2000:25-09-2000:13-10-2000:1:0: 5. Implémentation des fonctionnalitées d'exploitation
+ 6:task:25-09-2000:25-09-2000:28-09-2000:4:0: 6. Fonctionnalitées de l'imprimante.
+ 7:task:29-09-2000:29-09-2000:05-10-2000:6:0: 7. Gestion dynamiques des taches.
+ 8:task:06-10-2000:06-10-2000:10-10-2000:7:0: 8. Gestions des ressources.
+ 9:mile:13-10-2000:13-10-2000:	     :8:0:10. Deuxiemme publications
+

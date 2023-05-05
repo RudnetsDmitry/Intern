@@ -1,0 +1,45 @@
+Here are the current "issues" with this release of QtGantt.
+
+
+CRASH AND BURN
+--------------
+* If you give no project description, qtgantt crashes ;-( (may have been fixed)
+
+MISCELLANEOUS
+-------------
+* Task editor dialog doesn't update the model
+* Need a user configuration file
+* Need to be able to configure a date format (files will always be saved in
+  dd-mm-yyyy format)
+* Need the Options... dialog linking to the main menu
+* Need to merge calendar/Makefile changes with Mark Jackson's source
+* Need to patch calendar widget to understand different date formats
+* Need to make task editor pane format dates in the required date format
+* There are dependency arrow drawing bugs in GanttChart (see currentbug.gantt)
+* Load a file, hit 'New' - Gantt View doesn't clear down its List View, or
+  redisplay the GanttChart with nothing in it.
+* Restructure Gantt so I can reuse drawing code in GanttChart, better still,
+  create Milestone, Subtask and Maintask classes that take a row height and a 
+  Task, (could be composite objects in the Task object), and provide QRects 
+  of the correct dimensions.
+* Write/Find Observer/Observable mechanism
+* Add "current task pointer" to Project
+* Allow this to be updated when moving through Project tasks in QListView
+* Redraw GanttChart when scrolling out of view on QListView (GanttChart follows
+  its table)
+* When a task is updated in Task Editor, update that view's QListView.
+* Add a "start of view date" to Project (we have start of project, but not start
+  of view)
+* Save the project start of view date in the project file
+* Add horizontal/vertical scroll bar to GanttChart/Gantt
+* Make this horizontal scroll bar update the project start of view
+
+
+COSMETICS
+---------
+* In TaskEditor and GanttView, move the splitter so it's up against the
+  QListView, however wide that happens to be.
+
+* Add labels to the various fields in Task Editor
+
+* Develop a TimeStrip widget for the top of the GanttChart

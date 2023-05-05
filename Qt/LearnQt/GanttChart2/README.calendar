@@ -1,0 +1,14 @@
+Changes to calendar-0.15 for qtgantt
+------------------------------------
+
+I have modified the Makefile so that it builds the calendar library as a
+statically-linked archive.  The qtgantt Makefile will cd into this subdirectory
+first, do a make, then carry on.  I haven't modified any code for the calendar
+widget (although there are a couple of small bugs that I need to fix, e.g.
+entering a bad month causes a core dump).
+
+I'll make these changes to the calendar widget master source, so dropping in a
+new version will be easier.
+
+MJG, 16/10/00
+

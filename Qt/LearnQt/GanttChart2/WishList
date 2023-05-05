@@ -1,0 +1,42 @@
+Here is the current Wish List for QtGantt, with notes of who is doing what.
+
+* Add the vertical scroll bar (MJG)
+
+* Get printing working (MJG)
+
+* Multiple dependencies: arbitrary number of arrows between one task start/end
+and another task start/end to indicate the dependencies.
+
+* Make the table act more or less like the tables in ms excel, with editing 
+  capabilities (so you don't *have to* edit a text file)
+
+* Add right-click menu to the gantt diagram, right-click a task to edit it
+  (I think this would be easier if you make each task a QObject, since QObjects 
+   have lots of mouse routines and stuff..)
+
+* Lots of ideas from MS Project:
++ Promotion / Demotion of tasks
++ Summary tasks automatically summarize the duration and completedness of their
+  subtasks
++ Resources: each task can be assigned to zero or more resources
++ Calendar View: each resource (?) works from one calendar. There are a few
+  default calendars (working week, night shift, 24 hour), and you can define
+  your own.
++ Tasks can have durations without explicit start/end dates, if they're linked
+  to other tasks
++ Relationships between tasks (ASAP, FNEL, etc.)
++ Finish-Start / Start-Finish / Start-Start / Finish-Finish
++ The LHS of the Gantt view shows task indicators, names and durations. The
+  splitter control is used to move the Gantt chart out of the way, exposing
+  start/end date, lag, etc.
+
+Ideas from Conny Andersson:
++ Scrollbars (to be solved by QListView mode)
++ Printing (in any zoom level)
+  * The entire chart
+  * The chart shown on screen
++ Connected task-mile-task-mile-task chains. This could be useful when moving
+  the starting date for example.  If you enter working days instead of absolute
+  dates, this would solve the problem. It could be useful to have a line,
+  like the header, that tells what days are holidays and special days when no
+  work should be scheduled. 
