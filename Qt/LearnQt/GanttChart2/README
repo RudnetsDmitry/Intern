@@ -1,0 +1,151 @@
+QtGantt by Gunnstein Lye (gunnstein@netcom.no), 
+           Matt Gumbley (matt@gumbley.demon.co.uk)
+           and the gantt-devel@geekstuff.co.uk mailing list
+
+Release history
+---------------
+0.0.3 on 02/02/2000
+0.0.4 on 10/05/2000
+0.0.5 on 25/05/2000
+0.0.6 on 02/06/2000
+0.0.7 on 15/09/2000
+0.0.8 tree initialised
+
+Thanks to
+---------
+Gunnstein Lye
+Frederik Holljen
+Sigurd Egseth
+Jeff Bailey
+Newton Solutions
+Conny Andersson
+Gregg Scott
+Olivier Berrod
+Mark Jackson
+
+Project Home Page
+-----------------
+http://www.gumbley.demon.co.uk/qtgantt.html
+
+Development Mailing List
+------------------------
+Kindly provided by Newton Solutions, send mail to 'majordomo@geekstuff.co.uk',
+with 'subscribe gantt-devel' or 'subscribe gantt-devel
+your-mail@address.goes.here.com' in the body of your mail, to subscribe to the
+list. It isn't high-traffic, at the moment. The list is for development
+discussions, feature requests, release announcements, etc.
+
+License
+-------
+This software is released under the GPL General Public License,
+see COPYING for details.
+
+
+
+What is it?
+-----------
+QtGantt is a simple application that draws and prints a Gantt schematic.
+If you don't know what Gantt schematics are, you probably don't need this
+app.
+
+
+How does it work?
+-----------------
+You can give the program a *.gantt file as a command line argument, or open a
+file with the "open" option on the menu. 
+
+The scrollbar below the menu resizes the task description area (this will be
+replaced by a splitter control later). 
+
+The spinbox changes the space in pixels between each day (same as the Zoom
+In/Out functions on the menu).
+
+The "print" button (CTRL-p) opens the print dialog, which lets you print to a
+printer or to a PostScript file. You can also use the -p filename option to
+print directly to a file from the command line, but this gives you no control
+over printing options. 
+
+The "quit" button (CTRL-q) quits the program. 
+
+The schematic has solid lines for each month, and dotted ones for each
+week. The current date is shown with a solid red line. 
+
+If the display is corrupted or the input file has changed while running the
+program, press F5 to reload, or choose Refresh from the menu. (At the moment,
+you have to edit the input file in an editor such as vi, emacs, etc. then
+refresh the display. The application will become a "proper" editor as we
+progress.)
+
+If you turn on 'Week Detail', you'll see weekends shaded, today is all pink, and
+you'll see the day numbers of each Monday (if you're zoomed in enough for them
+to fit.)
+
+
+How do I write a *.gantt file?
+------------------------------
+There are a number of sample .gantt files to illustrate this.
+
+All lines starting with # are ignored by the program.
+
+Blank lines must be empty, e.g. with no spaces or tabs.
+
+Header lines (only one in each file) start with % and contains
+the project start date and the project title, divided by a %.
+
+All dates should be on the form dd-mm-yyyy.
+
+Task lines (one for each task) are on the form:
+
+number:type:startdate:expenddate:enddate:after:%completed:Task description
+
+for example, like this:
+1:main:05-01-2000:05-01-2000:27-03-2000:0:0: 1. Bananorama
+
+"number" is the task number. 
+
+"type" is the task type, choose:
+  "task" (normal task)
+  "main" (main task) or 
+  "mile" (milestone).
+
+"startdate" and "enddate" should be obvious. (If the task is a
+milestone, the enddate is not read and should be left blank.)
+
+"expenddate" is the expected end date for this task, for example, you set the
+start and expected end date at the start of the project, then advance the end
+date as tasks slip.
+
+"after" tells qtgantt that this task can not be started until the task
+whose number is described in "after" is finished, and makes it draw an
+arrow from the end of this task to the start of the current task. If
+your task does not depend on other tasks, write 0 here.
+
+The "%completed" indicates how much of the task you have completed, and is a
+percentage. The chart indicates completed percentages in a darker colour.
+
+"Task description" contains a (more or less) detailed description of
+the task.
+
+
+This sucks! I could do better with my hands tied on my back!
+------------------------------------------------------------
+Then please do! And send me the result! (Sorry about the messy code)
+Or, join our mailing list, and ask what you can do to help. Suggestions are
+always welcome, and if you're not a programmer, your input will be valuable.
+We will need people skilled in writing documentation, tutorials, and
+translations (although not until the program is "finished").
+
+
+I'd like it to do Feature X that I've seen in XYZ Planner Tool...
+-----------------------------------------------------------------
+Then please write to the list, and let's discuss the feature. I (Matt) have
+experience of only one project planning tool, "Plan", from Twiddlebit Software
+(www.twiddlebit.com), and I'd like to make QtGantt do everything that Plan does
+- your goals will probably be different. Together, we can make this into a very
+useful projetc planning tool. And what's more, it'll be Free Software.
+
+
+Happy planning....
+
+Matt Gumbley
+15/09/2000

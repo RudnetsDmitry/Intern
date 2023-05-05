@@ -1,0 +1,45 @@
+# Header line:
+# %Project start date%Project description
+%13-04-2000%QtGantt Version 1.0
+
+# Task lines:
+# number:type:startdate:enddate:after:percentdone:Task description
+ 1:main:13-04-2000:13-04-2000:20-04-2000:0:25:Learn more Qt
+ 2:main:13-04-2000:13-04-2000:15-04-2000:0:0:Bug fix 0.0.4
+ 3:task:13-04-2000:13-04-2000:15-04-2000:0:0:Get multipage printing working
+ 5:mile:10-05-2000:10-05-2000:          :2:0:Release 0.0.4
+
+100:main:15-05-2000:15-05-2000:23-05-2000:5:0:0.0.5 - Model/View/Controller
+101:task:15-05-2000:15-05-2000:17-05-2000:0:100:Separate gantt.cpp into Model/View
+102:task:23-05-2000:23-05-2000:23-05-2000:101:100:Move controller functions into main.cpp; enhance them
+103:task:23-05-2000:23-05-2000:23-05-2000:102:25:Enhance model with get/set methods
+104:task:23-05-2000:23-05-2000:23-05-2000:103:25:Enhance model loading
+111:mile:23-05-2000:23-05-2000:          :104:0:Release 0.0.5
+
+
+200:main:23-05-2000:23-05-2000:31-12-2000:0:0:0.0.6 - Better Gantt View
+201:task:23-05-2000:23-05-2000:31-12-2000:0:0:Add views menu
+202:task:23-05-2000:23-05-2000:31-12-2000:0:0:Split Gantt's draw code into table & chart
+203:task:23-05-2000:23-05-2000:31-12-2000:0:0:Foddle
+
+#108:task:23-04-2000:30-04-2000:108:0:Enhance model with 'current task'
+#109:task:23-04-2000:30-04-2000:109:0:Add current task cursor to GUI (Gantt view)
+#105:task:23-04-2000:30-04-2000:104:0:Add model saving; link to menu item
+#200:main:01-05-2000:14-05-2000:111:0:0.0.5 - Task management
+#202:task:04-05-2000:05-04-2000:201:0:Add/Insert Task
+#203:task:05-05-2000:06-04-2000:202:0:Delete Task
+#204:task:06-05-2000:07-04-2000:203:0:Move Task Up/Down
+#205:mile:14-05-2000:          :204:0:Release 0.0.4
+
+#300:main:14-05-2000:14-05-2000:0:0:0.0.6 - Prettier Gantt display
+#301:task:14-05-2000:14-05-2000:0:100:Show weekends as grey; show day no. of Mondays
+#302:task:14-05-2000:14-05-2000:0:0:Show tasks indented under mains
+#303:task:14-05-2000:14-05-2000:0:0:Allow tasks/mains to be promoted/demoted
+#304:task:14-05-2000:14-05-2000:0:100:Add percentage complete field to each task
+#305:task:14-05-2000:14-05-2000:0:50:Show percentage complete on Gantt view
+#306:mile:14-05-2000:          :305:0:Release 0.0.6
+
+#400:main:30-05-2000:30-06-2000:0:0:0.0.7 - PERT display
+
+# other tasks for later:
+# calendar view

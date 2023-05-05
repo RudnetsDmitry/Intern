@@ -1,0 +1,35 @@
+# Header line:
+# %Project start date%Project description
+%10-10-2000%Displaying Of Dependency Arrows, Part II
+
+# Task lines:
+# number:type:startdate:expenddate:enddate:after:complete:Task description
+
+ 1:task:20-10-2000:21-10-2000:21-10-2000:0:0:After Matrix Task - Task
+ 2:task:20-10-2000:21-10-2000:21-10-2000:1:0:Depends
+ 3:task:23-10-2000:24-10-2000:24-10-2000:1:0:Depends
+ 4:task:20-10-2000:21-10-2000:21-10-2000:0:0:After Matrix Task - Mile
+ 5:mile:20-10-2000:21-10-2000:21-10-2000:4:0:Depends
+ 6:mile:23-10-2000:24-10-2000:24-10-2000:4:0:Depends
+ 7:task:20-10-2000:21-10-2000:21-10-2000:0:0:After Matrix Task - Main
+ 8:main:20-10-2000:21-10-2000:21-10-2000:7:0:Depends
+ 9:main:23-10-2000:24-10-2000:24-10-2000:7:0:Depends
+10:mile:20-10-2000:21-10-2000:21-10-2000:0:0:After Matrix Mile - Task
+11:task:20-10-2000:21-10-2000:21-10-2000:10:0:Depends
+12:task:23-10-2000:24-10-2000:24-10-2000:10:0:Depends
+13:mile:20-10-2000:21-10-2000:21-10-2000:0:0:After Matrix Mile - Mile
+14:mile:20-10-2000:21-10-2000:21-10-2000:13:0:Depends
+15:mile:23-10-2000:24-10-2000:24-10-2000:13:0:Depends
+16:mile:20-10-2000:21-10-2000:21-10-2000:0:0:After Matrix Mile - Main
+17:main:20-10-2000:21-10-2000:21-10-2000:16:0:Depends
+18:main:23-10-2000:24-10-2000:24-10-2000:16:0:Depends
+19:main:20-10-2000:21-10-2000:21-10-2000:0:0:After Matrix Main - Task
+20:task:20-10-2000:21-10-2000:21-10-2000:19:0:Depends
+21:task:23-10-2000:24-10-2000:24-10-2000:19:0:Depends
+22:main:20-10-2000:21-10-2000:21-10-2000:0:0:After Matrix Main - Mile
+23:mile:20-10-2000:21-10-2000:21-10-2000:22:0:Depends
+24:mile:23-10-2000:24-10-2000:24-10-2000:22:0:Depends
+25:main:20-10-2000:21-10-2000:21-10-2000:0:0:After Matrix Main - Main
+26:main:20-10-2000:21-10-2000:21-10-2000:25:0:Depends
+27:main:23-10-2000:24-10-2000:24-10-2000:25:0:Depends
+

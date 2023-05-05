@@ -1,0 +1,91 @@
+0.0.8
+* This version of QtGantt requires Qt 2.2 - dialogs created using Qt Designer
+  will not compile using Qt 2.1
+* Slight misunderstanding on my part about the meaning of expenddate. Now fixed
+  in README. Slight redraw bug / inefficiency fixed. Expected End Date is now
+  shown in the Gantt View. 
+* Tasks are now shifted up a little in the Print Preview.
+* Tried adding a QScrollView to the Gantt View. Failed miserably when the view
+  was split with a QScroller, so ditched the QScroller, and used a QHBoxLayout.
+  Everything is relatively OK now, apart from resizing the QListView.
+* Gantt View and Task Editor now show the task ID, not the task array index.
+* Changed the GanttChart so that it's a bit more efficient - not recalculating
+  distances between dates on every line.
+* Fixed a few bugs in GanttChart's rendering, probably introduced a few more.
+* Currently working on getting dependency arrow drawing right in GanttChart. See
+  the afters*gantt files. currentbug.gantt shows what I'm working on fixing...
+* Drew the task and project information dialogs using Qt Designer (from Qt 2.2),
+  integrated these - they're available from the File menu (for the project
+  properties (name and start date), and from various menus and toolbars (for
+  different perspectives on task information).
+* Started using Mark Jackson's calendar widget, version 0.15, which may be 
+  found in its entirity in the calendar directory.
+* Added several more toolbar icons, although they don't do much. Click the
+  "link" icon to see the task information dialog.
+* Added the long-awaited Save option.
+
+0.0.7
+* Added Gunnstein's qtgantt.pro, for tmake.
+* Reorganisation of some code to fix layout problems. We now have problems with
+  QT 2.2, displaying the scroll bar and spin control. Not sure why. Could the QT
+  experts help?
+* main and mainwidget split, now ugins a QTabWidget to display the different
+  views.
+* Switched to QT 2.1 for development. I have the following packages installed on
+  my main development system (Red Hat 6.2/Intel):
+  qt-2.1.0-4.beta1
+  qt1x-1.45-3
+  qt1x-devel-1.45-3
+  qt-devel-2.1.0-4.beta1
+  I also have QT 2.2 installed (for RH6.2/intel, and Solaris), but am not 
+  currently using this due to the above layout problems.
+* Added Conny Andersson's patch which adds a new field to the input files. This
+  is for the "expended date". One would set start and end dates for the tasks,
+  and as work progresses past the end of an end date, the expended date would be
+  moved to illustrate slippage.
+* Added the conv-6-7 script to convert 0.0.6 format files to the 0.0.7 format
+  required by Conny's patch.
+* Merged Olivier Berrod's task editor
+* The "old" Gantt view is now for print preview. The new one is the
+  QListView/Splitter/GanttChart one.
+
+0.0.6
+* Made more "Office-like", by using a QMainWindow. We how have a tool bar, which
+  is rather unruly, since it won't bind to the left-hand edge of the window. We
+  also have a tab bar, allowing the view to be changed between the "old" Gantt
+  view, the "new, unfinished" Gantt View, and the "new, unfinished" Calendar 
+  View. We would also have a status bar, but I can't get that to display well
+  with the tab bar. The View menu also allows switching between the three views.
+
+0.0.5
+* Architecture has now split into Model / View / Controller paradigm:
+  + project.cpp/h and task.cpp/h holds the Model class
+  + gantt.cpp/h holds the Gantt table/Chart View class
+  + main.cpp/h is the Controller class
+* Wishlist items from MS Project
+
+0.0.4
+* Based on Gunnstein's 0.0.3.
+* Added Week Detail toggle: this enables/disables lines for each day;
+  filled-in weekends; the day-in-month number of Mondays; today is pink.
+  Some of the extra graphical frills are not yet finished; I may have broken
+  the dependency-drawing code.
+* Pixels-per-day is now defaulted to 10, and can increase to 40.
+* The 'during' field in the input file has changed to a 'completed' 
+  percentage, and tasks are shown with their completed percentage 
+  in dark blue, and their uncompleted percentage in light blue.
+* Hard-coded pixel-measurements are now made into constants (there'll be less of
+  this if/when we switch to using a layout manager)
+* Added a menu, removed the buttons from the top of the window, although the
+  pixels-per-day and task title width scrollbar remain. The task title scrollbar
+  may probably be replaced with a QSplitter.
+* The screen view now correctly shows only as much as it can hold, without
+  overlaying the next screenful of tasks on top of the first page. You can
+  resize to see more. Obviously this is sub-optimal, since you need a huge
+  monitor to see everything on huge projects! There'll eventually be a 
+  vertical scroll bar so you can scroll. Projects print perfectly.
+* Command line options introduced:
+  -p filename 
+    This option enables you to generate postscript output of a given .gantt
+    file. e.g. qtgantt myproject.gantt -p myproject.ps
+

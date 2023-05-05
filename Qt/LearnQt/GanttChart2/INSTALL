@@ -1,0 +1,48 @@
+INSTALLING QTGANTT
+
+
+The simple way
+--------------
+The "Makefile" is one i grabbed from the Qt tutorial.
+(Nr 7 to be exact.) If your system is configured like mine
+is (Standard Redhat 6.1 with Qt in /usr/local/qt) it will
+probably work. All you have to do is to type
+
+make
+
+and then install the executable "qtgantt" wherever you want.
+
+
+The not quite so simple way (but still rather simple)
+---------------------------
+If the makefile doesn't fit your system, you will have to:
+a) write a makefile yourself (the build and compile rules are
+   at the end of the supplied "Makefile") or:
+b) do it the same way I did: Grab a makefile from the Qt tutorial.
+
+How to do this:
+Copy the "Makefile" in the tutorial/t7 directory in your Qt
+directory (normally /usr/local/qt) to the directory where you
+unpacked qtgantt.
+If you don't know where Qt is installed, run:
+
+echo $QTDIR
+
+When you have copied the file, open it in your favourite text
+editor. Locate the "### Target" section (around line 100) and change
+the line
+TARGET = t7   to   TARGET = qtgantt
+
+Now run a search/replace. Replace all occurences of
+lcdrange   with   gantt
+then save and exit.
+Finally, you are ready do it the simple way: run
+
+make
+
+and then install the executable "qtgantt" wherever you want.
+
+
+
+WHY CAN'T ANYONE WRITE A SIMPLE AUTOSCAN/AUTOCONF/AUTOMAKE TUTORIAL?
+(sorry about that.. just had to let it out)
