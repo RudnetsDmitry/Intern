@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug|Win32">
-      <Configuration>Debug</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|Win32">
-      <Configuration>Release</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
@@ -25,19 +17,6 @@
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
@@ -57,15 +36,10 @@
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\..\PropertySheets\QtDebug.props" />
+    <Import Project="..\..\..\PropertySheets\Common.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -73,15 +47,6 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup />
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
-      <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-    </ClCompile>
-  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -89,21 +54,6 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-    </ClCompile>
-    <Link>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -136,8 +86,6 @@
   <ItemGroup>
     <moc Include="MainWindow.h">
       <stdafx Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</stdafx>
-      <stdafx Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</stdafx>
-      <stdafx Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</stdafx>
       <stdafx Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</stdafx>
     </moc>
   </ItemGroup>
@@ -149,8 +97,6 @@
   </ItemGroup>
   <ItemGroup>
     <moc Include="SysInfoWidget.h">
-      <stdafx Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</stdafx>
-      <stdafx Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</stdafx>
       <stdafx Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</stdafx>
       <stdafx Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</stdafx>
     </moc>
@@ -159,8 +105,6 @@
     <ClInclude Include="WindowsSysInfo.h" />
     <moc Include="TaskWidget.h">
       <stdafx Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</stdafx>
-      <stdafx Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</stdafx>
-      <stdafx Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</stdafx>
       <stdafx Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</stdafx>
     </moc>
     <ClInclude Include="SystemInfo.h" />
@@ -173,15 +117,6 @@
   <ItemGroup>
     <ProjectReference Include="..\GaleryGUI\GaleryGUI.vcxproj">
       <Project>{0950393a-5725-479c-9ae0-5725a8fa170d}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\GanttChart2\GanttChart2.vcxproj">
-      <Project>{8c89b7c4-46ae-4ea1-a9fe-fe5f1fb4e944}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\GanttChart\GanttChart.vcxproj">
-      <Project>{a882b560-43a6-442a-862d-814e4c13b9dd}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\QmlGUI\QmlGUI.vcxproj">
-      <Project>{4146f0d3-be28-4966-82da-9b1ed3c9c6f2}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
