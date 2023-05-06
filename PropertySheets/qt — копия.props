@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+ <PropertyGroup Label="UserMacros">
+	<LibsPath>D:\Develop\Libs\vcpkg\installed\x64-windows</LibsPath>
+    <QtLibsPath>$(LibsPath)\Qt6</QtLibsPath>
+  </PropertyGroup>  
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+	  <LanguageStandard>stdcpp17</LanguageStandard>
+	  <AdditionalOptions>/bigobj /utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(QtLibsPath);$(QtLibsPath)\QtWidgets;$(QtLibsPath)\QtSvg;$(QtLibsPath)\QtCore;
+	  $(QtLibsPath)\QtSql;$(QtLibsPath)\QtGui;$(QtLibsPath)\QtQuickWidgets;$(QtLibsPath)\QtQuickTest;
+	  $(QtLibsPath)\QtQuickTemplates2;$(QtLibsPath)\QtQuickShapes;$(QtLibsPath)\QtQuickParticles;
+	  $(QtLibsPath)\QtQuickControls2;$(QtLibsPath)\QtQuick;$(QtLibsPath)\QtQmlDebug;$(QtLibsPath)\QtQml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(QtLibsPath)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+</Project>

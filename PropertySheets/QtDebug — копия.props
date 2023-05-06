@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets">
+    <Import Project="qt.props" />
+  </ImportGroup>
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <Link>
+      <AdditionalDependencies>Qt6Cored.lib;Qt6Guid.lib;Qt6Widgetsd.lib;Qt6Xmld.lib;Qt6Networkd.lib;Qt6Svgd.lib;Qt6Chartsd.lib;
+	  Qt6Sqld.lib;Qt6Qmld.lib;Qt6QuickControls2.lib;Qt6Quickd.lib;Qt6QuickParticlesd.lib;Qt6QuickShapesd.lib;
+	  Qt6QuickTemplates2d.lib;Qt6QuickWidgetsd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "$(QtLibsPath)\bin\Qt6Cored.dll" "$(TargetDir)"
+				xcopy /y /d "$(QtLibsPath)\bin\Qt6Guid.dll" "$(TargetDir)"
+				xcopy /y /d "$(QtLibsPath)\bin\Qt6Widgetsd.dll" "$(TargetDir)"
+				xcopy /y /d "$(QtLibsPath)\bin\Qt6Xmld.dll" "$(TargetDir)"
+				xcopy /y /d "$(QtLibsPath)\bin\Qt6Networkd.dll" "$(TargetDir)"
+				xcopy /y /d "$(QtLibsPath)\bin\Qt6Svgd.dll" "$(TargetDir)"
+				xcopy /y /d "$(QtLibsPath)\bin\Qt6Chartsd.dll" "$(TargetDir)"
+				xcopy /y /d "$(QtLibsPath)\bin\Qt6Sqld.dll" "$(TargetDir)"
+				
+				xcopy /y /d "$(QtLibsPath)\bin\Qt6Qmld.dll" "$(TargetDir)"
+				xcopy /y /d "$(QtLibsPath)\bin\Qt6QuickControls2.dll" "$(TargetDir)"
+				xcopy /y /d "$(QtLibsPath)\bin\Qt6Quickd.dll" "$(TargetDir)"
+				xcopy /y /d "$(QtLibsPath)\bin\Qt6QuickParticlesd.dll" "$(TargetDir)"
+				xcopy /y /d "$(QtLibsPath)\bin\Qt6QuickShapesd.dll" "$(TargetDir)"
+				xcopy /y /d "$(QtLibsPath)\bin\Qt6QuickTemplates2d.dll" "$(TargetDir)"
+				xcopy /y /d "$(QtLibsPath)\bin\Qt6QuickWidgetsd.dll" "$(TargetDir)"
+				</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+</Project>
