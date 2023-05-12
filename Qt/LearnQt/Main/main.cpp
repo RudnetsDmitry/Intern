@@ -9,22 +9,11 @@
 //#include <winnt.h>
 //#include <winnls.h>
 
-namespace
-{
-	class TestOperation
-	{
-		int value;
-	public:
-	};
-}
 
 int main(int argc, char * argv[])
 {
 	//::SetThreadLocale(MAKESORTLCID(MAKELANGID(LANG_RUSSIAN, SUBLANG_DEFAULT), SORT_DEFAULT));
 	QApplication app(argc, argv);
-
-	int ii = sizeof(std::wstring);
-	int ii1 = sizeof(QString);
 	
 	QMainWindow* mainWnd = nullptr;// gantt_chart2::MakeChart();
 	/*if (!mainWnd)

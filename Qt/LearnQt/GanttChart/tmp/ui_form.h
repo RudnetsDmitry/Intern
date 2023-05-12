@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'form.ui'
 **
-** Created by: Qt User Interface Compiler version 6.2.2
+** Created by: Qt User Interface Compiler version 6.5.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -38,44 +38,44 @@ public:
     void setupUi(QWidget *Form)
     {
         if (Form->objectName().isEmpty())
-            Form->setObjectName(QString::fromUtf8("Form"));
+            Form->setObjectName("Form");
         Form->resize(1680, 768);
         customPlot = new QCustomPlot(Form);
-        customPlot->setObjectName(QString::fromUtf8("customPlot"));
+        customPlot->setObjectName("customPlot");
         customPlot->setGeometry(QRect(0, 0, 851, 790));
         tableWidget = new QTableWidget(Form);
-        tableWidget->setObjectName(QString::fromUtf8("tableWidget"));
+        tableWidget->setObjectName("tableWidget");
         tableWidget->setGeometry(QRect(860, 10, 815, 621));
         label = new QLabel(Form);
-        label->setObjectName(QString::fromUtf8("label"));
+        label->setObjectName("label");
         label->setGeometry(QRect(1180, 20, 241, 16));
         QFont font;
         font.setPointSize(9);
         label->setFont(font);
         label_2 = new QLabel(Form);
-        label_2->setObjectName(QString::fromUtf8("label_2"));
+        label_2->setObjectName("label_2");
         label_2->setGeometry(QRect(1480, 20, 171, 16));
         label_2->setFont(font);
         makeGraph = new QPushButton(Form);
-        makeGraph->setObjectName(QString::fromUtf8("makeGraph"));
+        makeGraph->setObjectName("makeGraph");
         makeGraph->setGeometry(QRect(860, 650, 131, 23));
         label_3 = new QLabel(Form);
-        label_3->setObjectName(QString::fromUtf8("label_3"));
+        label_3->setObjectName("label_3");
         label_3->setGeometry(QRect(1020, 650, 47, 13));
         label_4 = new QLabel(Form);
-        label_4->setObjectName(QString::fromUtf8("label_4"));
+        label_4->setObjectName("label_4");
         label_4->setGeometry(QRect(1020, 730, 47, 13));
         label_5 = new QLabel(Form);
-        label_5->setObjectName(QString::fromUtf8("label_5"));
+        label_5->setObjectName("label_5");
         label_5->setGeometry(QRect(1020, 690, 47, 13));
         label_6 = new QLabel(Form);
-        label_6->setObjectName(QString::fromUtf8("label_6"));
+        label_6->setObjectName("label_6");
         label_6->setGeometry(QRect(1310, 650, 47, 13));
         insertRow = new QPushButton(Form);
-        insertRow->setObjectName(QString::fromUtf8("insertRow"));
+        insertRow->setObjectName("insertRow");
         insertRow->setGeometry(QRect(860, 690, 131, 21));
         removeRow = new QPushButton(Form);
-        removeRow->setObjectName(QString::fromUtf8("removeRow"));
+        removeRow->setObjectName("removeRow");
         removeRow->setGeometry(QRect(860, 730, 131, 21));
 
         retranslateUi(Form);

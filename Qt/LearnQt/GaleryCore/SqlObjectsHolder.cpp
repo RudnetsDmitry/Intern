@@ -202,7 +202,7 @@ namespace gallery
 
 	IGalleryManager & GetSqlGaleryManager()
 	{
-		static SqlGalleryManager galleryManager("c:/Projects/ProjectsData/test.db");
+		static SqlGalleryManager galleryManager("D:/Develop/Projects/ProjectsData/test.db");
 		return galleryManager;
 	}
 }
