@@ -7,3 +7,5 @@ tmp
 x64
 /Libs/vcpkg
 Qt
+/Qt/LearnQt/GanttChart/tmp
+/Qt/LearnQt/OpenGL_example/tmp

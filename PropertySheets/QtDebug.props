@@ -11,37 +11,5 @@
       <AdditionalDependencies>Qt6Cored.lib;Qt6Guid.lib;Qt6Widgetsd.lib;Qt6Xmld.lib;Qt6Networkd.lib;Qt6Svgd.lib;Qt6Chartsd.lib;
 	  Qt6Sqld.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>xcopy /y /d "$(LibsDebugPath)\bin\Qt6Cored.dll" "$(TargetDir)"
-				xcopy /y /d "$(LibsDebugPath)\bin\Qt6Guid.dll" "$(TargetDir)"
-				xcopy /y /d "$(LibsDebugPath)\bin\Qt6Widgetsd.dll" "$(TargetDir)"
-				xcopy /y /d "$(LibsDebugPath)\bin\Qt6Xmld.dll" "$(TargetDir)"
-				xcopy /y /d "$(LibsDebugPath)\bin\Qt6Networkd.dll" "$(TargetDir)"
-				xcopy /y /d "$(LibsDebugPath)\bin\Qt6Svgd.dll" "$(TargetDir)"
-				xcopy /y /d "$(LibsDebugPath)\bin\Qt6Chartsd.dll" "$(TargetDir)"
-				xcopy /y /d "$(LibsDebugPath)\bin\Qt6Sqld.dll" "$(TargetDir)"
-				xcopy /y /d "$(LibsDebugPath)\bin\Qt6OpenGLd.dll" "$(TargetDir)"
-				xcopy /y /d "$(LibsDebugPath)\bin\Qt6OpenGLWidgetsd.dll" "$(TargetDir)"
-
-				xcopy /y /d "$(LibsDebugPath)\bin\libpng16d.dll" "$(TargetDir)"
-				xcopy /y /d "$(LibsDebugPath)\bin\harfbuzz.dll" "$(TargetDir)"
-				xcopy /y /d "$(LibsDebugPath)\bin\freetyped.dll" "$(TargetDir)"
-				xcopy /y /d "$(LibsDebugPath)\bin\zlibd1.dll" "$(TargetDir)"
-				
-				xcopy /y /d "$(LibsDebugPath)\bin\icuind72.dll" "$(TargetDir)"
-				xcopy /y /d "$(LibsDebugPath)\bin\icuucd72.dll" "$(TargetDir)"
-				xcopy /y /d "$(LibsDebugPath)\bin\double-conversion.dll" "$(TargetDir)"
-				xcopy /y /d "$(LibsDebugPath)\bin\pcre2-16d.dll" "$(TargetDir)"
-				
-				xcopy /y /d "$(LibsDebugPath)\bin\libcrypto-3-x64.dll" "$(TargetDir)"
-				xcopy /y /d "$(LibsDebugPath)\bin\zstd.dll" "$(TargetDir)"
-				xcopy /y /d "$(LibsDebugPath)\bin\icudtd72.dll" "$(TargetDir)"
-				xcopy /y /d "$(LibsDebugPath)\bin\brotlidec.dll" "$(TargetDir)"
-				xcopy /y /d "$(LibsDebugPath)\bin\bz2d.dll" "$(TargetDir)"
-				xcopy /y /d "$(LibsDebugPath)\bin\brotlicommon.dll" "$(TargetDir)"
-				
-				
-				</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
 </Project>
