@@ -7,11 +7,14 @@
 /// @date   21.02.2019   16:43
 ///
 
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "GaleryCoreDecl.h"
 #include "Picture.h"
 
+#include <QPIxmap>
 #include <QUrl>
+
+#include "ExifImageHeader.h"
 
 namespace gallery
 {
@@ -55,5 +58,10 @@ namespace gallery
 	void Picture::SetFileUrl(const QUrl& fileUrl)
 	{
 		m_fileUrl = fileUrl;
+	}
+
+	QPixmap LoadPicture(QString const& filePath)
+	{
+		return QExifImageHeader(filePath).thumbnailPixmap(filePath);
 	}
 }

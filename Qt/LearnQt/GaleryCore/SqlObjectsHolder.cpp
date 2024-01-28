@@ -7,7 +7,7 @@
 /// @date   22.03.2019   13:09
 ///
 
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "SqlObjectsHolder.h"
 #include "Album.h"
 #include "Picture.h"
@@ -141,7 +141,8 @@ namespace gallery
 		{
 			std::vector<std::unique_ptr<item_t>> items;
 
-			QSqlQuery query("SELECT * FROM pictures  WHERE album_id=(:album_id)", m_db);
+			QSqlQuery query(m_db);
+			query.prepare("SELECT * FROM pictures WHERE album_id = :album_id");
 			query.bindValue(":album_id", key);
 			query.exec();
 

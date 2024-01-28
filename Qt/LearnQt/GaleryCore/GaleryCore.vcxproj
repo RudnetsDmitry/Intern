@@ -88,6 +88,7 @@
   <ItemGroup>
     <ClInclude Include="Album.h" />
     <ClInclude Include="AlbumModel.h" />
+    <ClInclude Include="ExifImageHeader.h" />
     <ClInclude Include="GaleryCoreDecl.h" />
     <ClInclude Include="GaleryCoreExp.h" />
     <ClInclude Include="ObjectsHolderDecl.h" />
@@ -101,6 +102,7 @@
     <ClCompile Include="Album.cpp" />
     <ClCompile Include="AlbumModel.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="ExifImageHeader.cpp" />
     <ClCompile Include="Picture.cpp" />
     <ClCompile Include="PictureModel.cpp" />
     <ClCompile Include="SqlObjectsHolder.cpp" />

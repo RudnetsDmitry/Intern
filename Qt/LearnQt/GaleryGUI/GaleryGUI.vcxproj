@@ -118,6 +118,10 @@
     <ClCompile Include="tmp\moc_AlbumWidget.cpp" />
     <ClCompile Include="tmp\moc_GalleryWidget.cpp" />
     <ClCompile Include="tmp\moc_PictureWidget.cpp" />
+    <ClCompile Include="tmp\resource.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GaleryCore\GaleryCore.vcxproj">
@@ -132,6 +136,9 @@
     <ui Include="UI\GalleryWidget.ui" />
     <ui Include="UI\MainWindow.ui" />
     <ui Include="UI\PictureWidget.ui" />
+  </ItemGroup>
+  <ItemGroup>
+    <res Include="res\resource.qrc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

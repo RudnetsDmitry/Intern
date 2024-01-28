@@ -8,7 +8,7 @@
 ///
 
 
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "AlbumModel.h"
 #include "SqlObjectsHolder.h"
 #include "Album.h"
@@ -20,12 +20,14 @@ namespace gallery
 		using albums_t = std::vector<std::unique_ptr<Album>>;
 
 		IAlbumManager & m_albumManager;
+		IPictureManager & m_pictureManager;
 		albums_t m_items;
 
 	public:
 
 		Impl(IGalleryManager & galleryMan)
 			: m_albumManager(galleryMan.GetAlbumManager())
+			, m_pictureManager(galleryMan.GetPictureManager())
 		{
 		}
 
@@ -46,10 +48,13 @@ namespace gallery
 		void RemoveAlbums(int fromPos, int count)
 		{
 			auto begIt = m_items.begin() + fromPos;
-			auto endIt = m_items.begin() + fromPos + count;
+			auto endIt = begIt + count;
 
 			for (auto it = begIt; it != endIt; ++it)
+			{
+				m_pictureManager.RemoveAll((*it)->GetId());
 				m_albumManager.RemoveItem((*it)->GetId());
+			}
 
 			m_items.erase(begIt, endIt);
 		}

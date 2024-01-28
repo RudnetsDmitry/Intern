@@ -8,7 +8,7 @@
 ///
 
 
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "GalleryWidget.h"
 
 #include "./tmp/ui_GalleryWidget.h"

@@ -8,7 +8,7 @@
 ///
 
 
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "AlbumListWidget.h"
 
 #include ".\tmp\ui_AlbumListWidget.h"

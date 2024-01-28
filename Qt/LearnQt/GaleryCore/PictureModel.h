@@ -34,6 +34,7 @@ namespace gallery
 		~PictureModel();
 
 		QModelIndex addPicture(const Picture& album);
+		QModelIndex addPictures(QStringList const& fileNames);
 		int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 		QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const
 			override;

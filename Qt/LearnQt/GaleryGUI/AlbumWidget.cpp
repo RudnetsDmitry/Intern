@@ -7,7 +7,7 @@
 /// @date   31.05.2019   13:54
 ///
 
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "AlbumWidget.h"
 #include "ThumbnailProxyModel.h"
 
@@ -149,14 +149,7 @@ namespace gallery
 		if (filenames.isEmpty())
 			return;
 
-		QModelIndex lastModelIndex;
-
-		for (auto const & filename : filenames)
-		{
-			Picture picture(filename);
-			lastModelIndex = m_pictureModel->pictureModel()->addPicture(picture);
-		}
-
+		QModelIndex lastModelIndex = m_pictureModel->pictureModel()->addPictures(filenames);
 		m_ui->thumbnailListView->setCurrentIndex(m_pictureModel->mapFromSource(lastModelIndex));
 	}
 

@@ -68,9 +68,6 @@
     <ClCompile Include="dllmain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="tmp\resource.cpp">
-      <Filter>Generated</Filter>
-    </ClCompile>
     <ClCompile Include="AlbumListWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -101,11 +98,9 @@
     <ClCompile Include="PictureDelegate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <res Include="res\resource.qrc">
-      <Filter>Resource Files</Filter>
-    </res>
+    <ClCompile Include="tmp\resource.cpp">
+      <Filter>Generated</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ui Include="UI\AlbumListWidget.ui">
@@ -134,5 +129,10 @@
     <moc Include="GalleryWidget.h">
       <Filter>Header Files</Filter>
     </moc>
+  </ItemGroup>
+  <ItemGroup>
+    <res Include="res\resource.qrc">
+      <Filter>Resource Files</Filter>
+    </res>
   </ItemGroup>
 </Project>

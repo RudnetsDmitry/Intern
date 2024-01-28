@@ -8,11 +8,13 @@
 ///
 
 
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "ThumbnailProxyModel.h"
 #include "../GaleryCore/PictureModel.h"
+#include "../GaleryCore/Picture.h"
 
 #include <QPixmap>
+#include <execution>
 
 namespace gallery
 {
@@ -57,20 +59,29 @@ namespace gallery
 		if (!startIndex.isValid())
 			return;
 
-		auto const * model = startIndex.model();
+		std::vector<QString> filePathes;
+		filePathes.reserve(count);
+
+		auto const* model = startIndex.model();
 		for (int i = startIndex.row(), end = i + count; i < end; ++i)
 		{
 			QString filePath = model->data(model->index(i, 0), PictureModel::Roles::FilePathRole)
 				.toString();
-			if (filePath.isEmpty())
-				continue;
-			QPixmap pixmap(filePath);
-			if (pixmap.isNull())
-				continue;
-			auto scaledPixmap = new QPixmap(pixmap.scaled(THUMBNAIL_SIZE, THUMBNAIL_SIZE,
-				Qt::KeepAspectRatio, Qt::SmoothTransformation));
-			m_thumbnails.insert(filePath, scaledPixmap);
+			if (!filePath.isEmpty())
+				filePathes.emplace_back(filePath);
 		}
+
+		std::mutex mtx;
+		std::for_each(std::execution::par, filePathes.begin(), filePathes.end(), [&](auto const& path)
+			{
+				QPixmap pixmap = ::gallery::LoadPicture(path);
+				if (pixmap.isNull())
+					return;
+				auto scaledPixmap = new QPixmap(pixmap.scaled(THUMBNAIL_SIZE, THUMBNAIL_SIZE,
+					Qt::KeepAspectRatio, Qt::SmoothTransformation));
+				std::lock_guard<std::mutex> lock(mtx);
+				m_thumbnails.insert(path, scaledPixmap);
+			});
 	}
 
 	void ThumbnailProxyModel::reloadThumbnails()

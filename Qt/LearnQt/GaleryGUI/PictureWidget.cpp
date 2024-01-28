@@ -8,15 +8,15 @@
 ///
 
 
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "PictureWidget.h"
 #include "ThumbnailProxyModel.h"
 
 #include "..\GaleryCore\PictureModel.h"
+#include "..\GaleryCore\Picture.h"
 
 #include ".\tmp\ui_PictureWidget.h"
 
-#include <QItemSelection>
 #include <QItemSelectionModel>
 
 namespace gallery
@@ -110,7 +110,7 @@ namespace gallery
 		}
 
 		QModelIndex current = selected.indexes().at(0);
-		m_pixmap = QPixmap(m_model->data(current, PictureModel::Roles::FilePathRole).toString());
+		m_pixmap = ::gallery::LoadPicture(m_model->data(current, PictureModel::Roles::FilePathRole).toString());
 
 		m_ui->nameLabel->setText(m_model->data(current, Qt::DisplayRole).toString());
 		updatePicturePixmap();

@@ -8,7 +8,7 @@
 ///
 
 
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "PictureModel.h"
 
 #include "SqlObjectsHolder.h"
@@ -60,6 +60,12 @@ namespace gallery
 			m_items.emplace_back(std::move(newPicture));
 		}
 
+		void AddPictures(QStringList const& fileNames)
+		{
+			for (auto const& name : fileNames)
+				AddPicture(Picture(name));
+		}
+
 		void RemovePictures(int fromPos, int count)
 		{
 			auto begIt = m_items.begin() + fromPos;
@@ -94,6 +100,17 @@ namespace gallery
 		endInsertRows();
 
 		return index(rowIndex, 0);
+	}
+
+	QModelIndex PictureModel::addPictures(QStringList const& fileNames)
+	{
+		int rowIndex = rowCount();
+		auto lastIndex = rowIndex + fileNames.size() - 1;
+		beginInsertRows(QModelIndex(), rowIndex, lastIndex);
+		m_impl->AddPictures(fileNames);
+		endInsertRows();
+
+		return index(lastIndex, 0);
 	}
 
 	int PictureModel::rowCount(const QModelIndex& parent /*= QModelIndex()*/) const

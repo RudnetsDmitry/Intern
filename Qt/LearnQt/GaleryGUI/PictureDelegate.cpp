@@ -7,7 +7,7 @@
 /// @date   29.10.2019   15:37
 ///
 
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "PictureDelegate.h"
 
 #include <QPainter>

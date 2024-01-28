@@ -7,7 +7,7 @@
 /// @date   03.02.2019   15:44
 ///
 
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "GaleryCoreDecl.h"
 
 #include "Album.h"

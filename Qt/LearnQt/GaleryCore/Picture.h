@@ -1,4 +1,4 @@
-/// @file	Picture.h
+﻿/// @file	Picture.h
 ///
 /// @brief
 ///
@@ -12,6 +12,8 @@
 #include "GaleryCoreExp.h"
 #include <QString>
 #include <QUrl>
+
+class QPixmap;
 
 namespace gallery
 {
@@ -35,4 +37,7 @@ namespace gallery
 		int m_albumId;
 		QUrl m_fileUrl;
 	};
+
+	GALERYCORE_EXT_CLASS QPixmap LoadPicture(QString const & filePath);
+
 }
