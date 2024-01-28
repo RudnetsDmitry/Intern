@@ -15,14 +15,16 @@
 				xcopy /y /d "$(LibsDebugPath)\bin\Qt6Sqld.dll" "$(TargetDir)"
 				xcopy /y /d "$(LibsDebugPath)\bin\Qt6OpenGLd.dll" "$(TargetDir)"
 				xcopy /y /d "$(LibsDebugPath)\bin\Qt6OpenGLWidgetsd.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsDebugPath)\bin\Qt6Core5Compatd.dll" "$(TargetDir)"
 
 				xcopy /y /d "$(LibsDebugPath)\bin\libpng16d.dll" "$(TargetDir)"
 				xcopy /y /d "$(LibsDebugPath)\bin\harfbuzz.dll" "$(TargetDir)"
 				xcopy /y /d "$(LibsDebugPath)\bin\freetyped.dll" "$(TargetDir)"
 				xcopy /y /d "$(LibsDebugPath)\bin\zlibd1.dll" "$(TargetDir)"
 				
-				xcopy /y /d "$(LibsDebugPath)\bin\icuind72.dll" "$(TargetDir)"
-				xcopy /y /d "$(LibsDebugPath)\bin\icuucd72.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsDebugPath)\bin\icuind74.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsDebugPath)\bin\icuucd74.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsDebugPath)\bin\icudtd74.dll" "$(TargetDir)"
 				xcopy /y /d "$(LibsDebugPath)\bin\double-conversion.dll" "$(TargetDir)"
 				xcopy /y /d "$(LibsDebugPath)\bin\pcre2-16d.dll" "$(TargetDir)"
 				

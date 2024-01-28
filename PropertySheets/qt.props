@@ -13,7 +13,8 @@
 	  <LanguageStandard>stdcpp17</LanguageStandard>
 	  <AdditionalOptions>/Zc:__cplusplus /bigobj /utf-8 %(AdditionalOptions)</AdditionalOptions>
       <AdditionalIncludeDirectories>$(QtIncludePath);$(QtIncludePath)\QtWidgets;$(QtIncludePath)\QtSvg;$(QtIncludePath)\QtCore;
-	  $(QtIncludePath)\QtSql;$(QtIncludePath)\QtGui;$(QtIncludePath)\QtCharts;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+	  $(QtIncludePath)\QtSql;$(QtIncludePath)\QtGui;$(QtIncludePath)\QtOpenGL;$(QtIncludePath)\QtOpenGLWidgets;
+	  $(QtIncludePath)\QtCore5Compat;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(LibsPath)\lib;$(LibsPath)\debug\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>

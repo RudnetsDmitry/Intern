@@ -8,8 +8,8 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <Link>
-      <AdditionalDependencies>Qt6Cored.lib;Qt6Guid.lib;Qt6Widgetsd.lib;Qt6Xmld.lib;Qt6Networkd.lib;Qt6Svgd.lib;Qt6Chartsd.lib;
-	  Qt6Sqld.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Qt6Cored.lib;Qt6Guid.lib;Qt6Widgetsd.lib;Qt6Xmld.lib;Qt6Networkd.lib;Qt6Chartsd.lib;
+	  Qt6Sqld.lib;Qt6Core5Compatd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
 </Project>
