@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{c118fe93-c8ca-4945-8252-ace15ffdf96e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated">
+      <UniqueIdentifier>{d481f35e-ba52-4e83-947d-c3e41742ca84}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -21,34 +27,19 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GaleryCoreExp.h">
+    <ClInclude Include="ImageProcessExp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Album.h">
+    <ClInclude Include="ImageFilters.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Picture.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="tmp\ui_FilterWidget.h">
+      <Filter>UI</Filter>
     </ClInclude>
-    <ClInclude Include="GaleryCoreDecl.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="tmp\ui_MainWindow.h">
+      <Filter>UI</Filter>
     </ClInclude>
-    <ClInclude Include="ObjectsHolderDecl.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SqlObjectsHolder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AlbumModel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PictureModel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ExifImageHeader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Filter.h">
+    <ClInclude Include="ExportFunctions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -59,23 +50,47 @@
     <ClCompile Include="dllmain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Album.cpp">
+    <ClCompile Include="ImageFilters.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Picture.cpp">
+    <ClCompile Include="FilterWidget.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SqlObjectsHolder.cpp">
+    <ClCompile Include="tmp\filter.cpp">
+      <Filter>Generated</Filter>
+    </ClCompile>
+    <ClCompile Include="tmp\moc_FilterWidget.cpp">
+      <Filter>Generated</Filter>
+    </ClCompile>
+    <ClCompile Include="MainWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AlbumModel.cpp">
+    <ClCompile Include="tmp\moc_MainWindow.cpp">
+      <Filter>Generated</Filter>
+    </ClCompile>
+    <ClCompile Include="ExportFunctions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PictureModel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ExifImageHeader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ui Include="FilterWidget.ui">
+      <Filter>UI</Filter>
+    </ui>
+    <ui Include="MainWindow.ui">
+      <Filter>UI</Filter>
+    </ui>
+  </ItemGroup>
+  <ItemGroup>
+    <res Include="filter.qrc">
+      <Filter>Resource Files</Filter>
+    </res>
+  </ItemGroup>
+  <ItemGroup>
+    <moc Include="FilterWidget.h">
+      <Filter>Header Files</Filter>
+    </moc>
+    <moc Include="MainWindow.h">
+      <Filter>Header Files</Filter>
+    </moc>
   </ItemGroup>
 </Project>

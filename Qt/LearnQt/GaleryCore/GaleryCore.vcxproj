@@ -89,6 +89,7 @@
     <ClInclude Include="Album.h" />
     <ClInclude Include="AlbumModel.h" />
     <ClInclude Include="ExifImageHeader.h" />
+    <ClInclude Include="Filter.h" />
     <ClInclude Include="GaleryCoreDecl.h" />
     <ClInclude Include="GaleryCoreExp.h" />
     <ClInclude Include="ObjectsHolderDecl.h" />

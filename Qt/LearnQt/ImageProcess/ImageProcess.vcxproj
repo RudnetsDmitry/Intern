@@ -12,23 +12,24 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{CCFFC416-75FA-49D4-8A96-657A8222A061}</ProjectGuid>
-    <RootNamespace>Main</RootNamespace>
+    <ProjectGuid>{8753C61F-8631-4C7D-A014-6C52D657E04B}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>ImageProcess</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -38,90 +39,88 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\..\PropertySheets\QtDebug.props" />
     <Import Project="..\..\..\PropertySheets\Common.props" />
-    <Import Project="..\..\..\PropertySheets\Copy2BinD.props" />
+    <Import Project="..\..\..\PropertySheets\QtDebug.props" />
+    <Import Project="..\..\..\PropertySheets\OpenCV2Debug.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\..\PropertySheets\QtRelease.props" />
+    <Import Project="..\..\..\PropertySheets\Common.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;IMAGEPROCESS_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;IMAGEPROCESS_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CpuWidget.cpp" />
-    <ClCompile Include="main.cpp" />
+    <moc Include="MainWindow.h" />
+    <ClInclude Include="ExportFunctions.h" />
+    <ClInclude Include="tmp\ui_MainWindow.h" />
+    <moc Include="FilterWidget.h" />
+    <ClInclude Include="ImageFilters.h" />
+    <ClInclude Include="ImageProcessExp.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="tmp\ui_FilterWidget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="ExportFunctions.cpp" />
+    <ClCompile Include="FilterWidget.cpp" />
+    <ClCompile Include="ImageFilters.cpp" />
     <ClCompile Include="MainWindow.cpp" />
-    <ClCompile Include="MemWidget.cpp" />
-    <ClCompile Include="SysInfoWidget.cpp" />
-    <ClCompile Include="SystemInfo.cpp" />
-    <ClCompile Include="TaskWidget.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="tmp\filter.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="tmp\moc_FilterWidget.cpp" />
     <ClCompile Include="tmp\moc_MainWindow.cpp" />
-    <ClCompile Include="tmp\moc_SysInfoWidget.cpp" />
-    <ClCompile Include="tmp\moc_TaskWidget.cpp" />
-    <ClCompile Include="tmp\Resources.cpp" />
-    <ClCompile Include="WindowsSysInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <moc Include="MainWindow.h">
-      <stdafx Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</stdafx>
-      <stdafx Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</stdafx>
-    </moc>
-  </ItemGroup>
-  <ItemGroup>
-    <ui Include="MainWindow.ui">
+    <ui Include="FilterWidget.ui">
       <FileType>Document</FileType>
     </ui>
-    <ui Include="TaskWidget.ui" />
+    <ui Include="MainWindow.ui" />
   </ItemGroup>
   <ItemGroup>
-    <moc Include="SysInfoWidget.h">
-      <stdafx Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</stdafx>
-      <stdafx Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</stdafx>
-    </moc>
-    <ClInclude Include="CpuWidget.h" />
-    <ClInclude Include="MemWidget.h" />
-    <ClInclude Include="WindowsSysInfo.h" />
-    <moc Include="TaskWidget.h">
-      <stdafx Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</stdafx>
-      <stdafx Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</stdafx>
-    </moc>
-    <ClInclude Include="SystemInfo.h" />
-    <ClInclude Include="tmp\ui_MainWindow.h" />
-    <ClInclude Include="tmp\ui_TaskWidget.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <res Include="Resourses\Resources.qrc" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\GaleryGUI\GaleryGUI.vcxproj">
-      <Project>{0950393a-5725-479c-9ae0-5725a8fa170d}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\ImageProcess\ImageProcess.vcxproj">
-      <Project>{8753c61f-8631-4c7d-a014-6c52d657e04b}</Project>
-    </ProjectReference>
+    <res Include="filter.qrc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
