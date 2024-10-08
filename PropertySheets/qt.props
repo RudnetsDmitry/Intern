@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
- <PropertyGroup Label="UserMacros">
-	<LibsPath>D:\Develop\Libs\vcpkg\installed\x64-windows</LibsPath>
-	<LibsDebugPath>$(LibsPath)\debug</LibsDebugPath>
-    <QtIncludePath>$(LibsPath)\include\Qt6</QtIncludePath>
+ <ImportGroup Label="PropertySheets">
+    <Import Project="base.props" />
+  </ImportGroup>
+ <PropertyGroup Label="UserMacros">	
+    <QtIncludePath>$(IncludePath)\Qt6</QtIncludePath>
   </PropertyGroup>  
   <PropertyGroup>
     <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
   </PropertyGroup>
   <ItemDefinitionGroup>
-    <ClCompile>
-	  <LanguageStandard>stdcpp17</LanguageStandard>
-	  <AdditionalOptions>/Zc:__cplusplus /bigobj /utf-8 %(AdditionalOptions)</AdditionalOptions>
+    <ClCompile>	  
       <AdditionalIncludeDirectories>$(QtIncludePath);$(QtIncludePath)\QtWidgets;$(QtIncludePath)\QtSvg;$(QtIncludePath)\QtCore;
 	  $(QtIncludePath)\QtSql;$(QtIncludePath)\QtGui;$(QtIncludePath)\QtOpenGL;$(QtIncludePath)\QtOpenGLWidgets;
 	  $(QtIncludePath)\QtCore5Compat;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ClCompile>
-    <Link>
-      <AdditionalLibraryDirectories>$(LibsPath)\lib;$(LibsPath)\debug\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Link>
+    </ClCompile>   
   </ItemDefinitionGroup>
 </Project>
