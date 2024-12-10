@@ -24,6 +24,7 @@ class MandelbrotWidget : public QWidget
 {
     Q_OBJECT
 
+	using calculator_t = MandelbrotCalculator;
 public:
     explicit MandelbrotWidget(QWidget *parent = 0);
     ~MandelbrotWidget() override;
@@ -45,7 +46,7 @@ private:
     QRgb generateColorFromIteration(int iteration);
 
 private:
-    MandelbrotCalculator m_mandelbrotCalculator;
+    calculator_t m_mandelbrotCalculator;
     QThread m_threadCalculator;
     double m_scaleFactor;
     QPoint m_lastMouseMovePosition;

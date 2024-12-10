@@ -8,17 +8,8 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <Link>
-      <AdditionalDependencies>Qt6Core.lib;Qt6Gui.lib;Qt6Widgets.lib;Qt6Xml.lib;Qt6Network.lib;Qt6Svg.lib;Qt6Charts.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Qt6Core.lib;Qt6Gui.lib;Qt6Widgets.lib;Qt6Xml.lib;Qt6Network.lib;Qt6Charts.lib;
+	  Qt6Sql.lib;Qt6Core5Compat.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>xcopy /y /d "$(LibsPath)\bin\Qt6Core.dll" "$(TargetDir)"
-				xcopy /y /d "$(LibsPath)\bin\Qt6Gui.dll" "$(TargetDir)"
-				xcopy /y /d "$(LibsPath)\bin\Qt6Widgets.dll" "$(TargetDir)"
-				xcopy /y /d "$(LibsPath)\bin\Qt6Xml.dll" "$(TargetDir)"
-				xcopy /y /d "$(LibsPath)\bin\Qt6Network.dll" "$(TargetDir)"
-				xcopy /y /d "$(LibsPath)\bin\Qt6Svg.dll" "$(TargetDir)"
-				xcopy /y /d "$(LibsPath)\bin\Qt6Charts.dll" "$(TargetDir)"
-				</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
 </Project>

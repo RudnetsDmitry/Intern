@@ -30,9 +30,9 @@ MandelbrotWidget::MandelbrotWidget(QWidget *parent) :
     m_mandelbrotCalculator.moveToThread(&m_threadCalculator);
 
     connect(this, &MandelbrotWidget::requestPicture,
-            &m_mandelbrotCalculator, &MandelbrotCalculator::generatePicture);
+            &m_mandelbrotCalculator, &calculator_t::generatePicture);
 
-    connect(&m_mandelbrotCalculator, &MandelbrotCalculator::pictureLinesGenerated,
+    connect(&m_mandelbrotCalculator, &calculator_t::pictureLinesGenerated,
             this, &MandelbrotWidget::processJobResults);
 
     m_threadCalculator.start();

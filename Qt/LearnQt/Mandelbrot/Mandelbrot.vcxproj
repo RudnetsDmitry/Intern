@@ -46,6 +46,7 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\..\PropertySheets\Common.props" />
+    <Import Project="..\..\..\PropertySheets\QtRelease.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -88,8 +89,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ExportFunctions.h" />
-    <moc Include="Job.h" />
+    <ClInclude Include="Job.h" />
     <ClInclude Include="JobResult.h" />
+    <ClInclude Include="ThreadPool.h" />
     <moc Include="MandelbrotCalculator.h" />
     <ClInclude Include="MainWindow.h" />
     <ClInclude Include="MandelbrotExp.h" />
@@ -107,7 +109,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="tmp\moc_Job.cpp" />
+    <ClCompile Include="ThreadPool.cpp" />
     <ClCompile Include="tmp\moc_MandelbrotCalculator.cpp" />
     <ClCompile Include="tmp\moc_MandelbrotWidget.cpp" />
   </ItemGroup>
