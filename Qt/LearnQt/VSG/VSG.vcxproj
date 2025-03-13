@@ -12,17 +12,17 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{BB810724-9541-4C86-9D1C-E3142554E75F}</ProjectGuid>
+    <ProjectGuid>{35ADF405-ACF4-42EA-BF50-B79BA01216B4}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>Mandelbrot</ProjectName>
+    <ProjectName>VSG</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -40,12 +40,13 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\..\PropertySheets\QtDebug.props" />
-    <Import Project="..\..\..\PropertySheets\OpenCV2Debug.props" />
+    <Import Project="..\..\..\PropertySheets\VSGDebug.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\..\..\PropertySheets\Common.props" />
     <Import Project="..\..\..\PropertySheets\QtRelease.props" />
+    <Import Project="..\..\..\PropertySheets\VSGRelease.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -60,8 +61,9 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;MANDELBROT_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;VSG_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -76,7 +78,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;MANDELBROT_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;VSG_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
@@ -88,32 +90,44 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ExportFunctions.h" />
-    <ClInclude Include="Job.h" />
-    <ClInclude Include="JobResult.h" />
-    <ClInclude Include="ThreadPool.h" />
-    <moc Include="MandelbrotCalculator.h" />
-    <ClInclude Include="MainWindow.h" />
-    <ClInclude Include="MandelbrotExp.h" />
-    <moc Include="MandelbrotWidget.h" />
+    <ClInclude Include="KeyboardMap.h" />
+    <ClInclude Include="Qt\camera.h" />
+    <ClInclude Include="Qt\mainwindow.h" />
+    <ClInclude Include="Qt\mesh.h" />
+    <ClInclude Include="Qt\renderer.h" />
+    <ClInclude Include="Qt\shader.h" />
+    <ClInclude Include="Qt\trianglerenderer.h" />
+    <ClInclude Include="Qt\vulkanwindow.h" />
+    <ClInclude Include="Viewer.h" />
+    <ClInclude Include="VSGExp.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="ExportFunctions.cpp" />
-    <ClCompile Include="Job.cpp" />
-    <ClCompile Include="MainWindow.cpp" />
-    <ClCompile Include="MandelbrotCalculator.cpp" />
-    <ClCompile Include="MandelbrotWidget.cpp" />
+    <ClCompile Include="KeyboardMap.cpp" />
+    <ClCompile Include="Qt\camera.cpp" />
+    <ClCompile Include="Qt\mainwindow.cpp" />
+    <ClCompile Include="Qt\mesh.cpp" />
+    <ClCompile Include="Qt\renderer.cpp" />
+    <ClCompile Include="Qt\shader.cpp" />
+    <ClCompile Include="Qt\trianglerenderer.cpp" />
+    <ClCompile Include="Qt\vulkanwindow.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="ThreadPool.cpp" />
-    <ClCompile Include="tmp\moc_MandelbrotCalculator.cpp" />
-    <ClCompile Include="tmp\moc_MandelbrotWidget.cpp" />
+    <ClCompile Include="tmp\hellovulkancubes.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Viewer.cpp" />
+    <ClCompile Include="ExportFunctions_Qt.cpp" />
+    <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ui Include="MainWindow.ui" />
+    <res Include="Qt\hellovulkancubes.qrc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

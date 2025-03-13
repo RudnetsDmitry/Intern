@@ -5,6 +5,7 @@
 #include "..\GaleryGUI\ExportFunctions.h"
 #include "..\ImageProcess\ExportFunctions.h"
 #include "..\Mandelbrot\ExportFunctions.h"
+#include "..\VSG\ExportFunctions.h"
 
 //#include "..\QmlGUI\ExportFunctions.h"
 //#include "..\GanttChart\ExportFunctions.h"
@@ -23,6 +24,8 @@ int main(int argc, char * argv[])
 		mainWnd = gantt_chart::MakeChart();
 	if (!mainWnd)
 		mainWnd = ::qml_gui::MakeQmlWindow();*/
+	if (!mainWnd)
+		mainWnd = ::gallery::MakeVSGWindow();
 	if (!mainWnd)
 		mainWnd = ::gallery::MakekMandelbrotWindow();
 	if (!mainWnd)

@@ -1,15 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets">
-    <Import Project="qt.props" />
+    <Import Project="opencv2.props" />
   </ImportGroup>
   <PropertyGroup>
     <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <Link>
-      <AdditionalDependencies>Qt6Core.lib;Qt6Gui.lib;Qt6Widgets.lib;Qt6Xml.lib;Qt6Network.lib;Qt6Charts.lib;
-	  Qt6Sql.lib;Qt6Core5Compat.lib;Qt6Concurrent.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opencv_core4.lib;opencv_imgproc4.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
 </Project>

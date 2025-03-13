@@ -21,6 +21,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageProcess", "ImageProces
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Mandelbrot", "Mandelbrot\Mandelbrot.vcxproj", "{BB810724-9541-4C86-9D1C-E3142554E75F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VSG", "VSG\VSG.vcxproj", "{35ADF405-ACF4-42EA-BF50-B79BA01216B4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -101,6 +103,14 @@ Global
 		{BB810724-9541-4C86-9D1C-E3142554E75F}.Release|x64.Build.0 = Release|x64
 		{BB810724-9541-4C86-9D1C-E3142554E75F}.Release|x86.ActiveCfg = Release|x64
 		{BB810724-9541-4C86-9D1C-E3142554E75F}.Release|x86.Build.0 = Release|x64
+		{35ADF405-ACF4-42EA-BF50-B79BA01216B4}.Debug|x64.ActiveCfg = Debug|x64
+		{35ADF405-ACF4-42EA-BF50-B79BA01216B4}.Debug|x64.Build.0 = Debug|x64
+		{35ADF405-ACF4-42EA-BF50-B79BA01216B4}.Debug|x86.ActiveCfg = Debug|x64
+		{35ADF405-ACF4-42EA-BF50-B79BA01216B4}.Debug|x86.Build.0 = Debug|x64
+		{35ADF405-ACF4-42EA-BF50-B79BA01216B4}.Release|x64.ActiveCfg = Release|x64
+		{35ADF405-ACF4-42EA-BF50-B79BA01216B4}.Release|x64.Build.0 = Release|x64
+		{35ADF405-ACF4-42EA-BF50-B79BA01216B4}.Release|x86.ActiveCfg = Release|x64
+		{35ADF405-ACF4-42EA-BF50-B79BA01216B4}.Release|x86.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

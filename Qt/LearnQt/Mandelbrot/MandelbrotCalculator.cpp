@@ -16,7 +16,7 @@
 
 #include "Job.h"
 
-const int JOB_RESULT_THRESHOLD = 10;
+const int JOB_RESULT_THRESHOLD = 20;
 
 MandelbrotCalculator::MandelbrotCalculator(QObject* parent)
 	: QObject(parent),

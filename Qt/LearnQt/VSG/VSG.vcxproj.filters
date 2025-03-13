@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{c118fe93-c8ca-4945-8252-ace15ffdf96e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Generated">
+      <UniqueIdentifier>{d481f35e-ba52-4e83-947d-c3e41742ca84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Qt">
+      <UniqueIdentifier>{1543ebb7-4f77-468d-937a-db736888bf35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Qt\VulcanCubes">
+      <UniqueIdentifier>{5e64c044-dddf-4eaa-8305-72f3be0e3a20}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VSGExp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ExportFunctions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyboardMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Viewer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Qt\camera.h">
+      <Filter>Qt\VulcanCubes</Filter>
+    </ClInclude>
+    <ClInclude Include="Qt\mainwindow.h">
+      <Filter>Qt\VulcanCubes</Filter>
+    </ClInclude>
+    <ClInclude Include="Qt\mesh.h">
+      <Filter>Qt\VulcanCubes</Filter>
+    </ClInclude>
+    <ClInclude Include="Qt\renderer.h">
+      <Filter>Qt\VulcanCubes</Filter>
+    </ClInclude>
+    <ClInclude Include="Qt\shader.h">
+      <Filter>Qt\VulcanCubes</Filter>
+    </ClInclude>
+    <ClInclude Include="Qt\trianglerenderer.h">
+      <Filter>Qt\VulcanCubes</Filter>
+    </ClInclude>
+    <ClInclude Include="Qt\vulkanwindow.h">
+      <Filter>Qt\VulcanCubes</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ExportFunctions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyboardMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Viewer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ExportFunctions_Qt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Qt\camera.cpp">
+      <Filter>Qt\VulcanCubes</Filter>
+    </ClCompile>
+    <ClCompile Include="Qt\mainwindow.cpp">
+      <Filter>Qt\VulcanCubes</Filter>
+    </ClCompile>
+    <ClCompile Include="Qt\mesh.cpp">
+      <Filter>Qt\VulcanCubes</Filter>
+    </ClCompile>
+    <ClCompile Include="Qt\renderer.cpp">
+      <Filter>Qt\VulcanCubes</Filter>
+    </ClCompile>
+    <ClCompile Include="Qt\shader.cpp">
+      <Filter>Qt\VulcanCubes</Filter>
+    </ClCompile>
+    <ClCompile Include="Qt\trianglerenderer.cpp">
+      <Filter>Qt\VulcanCubes</Filter>
+    </ClCompile>
+    <ClCompile Include="Qt\vulkanwindow.cpp">
+      <Filter>Qt\VulcanCubes</Filter>
+    </ClCompile>
+    <ClCompile Include="tmp\hellovulkancubes.cpp">
+      <Filter>Generated</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <res Include="Qt\hellovulkancubes.qrc">
+      <Filter>Qt\VulcanCubes</Filter>
+    </res>
+  </ItemGroup>
+</Project>

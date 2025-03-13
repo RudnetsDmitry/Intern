@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <PostBuildEvent>
+      <Command> xcopy /y /d "$(LibsPath)\bin\Qt6Core.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsPath)\bin\Qt6Gui.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsPath)\bin\Qt6Widgets.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsPath)\bin\Qt6Xml.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsPath)\bin\Qt6Network.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsPath)\bin\Qt6Svg.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsPath)\bin\Qt6Charts.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsPath)\bin\Qt6Sql.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsPath)\bin\Qt6OpenGL.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsPath)\bin\Qt6OpenGLWidgets.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsPath)\bin\Qt6Core5Compat.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsPath)\bin\Qt6Concurrent.dll" "$(TargetDir)"
+				
+				xcopy /y /d "$(LibsPath)\bin\opencv_core4.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsPath)\bin\opencv_imgproc4.dll" "$(TargetDir)"
+
+				xcopy /y /d "$(LibsPath)\bin\libpng16.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsPath)\bin\harfbuzz.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsPath)\bin\freetype.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsPath)\bin\zlib1.dll" "$(TargetDir)"
+				
+				xcopy /y /d "$(LibsPath)\bin\icuin74.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsPath)\bin\icuuc74.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsPath)\bin\icudt74.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsPath)\bin\double-conversion.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsPath)\bin\pcre2-16.dll" "$(TargetDir)"
+				
+				xcopy /y /d "$(LibsPath)\bin\libcrypto-3-x64.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsPath)\bin\zstd.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsPath)\bin\icudt72.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsPath)\bin\brotlidec.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsPath)\bin\bz2.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsPath)\bin\brotlicommon.dll" "$(TargetDir)"
+				
+				xcopy /y /d "$(LibsPath)\bin\vsg-14.dll" "$(TargetDir)"				
+				
+				</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+</Project>

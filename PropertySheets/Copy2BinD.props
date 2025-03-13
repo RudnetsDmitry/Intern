@@ -16,6 +16,7 @@
 				xcopy /y /d "$(LibsDebugPath)\bin\Qt6OpenGLd.dll" "$(TargetDir)"
 				xcopy /y /d "$(LibsDebugPath)\bin\Qt6OpenGLWidgetsd.dll" "$(TargetDir)"
 				xcopy /y /d "$(LibsDebugPath)\bin\Qt6Core5Compatd.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsDebugPath)\bin\Qt6Concurrentd.dll" "$(TargetDir)"
 				
 				xcopy /y /d "$(LibsDebugPath)\bin\opencv_core4d.dll" "$(TargetDir)"
 				xcopy /y /d "$(LibsDebugPath)\bin\opencv_imgproc4d.dll" "$(TargetDir)"
@@ -37,6 +38,8 @@
 				xcopy /y /d "$(LibsDebugPath)\bin\brotlidec.dll" "$(TargetDir)"
 				xcopy /y /d "$(LibsDebugPath)\bin\bz2d.dll" "$(TargetDir)"
 				xcopy /y /d "$(LibsDebugPath)\bin\brotlicommon.dll" "$(TargetDir)"
+				
+				xcopy /y /d "$(LibsDebugPath)\bin\vsg-14d.dll" "$(TargetDir)"
 				
 				
 				</Command>

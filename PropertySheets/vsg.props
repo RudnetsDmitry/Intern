@@ -4,15 +4,17 @@
     <Import Project="base.props" />
   </ImportGroup>
  <PropertyGroup Label="UserMacros">	
-    <OCVIncludePath>$(IncludePath)\opencv4</OCVIncludePath>
+    <VSGIncludePath>$(IncludePath)\vsg</VSGIncludePath>
   </PropertyGroup>  
   <PropertyGroup>
     <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>	  
-      <AdditionalIncludeDirectories>$(OCVIncludePath);$(OCVIncludePath)\core;$(OCVIncludePath)\imgproc;
-	  %(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-    </ClCompile>   
+      <AdditionalIncludeDirectories>$(VSGIncludePath);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>  
+	<Link>
+      <AdditionalDependencies>vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>	
   </ItemDefinitionGroup>
 </Project>

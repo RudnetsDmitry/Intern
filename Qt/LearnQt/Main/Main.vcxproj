@@ -127,6 +127,9 @@
     <ProjectReference Include="..\Mandelbrot\Mandelbrot.vcxproj">
       <Project>{bb810724-9541-4c86-9d1c-e3142554e75f}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\VSG\VSG.vcxproj">
+      <Project>{35adf405-acf4-42ea-bf50-b79ba01216b4}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
