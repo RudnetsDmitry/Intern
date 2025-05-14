@@ -21,26 +21,14 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 #include <vulkan/vulkan.h>
 
-namespace vsgQt {
-
-	Window::Window(vsg::ref_ptr<vsgQt::Viewer> in_viewer, vsg::ref_ptr<vsg::WindowTraits> in_traits, QWindow* parent) :
-		QWindow(parent),
-		m_viewer(in_viewer),
+namespace vsgQt
+{
+	Window::Window(QWindow* parent)
+	:	base_t(parent),
 		m_keyboardMap(KeyboardMap::create())
 	{
-		if (in_traits)
-		{
-			m_traits = vsg::WindowTraits::create(*in_traits);
-			setGeometry(m_traits->x, m_traits->y, m_traits->width, m_traits->height);
-		}
-		else
-		{
-			m_traits = vsg::WindowTraits::create();
-			m_traits->x = x();
-			m_traits->y = y();
-			m_traits->width = width();
-			m_traits->height = height();
-		}
+		m_viewer = vsgQt::Viewer::create();
+		m_viewer->addEventHandler(vsg::CloseHandler::create(m_viewer));
 	}
 
 	Window::~Window()
@@ -72,6 +60,7 @@ namespace vsgQt {
 		m_traits->height = convert_coord(height());
 
 		m_windowAdapter = vsg::Window::create(m_traits);
+		m_traits->device = getOrCreateDevice();
 	}
 
 	vsg::ref_ptr<vsg::Device> Window::getOrCreateDevice()
@@ -79,9 +68,24 @@ namespace vsgQt {
 		return m_windowAdapter->getOrCreateDevice();
 	}
 
-	vsg::WindowTraits const& Window::getTraits() const
+	vsg::WindowTraits const & Window::getTraits() const
 	{
 		return *m_traits;
+	}
+
+	vsg::WindowTraits & Window::getTraits()
+	{
+		return *m_traits;
+	}
+
+	Viewer & Window::getViewer()
+	{
+		return *m_viewer;
+	}
+
+	Viewer const & Window::getViewer() const
+	{
+		return *m_viewer;
 	}
 
 	void Window::cleanup()

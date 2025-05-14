@@ -29,8 +29,9 @@ namespace vsgQt
 {
 	class Window : public QWindow
 	{
+		using base_t = QWindow;
 	public:
-		Window(vsg::ref_ptr<Viewer> in_viewer, vsg::ref_ptr<vsg::WindowTraits> in_traits, QWindow* parent);
+		Window(QWindow * parent);
 
 		~Window() override;
 		
@@ -42,6 +43,10 @@ namespace vsgQt
 		vsg::ref_ptr<vsg::Device> getOrCreateDevice();
 
 		vsg::WindowTraits const & getTraits() const;
+		vsg::WindowTraits & getTraits();
+
+		Viewer & getViewer();
+		Viewer const & getViewer() const;
 
 	protected:
 		void cleanup();

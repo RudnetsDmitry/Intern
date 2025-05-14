@@ -31,11 +31,158 @@
 #include <state/VertexInputState.h>
 #include <utils/ComputeBounds.h>
 
+#include <vsg/all.h>
+
 #include "Window.h"
 
 namespace
 {
+	class RotationTrackingMatrix : public vsg::Inherit<vsg::ViewMatrix, RotationTrackingMatrix>
+	{
+	public:
+		RotationTrackingMatrix(vsg::ref_ptr<vsg::ViewMatrix> parentTransform) :
+			parentTransform_(parentTransform) {
+		}
+
+		// The transform() returns the rotation part of the tracked matrix
+		vsg::dmat4 transform() const override
+		{
+
+			vsg::dvec3 translation, scale;
+			vsg::dquat rotation;
+			vsg::decompose(parentTransform_->transform(),
+				// output
+				translation,
+				rotation,
+				scale);
+
+			return vsg::rotate(rotation);
+		}
+
+	private:
+		vsg::ref_ptr<vsg::ViewMatrix> parentTransform_;
+	};
+	// Create an arrow with the back at pos and pointing in the direction of dir
+// Place a cone at the end of the arrow with the color color
+	vsg::ref_ptr<vsg::Node> createArrow(vsg::vec3 pos, vsg::vec3 dir, vsg::vec4 color)
+	{
+		vsg::ref_ptr<vsg::Group> arrow = vsg::Group::create();
+
+		vsg::Builder builder;
+		vsg::GeometryInfo geomInfo;
+		vsg::StateInfo stateInfo;
+
+		geomInfo.color = vsg::vec4{ 1, 1, 1, 1 };
+		geomInfo.position = pos;
+		geomInfo.transform = vsg::translate(0.0f, 0.0f, 0.5f);
+
+		// If we don't point in the z-direction, then rotate the arrow
+		vsg::vec3 axis = vsg::cross(vsg::vec3{ 0, 0, 1 }, dir);
+		if (vsg::length(axis) > 0.0001)
+		{
+			float angle = acos(vsg::dot(vsg::vec3{ 0, 0, 1 }, dir));
+			geomInfo.transform = vsg::rotate(angle, axis) * geomInfo.transform;
+		}
+
+		auto axisTransform = geomInfo.transform;
+		geomInfo.transform = geomInfo.transform * vsg::scale(0.1f, 0.1f, 1.0f);
+
+		// Rotate geomInfo from pos in the direction of dir
+		auto node = builder.createCylinder(geomInfo, stateInfo);
+		arrow->addChild(node);
+
+		// The cone
+		geomInfo.color = color;
+		// This would have been cleaner with a pre_translate transform
+		geomInfo.transform = vsg::scale(0.3f, 0.3f, 0.3f) * axisTransform * vsg::translate(0.0f, 0.0f, 1.0f / 0.3f);
+		node = builder.createCone(geomInfo, stateInfo);
+		arrow->addChild(node);
+
+		return arrow;
+	}
+
+	// Create three arrows of the coordinate axes
+	vsg::ref_ptr<vsg::Node> createGizmo()
+	{
+		vsg::ref_ptr<vsg::Group> gizmo = vsg::Group::create();
+
+		auto org = vsg::vec3{ 0, 0, 0 };
+
+		gizmo->addChild(createArrow(org, vsg::vec3{ 1, 0, 0 }, vsg::vec4{ 1, 0, 0, 1 }));
+		gizmo->addChild(createArrow(org, vsg::vec3{ 0, 1, 0 }, vsg::vec4{ 0, 1, 0, 1 }));
+		gizmo->addChild(createArrow(org, vsg::vec3{ 0, 0, 1 }, vsg::vec4{ 0, 0, 1, 1 }));
+
+		vsg::Builder builder;
+		vsg::GeometryInfo geomInfo;
+		vsg::StateInfo stateInfo;
+		geomInfo.color = vsg::vec4{ 1, 1, 1, 1 };
+		geomInfo.transform = vsg::scale(0.1f, 0.1f, 0.1f);
+
+		auto sphere = builder.createSphere(geomInfo, stateInfo);
+		gizmo->addChild(sphere);
+
+		return gizmo;
+	}
+
+	// Create a tracking overlay with a axes view that shows the orientation
+	// of the main camera view matrix
+	vsg::ref_ptr<vsg::View> createAxesView(vsg::ref_ptr<vsg::Camera> camera,
+		double aspectRatio)
+	{
+		auto viewMat = RotationTrackingMatrix::create(camera->viewMatrix);
+
+		// Place the gizmo in the view port by modifying its ortho camera x
+		// and y limits
+		double camWidth = 10;
+		double camXOffs = -8;
+		double camYOffs = -8;
+		auto ortho = vsg::Orthographic::create(camXOffs, camXOffs + camWidth,                               // left, right
+			camYOffs / aspectRatio, (camYOffs + camWidth) / aspectRatio, // bottom, top
+			-1000, 1000);                                                // near, far
+
+		auto gizmoCamera = vsg::Camera::create(
+			ortho,
+			viewMat,
+			camera->viewportState);
+
+		auto scene = vsg::Group::create();
+		scene->addChild(createGizmo());
+
+		auto view = vsg::View::create(gizmoCamera);
+		view->addChild(vsg::createHeadlight());
+		view->addChild(scene);
+		return view;
+	}
+
+	vsg::ref_ptr<vsg::Camera> createCameraForScene(vsg::Node* scenegraph, int32_t x, int32_t y, uint32_t width, uint32_t height)
+	{
+		// compute the bounds of the scene graph to help position camera
+		vsg::ComputeBounds computeBounds;
+		scenegraph->accept(computeBounds);
+		vsg::dvec3 centre = (computeBounds.bounds.min + computeBounds.bounds.max) * 0.5;
+		double radius = vsg::length(computeBounds.bounds.max - computeBounds.bounds.min) * 0.6;
+		double nearFarRatio = 0.001;
+
+		// set up the camera
+		auto lookAt = vsg::LookAt::create(centre + vsg::dvec3(0.0, -radius * 3.5, 0.0),
+			centre, vsg::dvec3(0.0, 0.0, 1.0));
+
+		auto perspective = vsg::Perspective::create(30.0, static_cast<double>(width) / static_cast<double>(height),
+			nearFarRatio * radius, radius / nearFarRatio);
+
+		auto viewportstate = vsg::ViewportState::create(x, y, width, height);
+
+		return vsg::Camera::create(perspective, lookAt, viewportstate);
+	}
+
 	vsg::ref_ptr<vsg::Node> CreateScene()
+	{
+		auto scene = vsg::Group::create();
+		scene->addChild(createGizmo());
+		return scene;
+	}
+
+	vsg::ref_ptr<vsg::Node> CreateScene_1()
 	{
 		auto options = vsg::Options::create();
 		options->fileCache = vsg::getEnv("VSG_FILE_CACHE");
@@ -166,19 +313,14 @@ namespace
 		return scenegraph;
 	}
 
-	vsgQt::Window* createWindow(vsg::ref_ptr<vsgQt::Viewer> viewer, vsg::ref_ptr<vsg::WindowTraits> traits,
-		vsg::ref_ptr<vsg::Node> vsg_scene, QWindow* parent, const QString& title = {})
+	vsgQt::Window* createWindow(vsg::ref_ptr<vsg::Node> vsg_scene, QWindow* parent, const QString& title = {})
 	{
-		auto window = new vsgQt::Window(viewer, traits, parent);
+		auto window = new vsgQt::Window(parent);
 
 		window->setTitle(title);
 
 		window->initializeWindow();
-
-		// if this is the first window to be created, use its device for future window creation.
-		if (!traits->device)
-			traits->device = window->getOrCreateDevice();
-
+		
 		if (!vsg_scene)
 			vsg_scene = CreateScene();
 
@@ -213,7 +355,7 @@ namespace
 					30.0,
 					static_cast<double>(width) /
 					static_cast<double>(height),
-					nearFarRatio * radius, radius * 4.5);
+					nearFarRatio * radius, radius / nearFarRatio);
 			}
 
 			camera = vsg::Camera::create(perspective, lookAt, vsg::ViewportState::create(VkExtent2D{ width, height }));
@@ -222,11 +364,11 @@ namespace
 		auto trackball = vsg::Trackball::create(camera, ellipsoidModel);
 		trackball->addWindow(*window);
 
-		viewer->addEventHandler(trackball);
+		window->getViewer().addEventHandler(trackball);
 
 		auto commandGraph = vsg::createCommandGraphForView(*window, camera, vsg_scene);
 
-		viewer->addRecordAndSubmitTaskAndPresentation({ commandGraph });
+		window->getViewer().addRecordAndSubmitTaskAndPresentation({ commandGraph });
 
 		return window;
 	}
@@ -238,26 +380,22 @@ namespace gallery
 	{
 		QMainWindow* mainWindow = new QMainWindow();
 
-		auto windowTraits = vsg::WindowTraits::create();
-		windowTraits->windowTitle = "vsgQt viewer";
-
-		// create the viewer that will manage all the rendering of the views
-		auto viewer = vsgQt::Viewer::create();
-
 		vsg::ref_ptr<vsg::Node> vsg_scene;
 
-		auto window = createWindow(viewer, windowTraits, vsg_scene, nullptr, "First Window");
+		auto window = createWindow(vsg_scene, nullptr, "First Window");
+		auto& windowTraits = window->getTraits();
+
+		windowTraits.windowTitle = "vsgQt viewer";
 
 		auto widget = QWidget::createWindowContainer(window, mainWindow);
 
 		mainWindow->setCentralWidget(widget);
 
-		mainWindow->setGeometry(windowTraits->x, windowTraits->y, windowTraits->width, windowTraits->height);
+		mainWindow->setGeometry(windowTraits.x, windowTraits.y, windowTraits.width, windowTraits.height);
 
 		mainWindow->show();
 
-		viewer->addEventHandler(vsg::CloseHandler::create(viewer));
-		viewer->compile();
+		window->getViewer().compile();
 
 		return mainWindow;
 	}
