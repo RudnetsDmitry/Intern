@@ -313,7 +313,7 @@ namespace
 		return scenegraph;
 	}
 
-	vsgQt::Window* createWindow(vsg::ref_ptr<vsg::Node> vsg_scene, QWindow* parent, const QString& title = {})
+	vsgQt::Window* createWindow(QWindow* parent, const QString& title = {})
 	{
 		auto window = new vsgQt::Window(parent);
 
@@ -321,8 +321,7 @@ namespace
 
 		window->initializeWindow();
 		
-		if (!vsg_scene)
-			vsg_scene = CreateScene();
+		auto vsg_scene = CreateScene();
 
 		// compute the bounds of the scene graph to help position camera
 		vsg::ComputeBounds computeBounds;
@@ -380,9 +379,7 @@ namespace gallery
 	{
 		QMainWindow* mainWindow = new QMainWindow();
 
-		vsg::ref_ptr<vsg::Node> vsg_scene;
-
-		auto window = createWindow(vsg_scene, nullptr, "First Window");
+		auto window = createWindow(nullptr, "First Window");
 		auto& windowTraits = window->getTraits();
 
 		windowTraits.windowTitle = "vsgQt viewer";

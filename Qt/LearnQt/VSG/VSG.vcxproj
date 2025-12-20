@@ -89,6 +89,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="3DStructures.h" />
+    <ClInclude Include="3DSystem.h" />
     <ClInclude Include="ExportFunctions.h" />
     <ClInclude Include="KeyboardMap.h" />
     <ClInclude Include="Qt\camera.h" />
