@@ -14,6 +14,7 @@
 
 #include <memory>
 #include <optional>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -74,7 +75,7 @@ namespace model3d
 		virtual void setSelectColor(SelectType type, COLORREF color) = 0;
 
 		/// установить режим отображения полигоном
-		virtual void setPolygonMode(int mode) = 0; /*VkPolygonMode*/
+		virtual void setPolygonMode(std::optional<PolygonMode> const & mode) = 0; /*VkPolygonMode*/
 		///
 		virtual void setFrontCullFaceEnabled(bool enable) = 0;
 
@@ -100,26 +101,23 @@ namespace model3d
 		virtual std::vector<size_t> nodeName2Key(std::string const & nodeName) const = 0;
 		virtual std::wstring entityInfo(std::vector<size_t> const & entityId) const = 0;
 
-		virtual void recreateAxis(CPoint3D const & org = {}) = 0;
-		virtual void recreateAxisForPlatform(osg::BoundingBox const &) = 0;
-		virtual void updateLightState(osg::Vec3f const & org, double rad) = 0;
-		virtual osg::Vec3d const & getAxisOrg() const = 0;
+		virtual void recreateAxis(CPoint3D const & org = CPoint3D(.0)) = 0;
+		virtual void recreateAxisForPlatform(CRect3D const &) = 0;
+		virtual void updateLightState(CPoint3D const & org, double rad) = 0;
+		virtual CPoint3D const & getAxisOrg() const = 0;
 
 		virtual void updateVisibilityForNodes(size_t prjKey, std::set<size_t> const & unvisibleNodes,
 			std::set<size_t> const & restoreVisibility) = 0;
-		virtual osg::BoundingSphere showNodes(size_t prjKey, std::set<size_t> const& nodes) = 0;
-		virtual void showSkyBox(bool show, QImage const * cubemap) = 0;
+		virtual CSphere showNodes(size_t prjKey, std::set<size_t> const& nodes) = 0;
+		virtual void showSkyBox(bool show, /*QImage*/void const * cubemap) = 0;
 
-		virtual ::osg::Group* objUnderCursor() const = 0;
-		virtual std::set<::osg::Group *> selectedObjects() const = 0;
+		virtual ::vsg::Group* objUnderCursor() const = 0;
+		virtual std::set<::vsg::Group *> selectedObjects() const = 0;
 
-		virtual osg::ClipPlane * addClipPlane(double a, double b, double c, double d) = 0;
+		/*virtual osg::ClipPlane * addClipPlane(double a, double b, double c, double d) = 0;
 		virtual void removeClipPlanes() = 0;
-		virtual void removeClipPlane(osg::ClipPlane * clipPlane) = 0;
+		virtual void removeClipPlane(osg::ClipPlane * clipPlane) = 0;*/
 
-		virtual osg::BoundingBox calcWorldBoundingBox() const = 0;
+		virtual CRect3D calcWorldBoundingBox() const = 0;
 	};
-
-	Base3DSystem * Make3DSystem(std::unique_ptr<INodeNameConvertor> && nodeConv = nullptr);
-	PDEXTGUICLS_EXT_CLASS void SetLightDir(osg::Light * lihght, double az);
 }

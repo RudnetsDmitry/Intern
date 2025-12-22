@@ -72,6 +72,9 @@
     <ClInclude Include="3DStructures.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="3DSystemBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -118,6 +121,15 @@
     </ClCompile>
     <ClCompile Include="tmp\hellovulkancubes.cpp">
       <Filter>Generated</Filter>
+    </ClCompile>
+    <ClCompile Include="3DSystemBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform2VSG.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform2VSG.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

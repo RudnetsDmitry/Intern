@@ -9,7 +9,7 @@
   <ItemDefinitionGroup>
     <Link>
       <AdditionalDependencies>Qt6Cored.lib;Qt6Guid.lib;Qt6Widgetsd.lib;Qt6Xmld.lib;Qt6Networkd.lib;Qt6Chartsd.lib;
-	  Qt6Sqld.lib;Qt6Core5Compatd.lib;Qt6Concurrentd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+	  Qt6Sqld.lib;Qt6Core5Compatd.lib;Qt6Concurrentd.lib;Qt6Opengld.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
 </Project>

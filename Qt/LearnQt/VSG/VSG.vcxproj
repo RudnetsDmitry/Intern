@@ -91,6 +91,7 @@
   <ItemGroup>
     <ClInclude Include="3DStructures.h" />
     <ClInclude Include="3DSystem.h" />
+    <ClInclude Include="3DSystemBase.h" />
     <ClInclude Include="ExportFunctions.h" />
     <ClInclude Include="KeyboardMap.h" />
     <ClInclude Include="Qt\camera.h" />
@@ -106,9 +107,12 @@
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="3DSystemBase.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="ExportFunctions.cpp" />
     <ClCompile Include="KeyboardMap.cpp" />
+    <ClCompile Include="Platform2VSG.cpp" />
+    <ClCompile Include="Platform2VSG.h" />
     <ClCompile Include="Qt\camera.cpp" />
     <ClCompile Include="Qt\mainwindow.cpp" />
     <ClCompile Include="Qt\mesh.cpp" />

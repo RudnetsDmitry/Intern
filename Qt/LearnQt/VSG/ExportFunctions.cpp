@@ -45,9 +45,8 @@ namespace
 		}
 
 		// The transform() returns the rotation part of the tracked matrix
-		vsg::dmat4 transform() const override
+		vsg::dmat4 transform(const vsg::dvec3& offset) const override
 		{
-
 			vsg::dvec3 translation, scale;
 			vsg::dquat rotation;
 			vsg::decompose(parentTransform_->transform(),
