@@ -9,15 +9,37 @@
 
 #include "stdafx.h"
 #include "3DSystemBase.h"
+#include "Platform2VSG.h"\
 
-#include <maths/transform.h>
-#include <nodes/MatrixTransform.h>
+#include <vsg/maths/transform.h>
+#include <vsg/nodes/MatrixTransform.h>
+#include <vsg/nodes/Geometry.h>
+#include <vsg/nodes/Switch.h>
+#include <vsg/utils/Builder.h>
+
 #include <vsg/commands/SetLineWidth.h>
 #include <vsg/commands/Commands.h>
 #include <vsg/nodes/Group.h>
+#include <vsg/lighting/DirectionalLight.h>
+#include <vsg/lighting/Light.h>
+#include <vsg/text/StandardLayout.h>
+#include <vsg/text/Text.h>
 
-#include "Platform2VSG.h"
+#include <numbers>
+#include <utils/ComputeBounds.h>
 
+namespace
+{
+	template<typename TVal>
+	TVal DegreesToRadians(TVal degree)
+	{
+		if constexpr (std::is_same_v<float, TVal>)
+			return std::numbers::pi_v<float> * degree / 180.f;
+		else
+			return std::numbers::pi_v<double> * degree / 180.;
+
+	}
+}
 namespace model3d
 {
 	vsg::ref_ptr<vsg::Node> CreateAxisNode(AxisParams const & params, CPoint3D const & axisOrg)
@@ -34,25 +56,22 @@ namespace model3d
 
 		float alpha = 0.5f;
 
-		vsg::dmat4 resMatrix = vsg::translate(PointToVec(axisOrg));
 		vsg::ref_ptr<vsg::MatrixTransform> transform = vsg::MatrixTransform::create();
-
-		if (params.isAxisScaling)
+		transform->matrix = vsg::translate(PointToVec(axisOrg));
+		/*if (params.isAxisScaling)
 		{
 			vsg::ref_ptr<vsg::AutoTransform> at = new vsg::AutoTransform;
 			at->setAutoScaleToScreen(true);
 			at->addChild(geode);
 			transform->addChild(at);
 		}
-		else
+		else*/
 		{
-			transform->addChild(geode);
+			transform->addChild(axis);
 		}
 
-		transform->setMatrix(resMatrix);
-		transform->dirtyBound();
-
-		vsg::Vec3f const org = vsg::Vec3f(0.0, 0.0, 0.0);
+		
+		auto const org = vsg::vec3(0.0, 0.0, 0.0);
 
 		auto FormCoordinateAxis = [&](bool isPositive)
 		{
@@ -60,86 +79,94 @@ namespace model3d
 			int axisSign = isPositive ? 1 : -1;
 
 			// настройка стрелок для положительных осей
-			constexpr double arrowAngleDegr = 30.0;
-			constexpr double arrowLengthPercetange = 0.09;
-			const double arrowLength = arrowLengthPercetange * params.lineAxisLength;
-			const double arrowProjectionLength = cos(math::DegreesToRadians(arrowAngleDegr)) * arrowLength;
-			const double endOfArrowCoordX = params.lineAxisLength - arrowProjectionLength;
-			const double endOfArrowCoordY = sin(math::DegreesToRadians(arrowAngleDegr)) * arrowLength;
+			constexpr float arrowAngleDegr = 30.0;
+			constexpr float arrowLengthPercetange = 0.09;
+			const float arrowLength = arrowLengthPercetange * params.lineAxisLength;
+			const float arrowProjectionLength = cos(DegreesToRadians(arrowAngleDegr)) * arrowLength;
+			const float endOfArrowCoordX = params.lineAxisLength - arrowProjectionLength;
+			const float endOfArrowCoordY = sin(DegreesToRadians(arrowAngleDegr)) * arrowLength;
 
-			vsg::ref_ptr<vsg::Geometry> geom = new vsg::Geometry();
-			vsg::ref_ptr<vsg::Vec3Array> vertices = new vsg::Vec3Array();
+			uint32_t count = 2 + (isPositive ? 4 : 0);
+			count *= 3;
+			vsg::ref_ptr<vsg::vec3Array> vertices(new vsg::vec3Array(count));
 
+			uint32_t pos = 0;
 			// создаем X ось
-			vertices->push_back(org);
-			vertices->push_back(vsg::Vec3f(axisSign * params.lineAxisLength, 0.0, 0.0) + org);
+			vertices->at(pos++) = org;
+			vertices->at(pos++) = vsg::vec3(axisSign * params.lineAxisLength, 0.0, 0.0) + org;
 
 			// если положительная ось - достроим стрелки
 			if (isPositive)
 			{
-				vertices->push_back(vsg::Vec3f(endOfArrowCoordX, -endOfArrowCoordY, 0.0) + org);
-				vertices->push_back(vsg::Vec3f(params.lineAxisLength, 0.0, 0.0) + org);
-				vertices->push_back(vsg::Vec3f(endOfArrowCoordX, endOfArrowCoordY, 0.0) + org);
-				vertices->push_back(vsg::Vec3f(params.lineAxisLength, 0.0, 0.0) + org);
+				vertices->at(pos++) = vsg::vec3(endOfArrowCoordX, -endOfArrowCoordY, 0.0) + org;
+				vertices->at(pos++) = vsg::vec3(params.lineAxisLength, 0.0, 0.0) + org;
+				vertices->at(pos++) = vsg::vec3(endOfArrowCoordX, endOfArrowCoordY, 0.0) + org;
+				vertices->at(pos++) = vsg::vec3(params.lineAxisLength, 0.0, 0.0) + org;
 			}
 
 			// создаем Y ось
-			vertices->push_back(org);
-			vertices->push_back(vsg::Vec3f(0.0, axisSign * -params.lineAxisLength, 0.0) + org);
+			vertices->at(pos++) = org;
+			vertices->at(pos++) = vsg::vec3(0.0, axisSign * -params.lineAxisLength, 0.0) + org;
 
 			// если положительная ось - достроим стрелки
 			if (isPositive)
 			{
-				vertices->push_back(vsg::Vec3f(-endOfArrowCoordY, -endOfArrowCoordX, 0.0) + org);
-				vertices->push_back(vsg::Vec3f(0.0, -params.lineAxisLength, 0.0) + org);
-				vertices->push_back(vsg::Vec3f(endOfArrowCoordY, -endOfArrowCoordX, 0.0) + org);
-				vertices->push_back(vsg::Vec3f(0.0, -params.lineAxisLength, 0.0) + org);
+				vertices->at(pos++) = vsg::vec3(-endOfArrowCoordY, -endOfArrowCoordX, 0.0) + org;
+				vertices->at(pos++) = vsg::vec3(0.0, -params.lineAxisLength, 0.0) + org;
+				vertices->at(pos++) = vsg::vec3(endOfArrowCoordY, -endOfArrowCoordX, 0.0) + org;
+				vertices->at(pos++) = vsg::vec3(0.0, -params.lineAxisLength, 0.0) + org;
 			}
 
 			// создаем Z ось
-			vertices->push_back(org);
-			vertices->push_back(vsg::Vec3f(0.0, 0.0, axisSign * params.lineAxisLength) + org);
+			vertices->at(pos++) = org;
+			vertices->at(pos++) = vsg::vec3(0.0, 0.0, axisSign * params.lineAxisLength) + org;
 
 			if (isPositive)
 			{
-				vertices->push_back(vsg::Vec3f(endOfArrowCoordY, 0.0, endOfArrowCoordX) + org);
-				vertices->push_back(vsg::Vec3f(0.0, 0.0, params.lineAxisLength) + org);
-				vertices->push_back(vsg::Vec3f(-endOfArrowCoordY, 0.0, endOfArrowCoordX) + org);
-				vertices->push_back(vsg::Vec3f(0.0, 0.0, params.lineAxisLength) + org);
+				vertices->at(pos++) = vsg::vec3(endOfArrowCoordY, 0.0, endOfArrowCoordX) + org;
+				vertices->at(pos++) = vsg::vec3(0.0, 0.0, params.lineAxisLength) + org;
+				vertices->at(pos++) = vsg::vec3(-endOfArrowCoordY, 0.0, endOfArrowCoordX) + org;
+				vertices->at(pos++) = vsg::vec3(0.0, 0.0, params.lineAxisLength) + org;
 			}
 
-			vsg::ref_ptr<vsg::Vec4Array> colors = new vsg::Vec4Array();
-
-			const int verticesPerAxis = [isPositive]()
+			const int32_t verticesPerAxis = [isPositive]()
 			{
 				return isPositive ? 6 : 2;
 			}();
 
-			std::vector<vsg::Vec4f> axisColors = {
-				vsg::Vec4f(1.f, 0.f, 0.f, alpha),
-				vsg::Vec4f(0.f, 0.8f, 0.f, alpha),
-				vsg::Vec4f(0.f, 0.f, 1.f, alpha)
+			vsg::ref_ptr<vsg::vec4Array> colors(new vsg::vec4Array(verticesPerAxis * 3));
+			
+
+			std::vector<vsg::vec4> axisColors = {
+				vsg::vec4(1.f, 0.f, 0.f, alpha),
+				vsg::vec4(0.f, 0.8f, 0.f, alpha),
+				vsg::vec4(0.f, 0.f, 1.f, alpha)
 			};
 
 			// привязываем цвета к осям. В каждой оси (всего 3 оси) по verticesPerAxis вершин
+			pos = 0;
 			for (int i = 0; i < 3; ++i)
 			{
 				for (int j = 0; j < verticesPerAxis; ++j)
-					colors->push_back(axisColors[i]);
+					colors->at(pos++) = axisColors[i];
 			}
 
-			colors->setBinding(vsg::Array::BIND_PER_VERTEX);
-			geode->addDrawable(geom);
-			geom->setColorArray(colors);
-			geom->setVertexArray(vertices);
-			geom->addPrimitiveSet(new vsg::DrawArrays(vsg::PrimitiveSet::LINES, 0, verticesPerAxis * 3));
+			auto attributteArray = vsg::DataList{vertices};
+			attributteArray.push_back(colors);
 
-			if (!isPositive)
-			{
-				// сделать отрицательные оси пунктиром
-				vsg::ref_ptr<vsg::StateSet> stateset_negative = geom->getOrCreateStateSet();
-				stateset_negative->setAttributeAndModes(new vsg::LineStipple(2, 0xAAAA), vsg::StateAttribute::ON);
-			}
+			vsg::ref_ptr<vsg::Geometry> geom = vsg::Geometry::create();
+			geom->assignArrays(attributteArray);
+
+			axis->addChild(geom);
+
+			//geom->addPrimitiveSet(new vsg::DrawArrays(vsg::PrimitiveSet::LINES, 0, verticesPerAxis * 3));
+
+			//if (!isPositive)
+			//{
+			//	// сделать отрицательные оси пунктиром
+			//	vsg::ref_ptr<vsg::StateSet> stateset_negative = geom->getOrCreateStateSet();
+			//	stateset_negative->setAttributeAndModes(new vsg::LineStipple(2, 0xAAAA), vsg::StateAttribute::ON);
+			//}
 		};
 
 		// положительные оси
@@ -159,78 +186,59 @@ namespace model3d
 
 namespace model3d
 {
-	namespace
+	void SetLightDir(vsg::DirectionalLight & light, double az)
 	{
-		struct OsgNodeNameConvertorForIFC : public IOsgNodeNameConvertor
-		{
-			virtual bool isValidNodeName(std::string const & nodeName) const
-			{
-				if (nodeName.at(0) != '#')
-					return false;
+		auto & lightPosition = light.direction;
 
-				if (nodeName.compare(0, 9, "intersect") == 0)
-					return false;
-
-				return true;
-			}
-
-			virtual std::vector<size_t> nodeName2Key(std::string const & nodeName) const
-			{
-				std::string nodeNameId = nodeName.substr(1);
-				size_t lastIndex = nodeNameId.find_first_not_of("0123456789");
-				std::string idStr = nodeNameId.substr(0, lastIndex);
-				return { static_cast<size_t>(std::stoi(idStr)) };
-			}
-		};
+		double dirXY = std::cos(az) / std::sqrt(2.0);
+		double dirZ = std::sin(az);
+		lightPosition.x() = static_cast<float>(dirXY);
+		lightPosition.y() = static_cast<float>(dirXY);
+		lightPosition.z() = static_cast<float>(dirZ);
 	}
 
-	Base3DSystem::Base3DSystem(std::unique_ptr<IOsgNodeNameConvertor> nodeConv)
-		: m_nodeConv(std::move(nodeConv))
-		, m_polygonModeForSelect(new vsg::PolygonMode(vsg::PolygonMode::FRONT_AND_BACK, vsg::PolygonMode::FILL))
-		, m_frontCullFace(new vsg::CullFace(vsg::CullFace::FRONT))
+	Base3DSystem::Base3DSystem(std::unique_ptr<INodeNameConvertor> nodeConv)
+		: m_polygonModeForSelect(PolygonMode::FILL)
+		//, m_polygonModeForSelect(new vsg::PolygonMode(vsg::PolygonMode::FRONT_AND_BACK, vsg::PolygonMode::FILL))
+		, m_nodeConv(std::move(nodeConv))
+		, m_frontCullFace(CullMode::FRONT)
 		, m_showBounds(true)
 	{
-		if (!m_nodeConv)
-			m_nodeConv = std::make_unique<OsgNodeNameConvertorForIFC>();
-
-		m_rootnode = new vsg::Group();
-		m_rootnode->setName("m_rootnode");
+		m_rootNode = new vsg::Group();
 
 		m_verticalScaleNode = new vsg::MatrixTransform();
-		m_verticalScaleNode->setName("m_verticalScaleNode");
-		m_rootnode->addChild(m_verticalScaleNode);
+		m_rootNode->addChild(m_verticalScaleNode);
 		m_swModel = new vsg::Switch();
-		m_swModel->setName("m_sw_model");
 
-		m_clipNode = new vsg::ClipNode();
+		/*
+		 m_clipNode = new osg::ClipNode();
 		m_clipNode->setName("m_clipNode");
 		m_clipNode->addChild(m_swModel);
-		m_verticalScaleNode->addChild(m_clipNode);
+		m_verticalScaleNode->addChild(m_clipNode);m_clipNode = new osg::ClipNode();
+		m_clipNode->setName("m_clipNode");
+		m_clipNode->addChild(m_swModel);
+		m_verticalScaleNode->addChild(m_clipNode); 
+		 */
+		m_verticalScaleNode->addChild(m_swModel);
 
-		m_swCoordAxes = new vsg::Switch();
-		m_swCoordAxes->setName("swCoordAxes");
+		m_swCoordAxes = vsg::Group::create();
 
 		// creating hud camera for axis
-		vsg::ref_ptr<vsg::Camera> axisCamera = new vsg::Camera;
+		/*vsg::ref_ptr<vsg::Camera> axisCamera = new vsg::Camera;
 		axisCamera->setReferenceFrame(vsg::Transform::RELATIVE_RF);
 		axisCamera->setClearMask(GL_DEPTH_BUFFER_BIT);
 		axisCamera->setRenderOrder(vsg::Camera::POST_RENDER);
 		axisCamera->setAllowEventFocus(false);
 		axisCamera->getOrCreateStateSet()->setMode(GL_LIGHTING, vsg::StateAttribute::OFF);
-		axisCamera->addChild(m_swCoordAxes.get());
+		axisCamera->addChild(m_swCoordAxes.get());*/
 
-		m_rootnode->addChild(axisCamera.get());
+		m_rootNode->addChild(m_swCoordAxes);
 
-		m_secondLightSource = new vsg::LightSource;
-		vsg::Light * light = m_secondLightSource->getLight();
-		light->setLightNum(1);
-		light->setDiffuse({ 1.0f, 1.0f, 1.0f, 1.0f });
-		light->setSpecular({ 0.0f, 0.0f, 0.0f, 0.0f });
-		light->setAmbient({ 0.2f, 0.2f, 0.2f, 1.0f });
-		SetLightDir(light, vsg::PI_4);
-		m_swModel->addChild(m_secondLightSource);
+		m_secondLightSource = vsg::DirectionalLight::create();
+		SetLightDir(*m_secondLightSource, vsg::PI * 0.25);
 
-		m_swModel->getOrCreateStateSet()->setMode(GL_LIGHT1, vsg::StateAttribute::OFF);
+		m_mainLightSource = vsg::createHeadlight();
+		m_rootNode->addChild(m_mainLightSource);
 	}
 
 	Base3DSystem::~Base3DSystem()
@@ -240,13 +248,13 @@ namespace model3d
 
 	void Base3DSystem::setVerticalScale(double scale)
 	{
-		auto matrix = vsg::Matrix::scale(1.0, 1.0, scale);
-		auto newAxisOrg = m_axisOrg * m_verticalScaleNode->getInverseMatrix() * matrix;
-		m_verticalScaleNode->setMatrix(matrix);
-		recreateAxis(newAxisOrg);
+		auto matrix = vsg::scale(1.0, 1.0, scale);
+		auto newAxisOrg = PointToVec(m_axisOrg) * vsg::inverse(m_verticalScaleNode->matrix) * matrix;
+		m_verticalScaleNode->matrix= matrix;
+		recreateAxis(VecToPoint(newAxisOrg));
 	}
 
-	void Base3DSystem::setNodeNameConvertor(std::shared_ptr<IOsgNodeNameConvertor> nameConvertor)
+	void Base3DSystem::setNodeNameConvertor(std::shared_ptr<INodeNameConvertor> nameConvertor)
 	{
 		m_nodeConv = nameConvertor;
 	}
@@ -277,32 +285,19 @@ namespace model3d
 
 	void Base3DSystem::resetModel()
 	{
-		if (m_geomConverter)
-		{
-			m_geomConverter->clearMessagesCallback();
-			m_geomConverter->resetModel();
-		}
-
-		m_geomConverter.reset();
-		m_buildingModel.reset();
-		m_geomSettings.reset();
-	}
-
-	std::shared_ptr<GeometryConverter> Base3DSystem::getBackGeometryConverter()
-	{
-		if (!m_geomConverter)
-		{
-			m_buildingModel = std::make_shared<BuildingModel>();
-			m_geomSettings = std::make_shared<GeometrySettings>();
-			m_geomConverter = std::make_shared<GeometryConverter>(m_buildingModel, m_geomSettings);
-		}
-		return m_geomConverter;
 	}
 
 	void Base3DSystem::setEnableLight(bool enable)
 	{
-		auto newState = enable ? vsg::StateAttribute::ON : vsg::StateAttribute::OFF;
-		m_swModel->getOrCreateStateSet()->setMode(GL_LIGHTING, newState);
+		auto it = std::find(m_rootNode->children.begin(), m_rootNode->children.end(), m_mainLightSource);
+		bool present = it != m_rootNode->children.end();
+		if (enable != present)
+		{
+			if (enable)
+				m_rootNode->addChild(m_mainLightSource);
+			else
+				m_rootNode->children.erase(it);
+		}
 	}
 
 	void Base3DSystem::setShowBoundsMode(bool showBounds)
@@ -341,9 +336,9 @@ namespace model3d
 	{
 	}
 
-	void Base3DSystem::setPolygonMode(vsg::PolygonMode::Mode mode)
+	void Base3DSystem::setPolygonMode(std::optional<PolygonMode> const & mode)
 	{
-		if (mode == vsg::PolygonMode::FILL)
+		/*if (mode == PolygonMode::FILL)
 		{
 			if (m_polygonMode)
 				m_swModel->getOrCreateStateSet()->removeAttribute(m_polygonMode.release());
@@ -354,16 +349,16 @@ namespace model3d
 				m_polygonMode = new vsg::PolygonMode();
 			m_polygonMode->setMode(vsg::PolygonMode::FRONT_AND_BACK, mode);
 			m_swModel->getOrCreateStateSet()->setAttribute(m_polygonMode, ::vsg::StateAttribute::ON);
-		}
+		}*/
 	}
 
 	void Base3DSystem::setFrontCullFaceEnabled(bool enable)
 	{
-		if (enable)
+		/*if (enable)
 			m_swModel->getOrCreateStateSet()->setAttributeAndModes(m_frontCullFace,
 				vsg::StateAttribute::ON | vsg::StateAttribute::OVERRIDE);
 		else
-			m_swModel->getOrCreateStateSet()->removeAttribute(m_frontCullFace);
+			m_swModel->getOrCreateStateSet()->removeAttribute(m_frontCullFace);*/
 	}
 
 	bool Base3DSystem::isAuxNode(vsg::Node const & /*node*/) const
@@ -371,39 +366,42 @@ namespace model3d
 		return false;
 	}
 
-	vsg::ref_ptr<vsg::Camera> Base3DSystem::getHUDCamera() const
+	vsg::Camera * Base3DSystem::getHUDCamera() const
 	{
 		return nullptr;
 	}
 
-	vsg::ref_ptr<vsg::Group> Base3DSystem::getInteractiveParent() const
+	vsg::Group * Base3DSystem::getInteractiveParent() const
 	{
 		return nullptr;
 	}
 
-	void Base3DSystem::updateLightState(vsg::Vec3f const & /*org*/, double /*rad*/)
+	void Base3DSystem::updateLightState(CPoint3D const& /*org*/, double /*rad*/)
 	{
 	}
 
-	vsg::ref_ptr<osgText::Text> Base3DSystem::createText(vsg::Vec4 const & color, std::string const & text, vsg::Vec3 const & position,
-		float characterSizeAspectRatio)
+	vsg::ref_ptr<vsg::Text> Base3DSystem::createText(std::array<float, 4> const& color, std::string const& text, CPoint3D const& position, float characterSizeAspectRatio)
 	{
-		vsg::ref_ptr<osgText::Text> resText = new  osgText::Text();
+		vsg::ref_ptr<vsg::Text> resText = vsg::Text::create();
 		//resText->setFont("fonts/calibri.ttf");
-		resText->setAlignment(osgText::Text::RIGHT_TOP);
-		resText->setAxisAlignment(osgText::Text::SCREEN);
-		resText->setColor(color);
-		resText->setCharacterSize(0.5f * characterSizeAspectRatio);
-		resText->setText(text);
-		resText->setPosition(position);
-		resText->setEnableDepthWrites(false);
+
+		auto layout = vsg::StandardLayout::create();
+		layout->horizontalAlignment = vsg::StandardLayout::RIGHT_ALIGNMENT;
+		layout->verticalAlignment = vsg::StandardLayout::TOP_ALIGNMENT;
+		layout->color = vsg::vec4(color[0], color[1], color[2], color[3]);
+		layout->position = PointToVec(position);
+
+		resText->text = vsg::stringValue::create(text);
+		//resText->setAxisAlignment(osgText::Text::SCREEN);
+		//resText->setCharacterSize(0.5f * characterSizeAspectRatio);
+		//resText->setEnableDepthWrites(false);
 
 		return resText;
 	}
 
 	vsg::ref_ptr<::vsg::Geometry> Base3DSystem::createGrid(double gridR)
 	{
-		gridR = std::max(gridR, 1.0);
+		/*gridR = std::max(gridR, 1.0);
 
 		vsg::ref_ptr<vsg::Geometry> geom = new vsg::Geometry();
 		vsg::ref_ptr<vsg::Vec3dArray> vertices = new vsg::Vec3dArray();
@@ -432,75 +430,79 @@ namespace model3d
 
 		geom->getOrCreateStateSet()->setAttributeAndModes(new vsg::LineStipple(2, 0xAAAA), vsg::StateAttribute::ON);
 
-		return geom;
+		return geom;*/
+		return nullptr;
 	}
 
-	void Base3DSystem::recreateAxisForPlatform(vsg::BoundingBox const & bb)
+	void Base3DSystem::recreateAxisForPlatform(CRect3D const & bb)
 	{
-		ClearAllChildNodes(m_swCoordAxes);
+		ClearAllChildNodes(*m_swCoordAxes);
 
-		vsg::ref_ptr<vsg::Geode> geode = new vsg::Geode();
-		geode->setName("createCoordinateAxes::geode");
-		vsg::ref_ptr<vsg::StateSet> stateset = geode->getOrCreateStateSet();
-		stateset->setMode(GL_LIGHTING, vsg::StateAttribute::OFF);
+		vsg::ref_ptr<vsg::Group> geode = vsg::Group::create();
 		float alpha = 0.5f;
 		m_swCoordAxes->addChild(geode);
 
-		m_axisOrg = vsg::Vec3d(0.0, .0, 0.0);
+		m_axisOrg = CPoint3D(0.0);
 
-		double xLength = (bb.xMax() - bb.xMin()) * 0.5;
-		double yLength = (bb.yMax() - bb.yMin()) * 0.5;
-		double zLength = bb.zMax() - bb.zMin();
+		double xLength = (bb.max.xy.x - bb.min.xy.x) * 0.5;
+		double yLength = (bb.max.xy.y - bb.min.xy.y) * 0.5;
+		double zLength = bb.max.z - bb.min.z;
 
 		double r = std::max(xLength, yLength);
 		r += r * 0.2;
 
 		// positive axes
-		vsg::ref_ptr<vsg::Geometry> geom = new vsg::Geometry();
-		geode->addDrawable(geom);
+		vsg::ref_ptr<vsg::Geometry> geom = vsg::Geometry::create(6);
+		geode->addChild(geom);
 
-		vsg::ref_ptr<vsg::Vec3dArray> vertices = new vsg::Vec3dArray();
+		vsg::ref_ptr<vsg::dvec3Array> vertices = vsg::dvec3Array::create();
+		int32_t pos = 0;
 
-		vertices->push_back(m_axisOrg);
-		vsg::Vec3d xEnd = vsg::Vec3d(r, .0, 0.0);
-		vertices->push_back(xEnd);
+		auto axisOrg = PointToVec(m_axisOrg);
+		vertices->at(pos++) = axisOrg;
+		auto xEnd = vsg::dvec3(r, .0, 0.0);
+		vertices->at(pos++) = xEnd;
 
-		vertices->push_back(m_axisOrg);
-		vsg::Vec3f yEnd = vsg::Vec3d(.0, -r, 0.0);
-		vertices->push_back(yEnd);
+		vertices->at(pos++) = axisOrg;
+		auto yEnd = vsg::dvec3(.0, -r, 0.0);
+		vertices->at(pos++) = yEnd;
 
+		vertices->at(pos++) = axisOrg;
+		auto zEnd = vsg::dvec3(0.0, 0.0, r);
+		vertices->at(pos++) = zEnd;
 
-		vertices->push_back(m_axisOrg);
-		vsg::Vec3d zEnd = vsg::Vec3d(0.0, 0.0, r);
-		vertices->push_back(zEnd);
+		vsg::ref_ptr<vsg::vec4Array> colors = vsg::vec4Array::create(6);
 
-		vsg::ref_ptr<vsg::Vec4Array> colors = new vsg::Vec4Array();
+		pos = 0;
 
-		vsg::Vec4f xColor(1.f, 0.f, 0.f, alpha);
-		colors->push_back(xColor);
-		colors->push_back(xColor);
+		vsg::vec4 xColor(1.f, 0.f, 0.f, alpha);
+		colors->at(pos++) = xColor;
+		colors->at(pos++) = xColor;
 
-		vsg::Vec4f yColor(0.f, 0.8f, 0.f, alpha);
-		colors->push_back(yColor);
-		colors->push_back(yColor);
+		vsg::vec4 yColor(0.f, 0.8f, 0.f, alpha);
+		colors->at(pos++) = yColor;
+		colors->at(pos++) = yColor;
 
-		vsg::Vec4f zColor(0.f, 0.f, 1.f, alpha);
-		colors->push_back(zColor);
-		colors->push_back(zColor);
-		colors->setBinding(vsg::Array::BIND_PER_VERTEX);
-		geom->setColorArray(colors);
+		vsg::vec4 zColor(0.f, 0.f, 1.f, alpha);
+		colors->at(pos++) = zColor;
+		colors->at(pos++) = zColor;
 
-		geom->setVertexArray(vertices);
-		geom->addPrimitiveSet(new vsg::DrawArrays(vsg::PrimitiveSet::LINES, 0, 6));
+		auto attributteArray = vsg::DataList{ vertices };
+		attributteArray.push_back(colors);
+
+		geom->assignArrays(attributteArray);
+		//geom->addPrimitiveSet(new vsg::DrawArrays(vsg::PrimitiveSet::LINES, 0, 6));
+
+		geode->addChild(geom);
 
 		float aspectRation = static_cast<float>(r) * 0.2f;
 
-		geode->addDrawable(createText(xColor, "x", xEnd, aspectRation));
-		geode->addDrawable(createText(yColor, "y", yEnd, aspectRation));
-		geode->addDrawable(createText(zColor, "z", zEnd, aspectRation));
+		geode->addChild(createText(xColor, "x", xEnd, aspectRation));
+		geode->addChild(createText(yColor, "y", yEnd, aspectRation));
+		geode->addChild(createText(zColor, "z", zEnd, aspectRation));
 
 		// grid
-		geode->addDrawable(createGrid(std::max(xLength, yLength) * 1.2));
+		//geode->addDrawable(createGrid(std::max(xLength, yLength) * 1.2));
 	}
 
 	vsg::Vec3d const & Base3DSystem::getAxisOrg() const
@@ -511,7 +513,7 @@ namespace model3d
 	void Base3DSystem::recreateAxis(vsg::Vec3d const & axisOrg)
 	{
 		m_axisOrg = axisOrg;
-		ClearAllChildNodes(m_swCoordAxes);
+		ClearAllChildNodes(*m_swCoordAxes);
 
 		if (auto newNode = CreateAxisNode(m_axisParams, axisOrg))
 			m_swCoordAxes->addChild(newNode);
@@ -540,7 +542,7 @@ namespace model3d
 		return {};
 	}
 
-	vsg::ClipPlane * Base3DSystem::addClipPlane(double a, double b, double c, double d)
+	/*vsg::ClipPlane * Base3DSystem::addClipPlane(double a, double b, double c, double d)
 	{
 		int num = m_clipNode->getNumClipPlanes();
 		vsg::ref_ptr<vsg::ClipPlane> clipPlane = new vsg::ClipPlane();
@@ -561,13 +563,13 @@ namespace model3d
 	void Base3DSystem::removeClipPlane(vsg::ClipPlane * clipPlane)
 	{
 		VERIFY(m_clipNode->removeClipPlane(clipPlane));
-	}
+	}*/
 
-	vsg::BoundingBox Base3DSystem::calcWorldBoundingBox() const
+	CRect3D Base3DSystem::calcWorldBoundingBox() const
 	{
-		vsg::ComputeBoundsVisitor cbv;
+		vsg::ComputeBounds cbv;
 		m_swModel->accept(cbv);
-		vsg::BoundingBox localBB = cbv.getBoundingBox();
+		auto localBB = cbv.bounds;
 		vsg::Matrix localToWorld = vsg::computeLocalToWorld(m_swModel->getParent(0)->getParentalNodePaths()[0]);
 
 		vsg::BoundingBox bb;
@@ -581,32 +583,29 @@ namespace model3d
 		return nullptr;
 	}
 
-	vsg::BoundingSphere Base3DSystem::showNodes(size_t /*prjKey*/, std::set<size_t> const & /*nodes*/)
+	CSphere Base3DSystem::showNodes(size_t /*prjKey*/, std::set<size_t> const & /*nodes*/)
 	{
-		ASSERT(false);
-
-		vsg::BoundingSphere boundingSphere;
-		return boundingSphere;
+		return {};
 	}
 
-	void Base3DSystem::showSkyBox(bool /*show*/, QImage const * cubemap)
+	void Base3DSystem::showSkyBox(bool /*show*/, void const * /*cubemap*/)
 	{
 	}
 
 	void Base3DSystem::updateVisibilityForNodes(size_t /*prjKey*/, std::set<size_t> const & /*unvisibleNodes*/,
 		std::set<size_t> const & /*restoreVisibility*/)
 	{
-		ASSERT(false);
+		//ASSERT(false);
 	}
 
 	void Base3DSystem::deleteNode(std::vector<size_t> const & /*objectKey*/, vsg::Group * /*fromParent = nullptr*/)
 	{
-		ASSERT(false);
+		//ASSERT(false);
 	}
 
 	void Base3DSystem::setSelectedObj(vsg::Group * /*node*/, bool /*selected*/, SelectType /*selType*/)
 	{
-		ASSERT(false);
+		//ASSERT(false);
 	}
 
 	void Base3DSystem::setObjectUnderCursor(std::vector<size_t> const & /*objectKey*/, bool /*selected*/, vsg::Group * /* grp = nullptr*/)
@@ -615,7 +614,7 @@ namespace model3d
 
 	vsg::Group * Base3DSystem::getRootNode()
 	{
-		return m_rootnode;
+		return m_rootNode;
 	}
 
 	vsg::MatrixTransform const & Base3DSystem::getVerticalScaleNode() const
@@ -631,13 +630,13 @@ namespace model3d
 	bool Base3DSystem::isEmptyModel() const
 	{
 		// 1 - ый ребенок - m_secondLightSource
-		return m_swModel->getNumChildren() < 2;
+		return m_swModel->children.size() < 2;
 	}
 
 	void Base3DSystem::clearAllNodes()
 	{
 		clearModelNode();
-		ClearAllChildNodes(m_swCoordAxes);
+		ClearAllChildNodes(*m_swCoordAxes);
 	}
 
 	void Base3DSystem::clearModelNode()
@@ -646,20 +645,20 @@ namespace model3d
 		{
 			return node != m_secondLightSource;
 		};
-		ClearAllChildNodes(m_swModel, dontRemoveLight);
+		ClearAllChildNodes(*m_swModel, dontRemoveLight);
 
-		if (m_swModel->getNumChildren() == 0) // ClearAllChildNodes достает m_secondLightSource из m_swModel
-			m_swModel->addChild(m_secondLightSource);
+		if (m_swModel->children.empty()) // ClearAllChildNodes достает m_secondLightSource из m_swModel
+			m_swModel->addChild(true, m_secondLightSource);
 
 		for (auto & pairData : m_unvisibleModel)
-			ClearAllChildNodes(pairData.second);
+			ClearAllChildNodes(*pairData.second);
 		m_unvisibleModel.clear();
-		removeClipPlanes();
+		//removeClipPlanes();
 	}
 
-	vsg::Switch * Base3DSystem::getCoordinateAxesNode()
+	vsg::Group * Base3DSystem::getCoordinateAxesNode()
 	{
-		return m_swCoordAxes;
+		return m_swCoordAxes.get();
 	}
 
 	void Base3DSystem::setAxisParams(AxisParams const & axisParams)
@@ -669,10 +668,10 @@ namespace model3d
 
 	void Base3DSystem::setRootNode(vsg::Group * root)
 	{
-		m_rootnode = root;
+		m_rootNode = root;
 	}
 
-	model3d::ArbitraryPropTypes Base3DSystem::getHideTypes() const
+	/*model3d::ArbitraryPropTypes Base3DSystem::getHideTypes() const
 	{
 		return {};
 	}
@@ -680,71 +679,61 @@ namespace model3d
 	bool Base3DSystem::changeHideTypes(ArbitraryPropTypes)
 	{
 		return false;
-	}
+	}*/
 
-	void Base3DSystem::ClearAllChildNodes(vsg::Group * group, std::function<bool(vsg::Node *)> const & needRemoveNode /*= nullptr*/)
+	namespace
 	{
-		using node_t = vsg::Node;
-
-		int numChildren = group->getNumChildren();
-
-		for (int i = numChildren - 1; i >= 0; --i)
+		template<class TNode>
+		void TClearAllChildNodes(TNode & group, std::function<bool(vsg::Node*)> const& needRemoveNode /*= nullptr*/)
 		{
-			node_t * node = group->getChild(i);
-
-			node_t const * constNode = node;
-			auto const & parents = constNode->getParents();
-
-			if (needRemoveNode && !needRemoveNode(node))
+			for (auto it = group.children.begin(); it != group.children.end();)
 			{
-				/// удалим из списка потомков group узел, который не нужно удалять
-				if (parents.size() > 1)
+				if (needRemoveNode && !needRemoveNode(*it))
 				{
-					/// Чтобы сохранить связь с другими родителями для node, удалим таким образом
-					group->removeChildren(i, 1); 
+					++it;
+					continue;
+				}
+
+				auto clearGroup = [&](auto & node)
+				{
+						TClearAllChildNodes(node, needRemoveNode);
+						if (node.children.empty())
+						{
+							it = group.children.erase(it);
+						}
+						else
+							++it;
+				};
+
+				if (auto childAsGroup = it->cast<vsg::Group>())
+				{
+					clearGroup(*childAsGroup);
+				}
+				else if (auto childAsSwitch = it->cast<vsg::Switch>())
+				{
+					clearGroup(*childAsSwitch);
 				}
 				else
-				{
-					// Остался один родитель(group)
-					// Чтобы не удалился node, очистим список родителей таким образом
-					const_cast<node_t::ParentList *>(&parents)->clear();
-				}
-				continue;
+					it = group.children.erase(it);
 			}
-			/// хак - чистим родителей
-			const_cast<node_t::ParentList *>(&parents)->clear();
-
-			if (auto childGroup = node->asGroup())
-				ClearAllChildNodes(childGroup, needRemoveNode);
-
-			node->releaseGLObjects();
-			if (node->getStateSet())
-				node->setStateSet(nullptr);
-
-			if (needRemoveNode)
-				group->removeChildren(i, 1);
 		}
+	}
 
-		if (!needRemoveNode)
-			group->removeChildren(0, numChildren);
+	void Base3DSystem::ClearAllChildNodes(vsg::Node & group, std::function<bool(vsg::Node *)> const & needRemoveNode /*= nullptr*/)
+	{
+		if (auto childAsGroup = group.cast<vsg::Group>())
+		{
+			TClearAllChildNodes(*childAsGroup, needRemoveNode);
+		}
+		else if (auto childAsSwitch = group.cast<vsg::Switch>())
+		{
+			TClearAllChildNodes(*childAsSwitch, needRemoveNode);
+		}
 	}
 
 	//////////////////////////////////////////////////////////////////////////
-	Base3DSystem * MakeBase3DSystem(std::unique_ptr<IOsgNodeNameConvertor> && nodeConv)
+	Base3DSystem * MakeBase3DSystem(std::unique_ptr<INodeNameConvertor> && nodeConv)
 	{
 		return new Base3DSystem(std::move(nodeConv));
-	}
-
-	void SetLightDir(vsg::Light * lihght, double az)
-	{
-		auto lightPosition = lihght->getPosition();
-
-		double dirXY = std::cos(az) / std::sqrt(2.0);
-		double dirZ = std::sin(az);
-		lightPosition.x() = static_cast<float>(dirXY);
-		lightPosition.y() = static_cast<float>(dirXY);
-		lightPosition.z() = static_cast<float>(dirZ);
-
-		lihght->setPosition(lightPosition);
 	}
 }

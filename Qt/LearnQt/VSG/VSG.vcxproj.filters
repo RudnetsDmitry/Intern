@@ -66,7 +66,7 @@
     <ClInclude Include="Qt\vulkanwindow.h">
       <Filter>Qt\VulcanCubes</Filter>
     </ClInclude>
-    <ClInclude Include="3DSystem.h">
+    <ClInclude Include="I3DSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="3DStructures.h">

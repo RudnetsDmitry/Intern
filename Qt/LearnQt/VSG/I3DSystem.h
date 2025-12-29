@@ -8,10 +8,10 @@
 ///
 
 #pragma once
-#include <functional>
 
 #include "3DStructures.h"
 
+#include <functional>
 #include <memory>
 #include <optional>
 #include <set>
@@ -37,8 +37,10 @@ namespace model3d
 		virtual std::vector<size_t> nodeName2Key(std::string const & nodeName) const = 0;
 	};
 
-	struct  I3DSystem
+	struct I3DSystem
 	{
+		virtual ~I3DSystem(){}
+
 		virtual void setNodeNameConvertor(std::shared_ptr<INodeNameConvertor>) = 0;
 		/// есть ли объект в модели
 		virtual bool isPresentEntityInModel(std::vector<size_t> const & objectKey) const = 0;
@@ -92,7 +94,7 @@ namespace model3d
 		virtual bool isEmptyModel() const = 0;
 		virtual void clearModelNode() = 0;
 		virtual void clearAllNodes() = 0;
-		virtual vsg::Switch * getCoordinateAxesNode() = 0;
+		virtual vsg::Group * getCoordinateAxesNode() = 0;
 		virtual void setRootNode(vsg::Group * root) = 0;
 
 		virtual void connectOnObjectUnderCursor(std::function<void(std::vector<size_t> const &)>) = 0;

@@ -90,7 +90,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="3DStructures.h" />
-    <ClInclude Include="3DSystem.h" />
+    <ClInclude Include="I3DSystem.h" />
     <ClInclude Include="3DSystemBase.h" />
     <ClInclude Include="ExportFunctions.h" />
     <ClInclude Include="KeyboardMap.h" />

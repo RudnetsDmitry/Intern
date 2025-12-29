@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "3DSystem.h"
+#include "I3DSystem.h"
 
 #include <map>
 
@@ -22,6 +22,7 @@ class GeometrySettings;
 
 namespace vsg
 {
+	class DirectionalLight;
 	class Camera;
 	class MatrixTransform;
 	class Geometry;
@@ -34,10 +35,10 @@ namespace model3d
 	class Base3DSystem : public I3DSystem
 	{
 	protected:
-		vsg::ref_ptr<vsg::Group>					m_rootnode;
+		vsg::ref_ptr<vsg::Group>					m_rootNode;
 		vsg::ref_ptr<vsg::MatrixTransform>			m_verticalScaleNode;
 
-		vsg::ref_ptr<vsg::Switch>					m_swCoordAxes;
+		vsg::ref_ptr<vsg::Group>					m_swCoordAxes;
 		//vsg::ref_ptr<vsg::ClipNode>					m_clipNode;
 		vsg::ref_ptr<vsg::Switch>					m_swModel;
 
@@ -51,7 +52,9 @@ namespace model3d
 		std::map<std::vector<size_t>, vsg::ref_ptr<vsg::Group>> m_unvisibleModel;
 
 		/// данный источник света используется для моделей, загруженных из IFC
-		vsg::ref_ptr<vsg::Light> m_secondLightSource;
+		vsg::ref_ptr<vsg::DirectionalLight> m_secondLightSource;
+		/// основной источник света
+		vsg::ref_ptr<vsg::Node> m_mainLightSource;
 
 		// Надо ли отображать границы тел
 		bool m_showBounds;
@@ -86,14 +89,14 @@ namespace model3d
 
 		void setEnableLight(bool enable);
 
-		void setPolygonMode(std::optional<PolygonMode> const& mode) override;
+		void setPolygonMode(std::optional<PolygonMode> const & mode) override;
 		void setFrontCullFaceEnabled(bool enable) override;
 		bool isAuxNode(vsg::Node const & node) const override;
 		vsg::Camera * getHUDCamera() const override;
 		vsg::Group * getInteractiveParent() const override;
 		void updateLightState(CPoint3D const & /*org*/, double /*rad*/) override;
 
-		static vsg::ref_ptr<vsg::Text> createText(std::array<double, 4> const & color, std::string const & text, CPoint3D const & position, float characterSizeAspectRatio);
+		static vsg::ref_ptr<vsg::Text> createText(std::array<float, 4> const & color, std::string const & text, CPoint3D const & position, float characterSizeAspectRatio);
 		static vsg::ref_ptr<::vsg::Geometry> createGrid(double gridR);
 
 		void recreateAxisForPlatform(CRect3D const & bb) override;
@@ -129,7 +132,7 @@ namespace model3d
 		void clearAllNodes() override;
 		void clearModelNode() override;
 
-		vsg::Switch* getCoordinateAxesNode() override;
+		vsg::Group * getCoordinateAxesNode() override;
 		void setAxisParams(AxisParams const & axisParams);
 
 		void setRootNode(vsg::Group * root) override;
@@ -139,7 +142,7 @@ namespace model3d
 		virtual bool changeHideTypes(ArbitraryPropTypes);*/
 
 	protected:
-		static void ClearAllChildNodes(vsg::Group* group, std::function<bool (vsg::Node *)> const & needRemoveNode = nullptr);
+		static void ClearAllChildNodes(vsg::Node & group, std::function<bool (vsg::Node *)> const & needRemoveNode = nullptr);
 	};
 
 	//////////////////////////////////////////////////////////////////////////

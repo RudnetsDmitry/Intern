@@ -15,4 +15,5 @@ namespace model3d
 	struct CPoint3D;
 
 	vsg::dvec3 PointToVec(CPoint3D const & pt);
+	CPoint3D VecToPoint(vsg::dvec3 const & pt);
 }

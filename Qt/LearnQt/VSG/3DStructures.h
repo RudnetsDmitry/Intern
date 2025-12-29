@@ -27,6 +27,11 @@ namespace model3d
 		{
 		}
 
+		CPoint2D(double xVal, double yVal)
+			: x(xVal)
+			, y(yVal)
+		{}
+
 		bool IsValid() const
 		{
 			return x != DOUBLE_EMPTY && y != DOUBLE_EMPTY;
@@ -43,6 +48,13 @@ namespace model3d
 			: xy(v)
 			, z(v)
 		{
+		}
+
+		CPoint3D(double xVal, double yVal, double zVal)
+			: xy(xVal, yVal)
+			, z(zVal)
+		{
+			
 		}
 
 		bool IsValid() const
