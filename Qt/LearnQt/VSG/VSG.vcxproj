@@ -21,13 +21,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -112,7 +112,7 @@
     <ClCompile Include="ExportFunctions.cpp" />
     <ClCompile Include="KeyboardMap.cpp" />
     <ClCompile Include="Platform2VSG.cpp" />
-    <ClCompile Include="Platform2VSG.h" />
+    <ClInclude Include="Platform2VSG.h" />
     <ClCompile Include="Qt\camera.cpp" />
     <ClCompile Include="Qt\mainwindow.cpp" />
     <ClCompile Include="Qt\mesh.cpp" />

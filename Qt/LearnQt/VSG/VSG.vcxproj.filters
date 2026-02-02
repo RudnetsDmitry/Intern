@@ -75,6 +75,9 @@
     <ClInclude Include="3DSystemBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Platform2VSG.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -124,9 +127,6 @@
     </ClCompile>
     <ClCompile Include="3DSystemBase.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Platform2VSG.h">
-      <Filter>Header Files</Filter>
     </ClCompile>
     <ClCompile Include="Platform2VSG.cpp">
       <Filter>Source Files</Filter>

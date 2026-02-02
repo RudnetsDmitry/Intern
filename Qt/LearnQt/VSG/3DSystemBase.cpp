@@ -37,8 +37,19 @@ namespace
 			return std::numbers::pi_v<float> * degree / 180.f;
 		else
 			return std::numbers::pi_v<double> * degree / 180.;
-
 	}
+
+	vsg::vec4 ToVec4(std::array<float, 4> const & val)
+	{
+		return { val[0], val[1], val[2], val[3] };
+	}
+
+	std::array<float, 4> ToArray(vsg::vec4 const & val)
+	{
+		return { val.x, val.y, val.z, val.a };
+	}
+
+	
 }
 namespace model3d
 {
@@ -192,9 +203,9 @@ namespace model3d
 
 		double dirXY = std::cos(az) / std::sqrt(2.0);
 		double dirZ = std::sin(az);
-		lightPosition.x() = static_cast<float>(dirXY);
-		lightPosition.y() = static_cast<float>(dirXY);
-		lightPosition.z() = static_cast<float>(dirZ);
+		lightPosition.x = static_cast<float>(dirXY);
+		lightPosition.y = static_cast<float>(dirXY);
+		lightPosition.z = static_cast<float>(dirZ);
 	}
 
 	Base3DSystem::Base3DSystem(std::unique_ptr<INodeNameConvertor> nodeConv)
@@ -497,20 +508,20 @@ namespace model3d
 
 		float aspectRation = static_cast<float>(r) * 0.2f;
 
-		geode->addChild(createText(xColor, "x", xEnd, aspectRation));
-		geode->addChild(createText(yColor, "y", yEnd, aspectRation));
-		geode->addChild(createText(zColor, "z", zEnd, aspectRation));
+		geode->addChild(createText(ToArray(xColor), "x", VecToPoint(xEnd), aspectRation));
+		geode->addChild(createText(ToArray(yColor), "y", VecToPoint(yEnd), aspectRation));
+		geode->addChild(createText(ToArray(zColor), "z", VecToPoint(zEnd), aspectRation));
 
 		// grid
 		//geode->addDrawable(createGrid(std::max(xLength, yLength) * 1.2));
 	}
 
-	vsg::Vec3d const & Base3DSystem::getAxisOrg() const
+	CPoint3D const & Base3DSystem::getAxisOrg() const
 	{
 		return m_axisOrg;
 	}
 
-	void Base3DSystem::recreateAxis(vsg::Vec3d const & axisOrg)
+	void Base3DSystem::recreateAxis(CPoint3D const & axisOrg)
 	{
 		m_axisOrg = axisOrg;
 		ClearAllChildNodes(*m_swCoordAxes);

@@ -70,7 +70,7 @@ namespace model3d
 
 		bool IsValid() const
 		{
-			return min.x < max.x ;
+			return min.xy.x < max.xy.x ;
 		}
 	};
 
