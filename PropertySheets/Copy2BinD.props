@@ -26,9 +26,11 @@
 				xcopy /y /d "$(LibsDebugPath)\bin\freetyped.dll" "$(TargetDir)"
 				xcopy /y /d "$(LibsDebugPath)\bin\zlibd1.dll" "$(TargetDir)"
 				
-				xcopy /y /d "$(LibsDebugPath)\bin\icuind74.dll" "$(TargetDir)"
-				xcopy /y /d "$(LibsDebugPath)\bin\icuucd74.dll" "$(TargetDir)"
-				xcopy /y /d "$(LibsDebugPath)\bin\icudtd74.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsDebugPath)\bin\md4c.dll" "$(TargetDir)"
+				
+				xcopy /y /d "$(LibsDebugPath)\bin\icuind78.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsDebugPath)\bin\icuucd78.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsDebugPath)\bin\icudtd78.dll" "$(TargetDir)"
 				xcopy /y /d "$(LibsDebugPath)\bin\double-conversion.dll" "$(TargetDir)"
 				xcopy /y /d "$(LibsDebugPath)\bin\pcre2-16d.dll" "$(TargetDir)"
 				
@@ -39,7 +41,7 @@
 				xcopy /y /d "$(LibsDebugPath)\bin\bz2d.dll" "$(TargetDir)"
 				xcopy /y /d "$(LibsDebugPath)\bin\brotlicommon.dll" "$(TargetDir)"
 				
-				xcopy /y /d "$(LibsDebugPath)\bin\vsg-14d.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsDebugPath)\bin\vsg-15d.dll" "$(TargetDir)"
 				
 				
 				</Command>
