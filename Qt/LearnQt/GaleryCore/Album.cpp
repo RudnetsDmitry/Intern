@@ -14,7 +14,7 @@
 
 namespace gallery
 {
-	Album::Album(const QString& name /*= QString()*/)
+	Album::Album(const QString & name /*= QString()*/)
 		: m_Name(name)
 		, m_Id(EntityIdType::InvalidId)
 	{

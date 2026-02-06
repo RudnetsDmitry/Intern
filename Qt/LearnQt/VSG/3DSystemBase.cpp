@@ -463,7 +463,7 @@ namespace model3d
 		r += r * 0.2;
 
 		// positive axes
-		vsg::ref_ptr<vsg::Geometry> geom = vsg::Geometry::create(6);
+		vsg::ref_ptr<vsg::Geometry> geom = vsg::Geometry::create();
 		geode->addChild(geom);
 
 		vsg::ref_ptr<vsg::dvec3Array> vertices = vsg::dvec3Array::create();
@@ -581,12 +581,14 @@ namespace model3d
 		vsg::ComputeBounds cbv;
 		m_swModel->accept(cbv);
 		auto localBB = cbv.bounds;
-		vsg::Matrix localToWorld = vsg::computeLocalToWorld(m_swModel->getParent(0)->getParentalNodePaths()[0]);
+		/*vsg::Matrix localToWorld = vsg::computeLocalToWorld(m_swModel->getParent(0)->getParentalNodePaths()[0]);
 
 		vsg::BoundingBox bb;
 		for (unsigned int i = 0; i < 8; ++i)
 			bb.expandBy(localBB.corner(i) * localToWorld);
-		return bb;
+		return bb;*/
+		// ToDo 
+		return {};
 	}
 
 	::vsg::Group * Base3DSystem::objUnderCursor() const
@@ -694,12 +696,23 @@ namespace model3d
 
 	namespace
 	{
+		template<class TChild>
+		vsg::Node * ChildToNode(TChild const & it)
+		{
+			return it;
+		}
+
+		vsg::Node* ChildToNode(vsg::Switch::Child const & it)
+		{
+			return it.node;
+		}
+
 		template<class TNode>
 		void TClearAllChildNodes(TNode & group, std::function<bool(vsg::Node*)> const& needRemoveNode /*= nullptr*/)
 		{
 			for (auto it = group.children.begin(); it != group.children.end();)
 			{
-				if (needRemoveNode && !needRemoveNode(*it))
+				if (needRemoveNode && !needRemoveNode(ChildToNode(*it)))
 				{
 					++it;
 					continue;
@@ -716,16 +729,17 @@ namespace model3d
 							++it;
 				};
 
-				if (auto childAsGroup = it->cast<vsg::Group>())
+				if (auto childAsGroup = ChildToNode(*it)->cast<vsg::Group>())
 				{
 					clearGroup(*childAsGroup);
 				}
-				else if (auto childAsSwitch = it->cast<vsg::Switch>())
+				else if (auto childAsSwitch = ChildToNode(*it)->cast<vsg::Switch>())
 				{
 					clearGroup(*childAsSwitch);
 				}
 				else
 					it = group.children.erase(it);
+				
 			}
 		}
 	}
