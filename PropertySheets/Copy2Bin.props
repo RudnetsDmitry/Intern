@@ -39,7 +39,7 @@
 				xcopy /y /d "$(LibsPath)\bin\bz2.dll" "$(TargetDir)"
 				xcopy /y /d "$(LibsPath)\bin\brotlicommon.dll" "$(TargetDir)"
 				
-				xcopy /y /d "$(LibsPath)\bin\vsg-14.dll" "$(TargetDir)"				
+				xcopy /y /d "$(LibsPath)\bin\vsg-16.dll" "$(TargetDir)"				
 				
 				</Command>
     </PostBuildEvent>

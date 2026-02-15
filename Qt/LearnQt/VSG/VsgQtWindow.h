@@ -13,6 +13,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 </editor-fold> */
 
 //#include <QVulkanInstance>
+#include <QWidget>
 #include <QWindow>
 
 #include <vsg/app/Window.h>
@@ -27,11 +28,11 @@ namespace vsg
 
 namespace vsgQt
 {
-	class Window : public QWindow
+	class Window : public QWidget
 	{
-		using base_t = QWindow;
+		using base_t = QWidget;
 	public:
-		Window(QWindow * parent);
+		Window(QWidget * parent);
 
 		~Window() override;
 		
@@ -53,7 +54,8 @@ namespace vsgQt
 
 		bool event(QEvent* e) override;
 
-		void exposeEvent(QExposeEvent*) override;
+		void paintEvent(QPaintEvent * event) override;
+		//void exposeEvent(QExposeEvent*) override;
 		void hideEvent(QHideEvent* ev) override;
 
 		void keyPressEvent(QKeyEvent*) override;
@@ -72,8 +74,6 @@ namespace vsgQt
 		std::pair<int32_t, int32_t> convertMousePosition(QMouseEvent* e) const;
 
 	private:
-		bool m_initialized = false;
-
 		vsg::ref_ptr<vsg::WindowTraits> m_traits;
 		vsg::ref_ptr<Viewer> m_viewer;
 

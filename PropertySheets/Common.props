@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
-    <LibsPath>k:\Develop\Libs\vcpkg\installed\x64-windows</LibsPath>
+    <LibsPath>d:\vcpkg\installed\x64-windows</LibsPath>
     <!-- <BoostLibsPath>$(LibsPath)\boost\boost_dir</BoostLibsPath> -->
   </PropertyGroup>
   <PropertyGroup>

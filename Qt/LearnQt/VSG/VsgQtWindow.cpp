@@ -12,7 +12,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 
 #include "stdafx.h"
-#include "Window.h"
+#include "VsgQtWindow.h"
 
 #include <vsg/all.h>
 
@@ -23,7 +23,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 namespace vsgQt
 {
-	Window::Window(QWindow* parent)
+	Window::Window(QWidget* parent)
 	:	base_t(parent),
 		m_keyboardMap(KeyboardMap::create())
 	{
@@ -132,19 +132,28 @@ namespace vsgQt
 			break;
 		}
 
-		return QWindow::event(e);
+		return QWidget::event(e);
 	}
 
-	void Window::exposeEvent(QExposeEvent* /*e*/)
+	void Window::paintEvent(QPaintEvent * /*event*/)
 	{
-		if (!m_initialized && isExposed())
-		{
-			initializeWindow();
-		}
-
+		//QWidget::paintEvent(event);
+		initializeWindow();
+		
 		if (m_viewer)
 			m_viewer->render();
 	}
+
+	//void Window::exposeEvent(QExposeEvent* /*e*/)
+	//{
+	//	if (!m_initialized && isExposed())
+	//	{
+	//		initializeWindow();
+	//	}
+
+	//	if (m_viewer)
+	//		m_viewer->render();
+	//}
 
 	void Window::hideEvent(QHideEvent* /*e*/)
 	{

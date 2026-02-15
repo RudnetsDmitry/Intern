@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Label="UserMacros">
-    <LibsPath>D:\Develop\Libs\vcpkg\installed\x64-windows</LibsPath>
+    <LibsPath>D:\vcpkg\installed\x64-windows</LibsPath>
     <LibsDebugPath>$(LibsPath)\debug</LibsDebugPath>
     <IncludePath>$(LibsPath)\include</IncludePath>
   </PropertyGroup>
@@ -14,6 +14,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
+	  <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalOptions>/Zc:__cplusplus /bigobj /utf-8 %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -22,4 +23,9 @@
       <AdditionalLibraryDirectories>$(LibsPath)\lib;$(LibsPath)\debug\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="LibsPath">
+      <Value>$(LibsPath)</Value>
+    </BuildMacro>
+  </ItemGroup>
 </Project>

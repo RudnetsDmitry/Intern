@@ -41,7 +41,7 @@
 				xcopy /y /d "$(LibsDebugPath)\bin\bz2d.dll" "$(TargetDir)"
 				xcopy /y /d "$(LibsDebugPath)\bin\brotlicommon.dll" "$(TargetDir)"
 				
-				xcopy /y /d "$(LibsDebugPath)\bin\vsg-15d.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsDebugPath)\bin\vsg-16d.dll" "$(TargetDir)"
 				
 				
 				</Command>

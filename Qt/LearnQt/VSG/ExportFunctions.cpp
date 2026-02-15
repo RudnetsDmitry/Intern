@@ -33,7 +33,8 @@
 
 #include <vsg/all.h>
 
-#include "Window.h"
+#include "SolidModelWindow.h"
+#include "VsgQtWindow.h"
 
 namespace
 {
@@ -314,9 +315,9 @@ namespace
 
 	vsgQt::Window* createWindow(QWindow* parent, const QString& title = {})
 	{
-		auto window = new vsgQt::Window(parent);
+		auto window = new vsgQt::Window(nullptr);
 
-		window->setTitle(title);
+		//window->setTitle(title);
 
 		window->initializeWindow();
 		
@@ -376,7 +377,7 @@ namespace gallery
 {
 	QMainWindow* MakeVSGWindow()
 	{
-		QMainWindow* mainWindow = new QMainWindow();
+		/*QMainWindow* mainWindow = new QMainWindow();
 
 		auto window = createWindow(nullptr, "First Window");
 		auto& windowTraits = window->getTraits();
@@ -391,8 +392,10 @@ namespace gallery
 
 		mainWindow->show();
 
-		window->getViewer().compile();
+		window->getViewer().compile();*/
 
+		auto * mainWindow = new model3d::SolidModelWindow(nullptr);
+		mainWindow->show();
 		return mainWindow;
 	}
 }

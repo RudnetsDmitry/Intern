@@ -42,7 +42,7 @@
     <ClInclude Include="Viewer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Window.h">
+    <ClInclude Include="VsgQtWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Qt\camera.h">
@@ -78,6 +78,9 @@
     <ClInclude Include="Platform2VSG.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SolidModelWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -95,7 +98,7 @@
     <ClCompile Include="Viewer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Window.cpp">
+    <ClCompile Include="VsgQtWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ExportFunctions_Qt.cpp">
@@ -129,6 +132,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Platform2VSG.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SolidModelWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

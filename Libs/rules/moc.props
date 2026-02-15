@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup Label="UserMacros">
-		<LibsPath>D:\Develop\Libs\vcpkg\installed\x64-windows</LibsPath>
+		<LibsPath>D:\vcpkg\installed\x64-windows</LibsPath>
 		<QtBinPath>$(LibsPath)\tools\Qt6\bin</QtBinPath>
 	</PropertyGroup>
   <PropertyGroup

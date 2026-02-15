@@ -101,10 +101,11 @@
     <ClInclude Include="Qt\shader.h" />
     <ClInclude Include="Qt\trianglerenderer.h" />
     <ClInclude Include="Qt\vulkanwindow.h" />
+    <ClInclude Include="SolidModelWindow.h" />
     <ClInclude Include="Viewer.h" />
     <ClInclude Include="VSGExp.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="Window.h" />
+    <ClInclude Include="VsgQtWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3DSystemBase.cpp" />
@@ -120,6 +121,7 @@
     <ClCompile Include="Qt\shader.cpp" />
     <ClCompile Include="Qt\trianglerenderer.cpp" />
     <ClCompile Include="Qt\vulkanwindow.cpp" />
+    <ClCompile Include="SolidModelWindow.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -130,7 +132,7 @@
     </ClCompile>
     <ClCompile Include="Viewer.cpp" />
     <ClCompile Include="ExportFunctions_Qt.cpp" />
-    <ClCompile Include="Window.cpp" />
+    <ClCompile Include="VsgQtWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <res Include="Qt\hellovulkancubes.qrc" />
