@@ -23,7 +23,7 @@ namespace model3d
 	{
 		using base_t = QMainWindow;
 
-		struct Impl;
+		class Impl;
 		std::unique_ptr<Impl> m_impl;
 	public:
 		SolidModelWindow(QWidget* parent);

@@ -67,7 +67,7 @@ namespace model3d
 
 	public:
 		Base3DSystem(std::unique_ptr<INodeNameConvertor> nodeConv);
-		virtual ~Base3DSystem();
+		~Base3DSystem() override;
 
 	public:
 		void setNodeNameConvertor(std::shared_ptr<INodeNameConvertor> nameConvertor) override;
@@ -79,13 +79,13 @@ namespace model3d
 		void resetModel() override;
 		void setShowBoundsMode(bool showBounds) override;
 		bool getShowBoundsMode() const override;
-		virtual std::optional<float> getLODBound() const override;
-		virtual void setLODBound(std::optional<float> const &) override;
-		virtual bool useTransparentModeForSelect() const override;
-		virtual void setTransparentModeForSelect(bool set) override;
-		virtual void setHighlightSelected(bool flag) override;
+		std::optional<float> getLODBound() const override;
+		void setLODBound(std::optional<float> const &) override;
+		bool useTransparentModeForSelect() const override;
+		void setTransparentModeForSelect(bool set) override;
+		void setHighlightSelected(bool flag) override;
 
-		virtual void setSelectColor(SelectType type, COLORREF color)override;
+		void setSelectColor(SelectType type, COLORREF color)override;
 
 		void setEnableLight(bool enable);
 
@@ -103,7 +103,7 @@ namespace model3d
 		void recreateAxis(CPoint3D const& org = CPoint3D(.0)) override;
 		CPoint3D const & getAxisOrg() const override;
 
-		void clearUnderCursor();
+		void clearUnderCursor() override;
 		void clearSelection() override;
 
 		bool isObjectUnderCursor(std::vector<size_t> const & objectKey) const override;

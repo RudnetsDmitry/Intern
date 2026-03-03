@@ -26,7 +26,12 @@
 #include <vsg/text/Text.h>
 
 #include <numbers>
+#include <nodes/StateGroup.h>
+#include <nodes/VertexDraw.h>
+#include <nodes/VertexIndexDraw.h>
 #include <utils/ComputeBounds.h>
+
+#include "Utils/ShaderUtilsVSG.h"
 
 namespace
 {
@@ -58,12 +63,12 @@ namespace model3d
 		if (!params.areAxisVisible)
 			return nullptr;
 
-		auto axis = vsg::Commands::create();
+		auto axis = vsg::Group::create();
 		axis->setValue("name", "createCoordinateAxes::geode");
 
-		auto lineWidth = vsg::SetLineWidth::create();
+		/*auto lineWidth = vsg::SetLineWidth::create();
 		lineWidth->lineWidth = static_cast<float>(params.lineAxisWidth);
-		axis->addChild(lineWidth);
+		axis->addChild(lineWidth);*/
 
 		float alpha = 0.5f;
 
@@ -162,13 +167,19 @@ namespace model3d
 					colors->at(pos++) = axisColors[i];
 			}
 
+			auto stategraph = vsg3d::createLineStateGroup(nullptr, VK_PRIMITIVE_TOPOLOGY_LINE_LIST, 1);
+
 			auto attributteArray = vsg::DataList{vertices};
 			attributteArray.push_back(colors);
 
-			vsg::ref_ptr<vsg::Geometry> geom = vsg::Geometry::create();
-			geom->assignArrays(attributteArray);
+			auto vd = vsg::VertexDraw::create();
+			vd->assignArrays(attributteArray);
+			vd->vertexCount = count;
+			vd->instanceCount = 1;
+			
+			stategraph->addChild(vd);	
 
-			axis->addChild(geom);
+			axis->addChild(stategraph);
 
 			//geom->addPrimitiveSet(new vsg::DrawArrays(vsg::PrimitiveSet::LINES, 0, verticesPerAxis * 3));
 
@@ -252,10 +263,7 @@ namespace model3d
 		m_rootNode->addChild(m_mainLightSource);
 	}
 
-	Base3DSystem::~Base3DSystem()
-	{
-		clearModelNode();
-	}
+	Base3DSystem::~Base3DSystem() = default;
 
 	void Base3DSystem::setVerticalScale(double scale)
 	{

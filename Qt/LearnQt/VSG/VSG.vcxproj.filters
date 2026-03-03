@@ -25,6 +25,9 @@
     <Filter Include="Qt\VulcanCubes">
       <UniqueIdentifier>{5e64c044-dddf-4eaa-8305-72f3be0e3a20}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{7d05ad24-b57d-4e85-84ec-6dd0a384f83e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -81,6 +84,12 @@
     <ClInclude Include="SolidModelWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Utils\ShaderUtilsVSG.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\PbrShader.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -136,6 +145,9 @@
     </ClCompile>
     <ClCompile Include="SolidModelWindow.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\ShaderUtilsVSG.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -102,6 +102,8 @@
     <ClInclude Include="Qt\trianglerenderer.h" />
     <ClInclude Include="Qt\vulkanwindow.h" />
     <ClInclude Include="SolidModelWindow.h" />
+    <ClInclude Include="Utils\PbrShader.h" />
+    <ClInclude Include="Utils\ShaderUtilsVSG.h" />
     <ClInclude Include="Viewer.h" />
     <ClInclude Include="VSGExp.h" />
     <ClInclude Include="stdafx.h" />
@@ -130,6 +132,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Utils\ShaderUtilsVSG.cpp" />
     <ClCompile Include="Viewer.cpp" />
     <ClCompile Include="ExportFunctions_Qt.cpp" />
     <ClCompile Include="VsgQtWindow.cpp" />

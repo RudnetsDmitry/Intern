@@ -9,14 +9,25 @@
 
 #include "stdafx.h"
 #include "SolidModelWindow.h"
+
 #include "VsgQtWindow.h"
 
 #include <vsg/maths/transform.h>
 #include <vsg/utils/Builder.h>
 #include <vsg/app/Trackball.h>
+#include <vsg/nodes/StateGroup.h>
+#include <vsg/nodes/Switch.h>
+#include <vsg/nodes/VertexIndexDraw.h>
+
+
+#include <vsg/utils/ComputeBounds.h>
+#include <vsg/utils/GraphicsPipelineConfigurator.h>
 
 #include <QtWidgets/QToolBar>
-#include <utils/ComputeBounds.h>
+
+#include "3DSystemBase.h"
+#include "I3DSystem.h"
+#include "Platform2VSG.h"
 
 namespace
 {
@@ -79,83 +90,225 @@ namespace
 
 		return gizmo;
 	}
+
+	std::string VERT{ R"(
+#version 450
+layout(push_constant) uniform PushConstants { mat4 projection; mat4 modelView; };
+layout(location = 0) in vec3 vertex;
+out gl_PerVertex { vec4 gl_Position; };
+void main() { gl_Position = (projection * modelView) * vec4(vertex, 1.0); }
+)" };
+
+	std::string FRAG0{ R"(
+#version 450
+layout(set = 0, binding = 0) readonly buffer CellColors { vec4[] cellColors; };
+layout(location = 0) out vec4 color;
+void main() { color = cellColors[gl_PrimitiveID]; }
+)" };
+
+	vsg::ref_ptr<vsg::StateGroup> createScene0()
+	{
+		auto vertexShader = vsg::ShaderStage::create(VK_SHADER_STAGE_VERTEX_BIT, "main", VERT);
+		auto fragmentShader = vsg::ShaderStage::create(VK_SHADER_STAGE_FRAGMENT_BIT, "main", FRAG0);
+		auto shaderSet = vsg::ShaderSet::create(vsg::ShaderStages{ vertexShader, fragmentShader });
+		shaderSet->addPushConstantRange("pc", "", VK_SHADER_STAGE_VERTEX_BIT, 0, 128);
+
+		shaderSet->addDescriptorBinding("cellColors", "", 0, 0,
+			VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_FRAGMENT_BIT,
+			vsg::vec4Array::create({ {1, 0, 0, 1} }));
+
+		shaderSet->addAttributeBinding("vertex", "", 0, VK_FORMAT_R32G32B32_SFLOAT,
+			vsg::vec3Array::create(1));
+
+		auto gpConf = vsg::GraphicsPipelineConfigurator::create(shaderSet);
+
+		/**
+		 * This array is used in the fragment shader to color each individual triangle
+		 * using gl_PrimitiveID as the array index. In principle, this could be
+		 * a very large array that would exceed the uniform buffer size limits.
+		 */
+		auto cellColors = vsg::vec4Array::create({
+			{0.176, 0.408, 0.376, 1.0}, // Powderkeg Blue (triangle 0)
+			{0.949, 0.663, 0.000, 1.0}, // Westwood Gold  (triangle 1)
+			});
+
+		gpConf->assignDescriptor("cellColors", cellColors);
+
+		/// single quad
+		auto vertices = vsg::vec3Array::create({ {-1, 0, -1}, {1, 0, -1}, {1, 0, 1}, {-1, 0, 1} });
+		auto indices = vsg::uintArray::create({ 0, 1, 2, 0, 2, 3 });
+		vsg::DataList vertexArrays;
+		gpConf->assignArray(vertexArrays, "vertex", VK_VERTEX_INPUT_RATE_VERTEX, vertices);
+
+		gpConf->init();
+
+		auto stateGroup = vsg::StateGroup::create();
+		gpConf->copyTo(stateGroup);
+
+		auto vertexDraw = vsg::VertexIndexDraw::create();
+		vertexDraw->assignArrays(vertexArrays);
+		vertexDraw->assignIndices(indices);
+		vertexDraw->indexCount = static_cast<uint32_t>(indices->size());
+		vertexDraw->instanceCount = 1;
+		stateGroup->addChild(vertexDraw);
+
+		return stateGroup;
+	}
+
+	std::string FRAG1{ R"(
+#version 450
+layout(location = 0) out vec4 color;
+void main() { color = vec4(0.6, 0.6, 0.6, 1.0); }
+)" };
+
+	vsg::ref_ptr<vsg::StateGroup> createScene1()
+	{
+		auto vertexShader = vsg::ShaderStage::create(VK_SHADER_STAGE_VERTEX_BIT, "main", VERT);
+		auto fragmentShader = vsg::ShaderStage::create(VK_SHADER_STAGE_FRAGMENT_BIT, "main", FRAG1);
+		auto shaderSet = vsg::ShaderSet::create(vsg::ShaderStages{ vertexShader, fragmentShader });
+		shaderSet->addPushConstantRange("pc", "", VK_SHADER_STAGE_VERTEX_BIT, 0, 128);
+
+		shaderSet->addAttributeBinding("vertex", "", 0, VK_FORMAT_R32G32B32_SFLOAT,
+			vsg::vec3Array::create(1));
+
+		auto gpConf = vsg::GraphicsPipelineConfigurator::create(shaderSet);
+
+		/// single quad
+		auto vertices = vsg::vec3Array::create({ {-1, 0, -1}, {1, 0, -1}, {1, 0, 1}, {-1, 0, 1} });
+		auto indices = vsg::uintArray::create({ 0, 1, 2, 0, 2, 3 });
+		vsg::DataList vertexArrays;
+		gpConf->assignArray(vertexArrays, "vertex", VK_VERTEX_INPUT_RATE_VERTEX, vertices);
+
+		gpConf->init();
+
+		auto stateGroup = vsg::StateGroup::create();
+		gpConf->copyTo(stateGroup);
+
+		auto vertexDraw = vsg::VertexIndexDraw::create();
+		vertexDraw->assignArrays(vertexArrays);
+		vertexDraw->assignIndices(indices);
+		vertexDraw->indexCount = static_cast<uint32_t>(indices->size());
+		vertexDraw->instanceCount = 1;
+		stateGroup->addChild(vertexDraw);
+
+		return stateGroup;
+	}
 }
 
+namespace 
+{
+	class NodeNameConverter : public model3d::INodeNameConvertor
+	{
+	public:
+		bool isValidNodeName(std::string const & nodeName) const override
+		{
+			return true;
+		}
+
+		std::vector<size_t> nodeName2Key(std::string const & nodeName) const override
+		{
+			return {};
+		}
+	};
+}
 namespace model3d
 {
-	struct SolidModelWindow::Impl
+	class SolidModelWindow::Impl
 	{
-		vsgQt::Window * vsgWind = nullptr;
-		vsg::ref_ptr<vsg::Camera> camera;
-		vsg::ref_ptr<vsg::Trackball> trackball;
-		vsg::ref_ptr<vsg::Group> scene;
+		vsgQt::Window * m_vsgWind;
+		vsg::ref_ptr<vsg::Camera> m_camera;
+		vsg::ref_ptr<vsg::Trackball> m_trackball;
+		std::unique_ptr<I3DSystem> m_sys;
 
-		void CreateWnd(QWidget * parent, QString const & title = {})
+	public:
+		explicit Impl(QWidget * parent)
+			: m_vsgWind(new vsgQt::Window(parent))
+			, m_sys(MakeBase3DSystem(std::make_unique<NodeNameConverter>()))
 		{
-			vsgWind = new vsgQt::Window(parent);
+			m_vsgWind->initializeWindow();
 
-			vsgWind->initializeWindow();
+			m_camera = vsg::Camera::create();
+			m_camera->viewMatrix = vsg::LookAt::create();
+			m_trackball = vsg::Trackball::create(m_camera, nullptr);
+			m_trackball->addWindow(*m_vsgWind);
 
-			camera = vsg::Camera::create();
-			camera->viewMatrix = vsg::LookAt::create();
-			trackball = vsg::Trackball::create(camera, nullptr);
-			trackball->addWindow(*vsgWind);
-
-			vsgWind->getViewer().addEventHandler(trackball);
-			scene = vsg::Group::create();
+			m_vsgWind->getViewer().addEventHandler(m_trackball);
 			Rebuild(false);
 
-			auto commandGraph = vsg::createCommandGraphForView(*vsgWind, camera, scene);
+			vsg::ref_ptr<vsg::Group> grptr(m_sys->getRootNode());
+			auto commandGraph = vsg::createCommandGraphForView(*m_vsgWind, m_camera, grptr);
 
-			vsgWind->getViewer().addRecordAndSubmitTaskAndPresentation({ commandGraph });
-			vsgWind->getViewer().compile();
+			m_vsgWind->getViewer().addRecordAndSubmitTaskAndPresentation({ commandGraph });
+			m_vsgWind->getViewer().compile();
+		}
+
+		vsgQt::Window * GetVsgWindow()
+		{
+			return m_vsgWind;
 		}
 
 		void Rebuild(bool compile = true)
 		{
-			vsgWind->getViewer().deviceWaitIdle();
-			scene->children.clear();
-			scene->addChild(createGizmo());
+			m_vsgWind->getViewer().deviceWaitIdle();
+			m_sys->clearModelNode();
 
-			// compute the bounds of the scene graph to help position camera
+			static int state = 0;
+			switch (state)
+			{
+			case 0:
+				m_sys->getModelNode()->addChild(true, createGizmo());
+				break;
+			case 1:
+				m_sys->getModelNode()->addChild(true, createScene0());
+				break;
+			case 2:
+				m_sys->getModelNode()->addChild(true, createScene1());
+				break;
+			}
+			++state;
+			if (state == 3)
+				state = 0;
+
+			// compute the bounds of the scene graph to help position m_camera
 			vsg::ComputeBounds computeBounds;
-			scene->accept(computeBounds);
+			m_sys->getModelNode()->accept(computeBounds);
 			vsg::dvec3 centre = (computeBounds.bounds.min + computeBounds.bounds.max) * 0.5;
+			m_sys->recreateAxis(VecToPoint(centre));
 			double radius = vsg::length(computeBounds.bounds.max - computeBounds.bounds.min) * 0.6;
 			double nearFarRatio = 0.001;
 
-			uint32_t width = vsgWind->width();
-			uint32_t height = vsgWind->height();
+			uint32_t width = m_vsgWind->width();
+			uint32_t height = m_vsgWind->height();
 
 			auto lookAt = vsg::LookAt(centre + vsg::dvec3(0.0, -radius * 3.5, 0.0),
 				centre, vsg::dvec3(0.0, 0.0, 1.0));
 
-			*(camera->viewMatrix.cast<vsg::LookAt>()) = lookAt;
-			camera->projectionMatrix = vsg::Perspective::create(
+			*(m_camera->viewMatrix.cast<vsg::LookAt>()) = lookAt;
+			m_camera->projectionMatrix = vsg::Perspective::create(
 				30.0,
 				static_cast<double>(width) /
 				static_cast<double>(height),
 				nearFarRatio * radius, radius / nearFarRatio);
-			camera->viewportState = vsg::ViewportState::create(VkExtent2D{ width, height });
+			m_camera->viewportState = vsg::ViewportState::create(VkExtent2D{ width, height });
 
 			if (!compile)
 				return;
 
-			auto result = vsgWind->getViewer().compile();
-			vsg::updateViewer(vsgWind->getViewer(), result);
+			auto result = m_vsgWind->getViewer().compile();
+			vsg::updateViewer(m_vsgWind->getViewer(), result);
 		}
 	};
 
 	SolidModelWindow::SolidModelWindow(QWidget * parent)
 		: base_t(parent)
-		, m_impl(new Impl)
+		, m_impl(new Impl(nullptr))
 	{
-		m_impl->CreateWnd(nullptr);
-		auto & windowTraits = m_impl->vsgWind->getTraits();
+		auto vsgWnd = m_impl->GetVsgWindow();
+		auto & windowTraits = vsgWnd->getTraits();
 
 		windowTraits.windowTitle = "vsgQt viewer";
 
-		setCentralWidget(m_impl->vsgWind);
+		setCentralWidget(vsgWnd);
 		setGeometry(windowTraits.x, windowTraits.y, windowTraits.width, windowTraits.height);
 
 		QToolBar * toolBar = addToolBar(tr("Rebuild"));
