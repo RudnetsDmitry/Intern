@@ -35,9 +35,9 @@ namespace vsg3d
 				} pc;
 
 				layout(location = 0) in vec3 inPosition;
-				layout(location = 1) in vec3 inColor;
+				layout(location = 1) in vec4 inColor;
 
-				layout(location = 0) out vec3 fragColor;
+				layout(location = 0) out vec4 fragColor;
 
 				out gl_PerVertex {
 				    vec4 gl_Position;
@@ -55,11 +55,11 @@ namespace vsg3d
 			R"(
 				#version 450
 				#extension GL_ARB_separate_shader_objects : enable
-				layout(location = 0) in vec3 fragColor;
+				layout(location = 0) in vec4 fragColor;
 				layout(location = 0) out vec4 outColor;
 				void main() {
 				//outColor = texture(texSampler, fragTexCoord);
-				outColor = vec4(fragColor,1);}
+				outColor = fragColor;}
 				)"
 		};
 	}
@@ -80,7 +80,7 @@ namespace vsg3d
 		auto shaderSet = vsg::ShaderSet::create(vsg::ShaderStages{ vertexShader, fragmentShader });
 
 		shaderSet->addAttributeBinding("inPosition", "", 0, VK_FORMAT_R32G32B32_SFLOAT, vsg::vec3Array::create(1));
-		shaderSet->addAttributeBinding("inColor", "", 1, VK_FORMAT_R32G32B32_SFLOAT, vsg::vec3Array::create(1));
+		shaderSet->addAttributeBinding("inColor", "", 1, VK_FORMAT_R32G32B32A32_SFLOAT, vsg::vec4Array::create(1));
 
 		shaderSet->addPushConstantRange("pc", "", VK_SHADER_STAGE_VERTEX_BIT, 0, 128);
 
@@ -246,7 +246,7 @@ namespace vsg3d
 		vsg::DescriptorSetLayoutBindings descriptorBindings;
 
 		graphicsPipelineConfig->enableArray("inPosition", VK_VERTEX_INPUT_RATE_VERTEX, 12);
-		graphicsPipelineConfig->enableArray("inColor", VK_VERTEX_INPUT_RATE_VERTEX, 12);
+		graphicsPipelineConfig->enableArray("inColor", VK_VERTEX_INPUT_RATE_VERTEX, 16);
 
 		struct SetPipelineStates : public vsg::Visitor {
 			SetPipelineStates(VkPrimitiveTopology topo, float width) : topology(topo), line_width(width) {}
