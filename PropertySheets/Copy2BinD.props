@@ -42,7 +42,12 @@
 				xcopy /y /d "$(LibsDebugPath)\bin\brotlicommon.dll" "$(TargetDir)"
 				
 				xcopy /y /d "$(LibsDebugPath)\bin\vsg-16d.dll" "$(TargetDir)"
-				
+				xcopy /y /d "$(LibsDebugPath)\bin\vsgXchanged.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsDebugPath)\bin\assimp-vc143-mtd.dll" "$(TargetDir)"	
+				xcopy /y /d "$(LibsDebugPath)\bin\poly2tri.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsDebugPath)\bin\kubazip.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsDebugPath)\bin\minizip.dll" "$(TargetDir)"
+				xcopy /y /d "$(LibsDebugPath)\bin\pugixml.dll" "$(TargetDir)"			
 				
 				</Command>
     </PostBuildEvent>

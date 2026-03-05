@@ -65,13 +65,7 @@ namespace model3d
 
 		auto axis = vsg::Group::create();
 		axis->setValue("name", "createCoordinateAxes::geode");
-
-		/*auto lineWidth = vsg::SetLineWidth::create();
-		lineWidth->lineWidth = static_cast<float>(params.lineAxisWidth);
-		axis->addChild(lineWidth);*/
-
-		float alpha = 0.5f;
-
+		
 		vsg::ref_ptr<vsg::MatrixTransform> transform = vsg::MatrixTransform::create();
 		transform->matrix = vsg::translate(PointToVec(axisOrg));
 		/*if (params.isAxisScaling)
@@ -150,13 +144,13 @@ namespace model3d
 				return isPositive ? 6 : 2;
 			}();
 
-			vsg::ref_ptr<vsg::vec4Array> colors(new vsg::vec4Array(verticesPerAxis * 3));
+			vsg::ref_ptr<vsg::vec3Array> colors(new vsg::vec3Array(verticesPerAxis * 3));
 			
 
-			std::vector<vsg::vec4> axisColors = {
-				vsg::vec4(1.f, 0.f, 0.f, alpha),
-				vsg::vec4(0.f, 0.8f, 0.f, alpha),
-				vsg::vec4(0.f, 0.f, 1.f, alpha)
+			std::vector<vsg::vec3> axisColors = {
+				vsg::vec3(1.f, 0.f, 0.f),
+				vsg::vec3(0.f, 0.8f, 0.f),
+				vsg::vec3(0.f, 0.f, 1.f)
 			};
 
 			// привязываем цвета к осям. В каждой оси (всего 3 оси) по verticesPerAxis вершин
@@ -167,7 +161,7 @@ namespace model3d
 					colors->at(pos++) = axisColors[i];
 			}
 
-			auto stategraph = vsg3d::createLineStateGroup(nullptr, VK_PRIMITIVE_TOPOLOGY_LINE_LIST, 1);
+			auto stategraph = vsg3d::createLineStateGroup(nullptr, VK_PRIMITIVE_TOPOLOGY_LINE_LIST, params.lineAxisWidth);
 
 			auto attributteArray = vsg::DataList{vertices};
 			attributteArray.push_back(colors);

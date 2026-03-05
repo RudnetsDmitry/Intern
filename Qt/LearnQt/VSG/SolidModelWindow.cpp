@@ -8,26 +8,31 @@
 ///
 
 #include "stdafx.h"
+
+#include "3DSystemBase.h"
+#include "I3DSystem.h"
+#include "Platform2VSG.h"
 #include "SolidModelWindow.h"
+
+#include <io/read.h>
 
 #include "VsgQtWindow.h"
 
-#include <vsg/maths/transform.h>
-#include <vsg/utils/Builder.h>
 #include <vsg/app/Trackball.h>
+#include <vsg/maths/transform.h>
 #include <vsg/nodes/StateGroup.h>
 #include <vsg/nodes/Switch.h>
 #include <vsg/nodes/VertexIndexDraw.h>
+#include <vsg/utils/Builder.h>
 
 
 #include <vsg/utils/ComputeBounds.h>
 #include <vsg/utils/GraphicsPipelineConfigurator.h>
 
-#include <QtWidgets/QToolBar>
+#include <vsgXchange/models.h>
+#include <vsgXchange/all.h>
 
-#include "3DSystemBase.h"
-#include "I3DSystem.h"
-#include "Platform2VSG.h"
+#include <QtWidgets/QToolBar>
 
 namespace
 {
@@ -247,27 +252,12 @@ namespace model3d
 			return m_vsgWind;
 		}
 
-		void Rebuild(bool compile = true)
+		void RebuildModel(std::function<void (vsg::Switch*)> const & f, bool compile = true)
 		{
 			m_vsgWind->getViewer().deviceWaitIdle();
 			m_sys->clearModelNode();
 
-			static int state = 0;
-			switch (state)
-			{
-			case 0:
-				m_sys->getModelNode()->addChild(true, createGizmo());
-				break;
-			case 1:
-				m_sys->getModelNode()->addChild(true, createScene0());
-				break;
-			case 2:
-				m_sys->getModelNode()->addChild(true, createScene1());
-				break;
-			}
-			++state;
-			if (state == 3)
-				state = 0;
+			f(m_sys->getModelNode());
 
 			// compute the bounds of the scene graph to help position m_camera
 			vsg::ComputeBounds computeBounds;
@@ -297,6 +287,29 @@ namespace model3d
 			auto result = m_vsgWind->getViewer().compile();
 			vsg::updateViewer(m_vsgWind->getViewer(), result);
 		}
+
+		void Rebuild(bool compile = true)
+		{
+			RebuildModel([](vsg::Switch* model)
+			{
+				static int state = 0;
+				switch (state)
+				{
+				case 0:
+					model->addChild(true, createGizmo());
+					break;
+				case 1:
+					model->addChild(true, createScene0());
+					break;
+				case 2:
+					model->addChild(true, createScene1());
+					break;
+				}
+				++state;
+				if (state == 3)
+					state = 0;
+			}, compile);
+		}
 	};
 
 	SolidModelWindow::SolidModelWindow(QWidget * parent)
@@ -313,6 +326,7 @@ namespace model3d
 
 		QToolBar * toolBar = addToolBar(tr("Rebuild"));
 		toolBar->addAction("1", [this]() {OnRebuild(); });
+		toolBar->addAction("LoadModel", [this]() {OnLoadModel(); });
 	}
 
 	SolidModelWindow::~SolidModelWindow() = default;
@@ -320,6 +334,21 @@ namespace model3d
 	void SolidModelWindow::OnRebuild()
 	{
 		m_impl->Rebuild();
+		update();
+	}
+
+	void SolidModelWindow::OnLoadModel()
+	{
+		auto options = vsg::Options::create();
+		auto reader = vsgXchange::assimp::create();
+		auto object = reader->read("d:/Develop/data/test.3ds", options).cast<vsg::Node>();
+		if (!object)
+			return;
+		
+		m_impl->RebuildModel([&object](vsg::Switch * model)
+		{
+			model->addChild(true, object);
+		});
 		update();
 	}
 }
