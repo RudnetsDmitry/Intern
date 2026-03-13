@@ -72,6 +72,13 @@ namespace model3d
 		{
 			return min.xy.x < max.xy.x ;
 		}
+
+		CPoint3D GetCenter() const
+		{
+			return CPoint3D((min.xy.x + max.xy.x) * 0.5,
+				(min.xy.y + max.xy.y) * 0.5,
+				(min.z + max.z) * 0.5);
+		}
 	};
 
 	struct CSphere

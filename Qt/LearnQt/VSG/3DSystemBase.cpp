@@ -447,7 +447,7 @@ namespace model3d
 		return nullptr;
 	}
 
-	void Base3DSystem::recreateAxisForPlatform(CRect3D const & bb)
+	void Base3DSystem::recreateAxisForBox(CRect3D const & bb, bool centerFromBox)
 	{
 		ClearAllChildNodes(*m_swCoordAxes);
 
@@ -455,7 +455,7 @@ namespace model3d
 		float alpha = 0.5f;
 		m_swCoordAxes->addChild(geode);
 
-		m_axisOrg = CPoint3D(0.0);
+		m_axisOrg = centerFromBox ?  bb.GetCenter() : CPoint3D(0.0);
 
 		double xLength = (bb.max.xy.x - bb.min.xy.x) * 0.5;
 		double yLength = (bb.max.xy.y - bb.min.xy.y) * 0.5;

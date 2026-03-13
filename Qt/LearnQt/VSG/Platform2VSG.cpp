@@ -22,4 +22,9 @@ namespace model3d
 	{
 		return {pt.x, pt.y, pt.z};
 	}
+
+	CRect3D Box2Rect3D(vsg::dbox const & box)
+	{
+		return CRect3D{ .min = VecToPoint(box.min), .max = VecToPoint(box.max) };
+	}
 }

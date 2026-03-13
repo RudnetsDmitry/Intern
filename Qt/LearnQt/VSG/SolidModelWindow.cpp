@@ -33,6 +33,7 @@
 #include <vsgXchange/all.h>
 
 #include <QtWidgets/QToolBar>
+#include <QtWidgets/QFileDialog>
 
 namespace
 {
@@ -263,7 +264,7 @@ namespace model3d
 			vsg::ComputeBounds computeBounds;
 			m_sys->getModelNode()->accept(computeBounds);
 			vsg::dvec3 centre = (computeBounds.bounds.min + computeBounds.bounds.max) * 0.5;
-			m_sys->recreateAxis(VecToPoint(centre));
+			m_sys->recreateAxisForBox(Box2Rect3D(computeBounds.bounds), true);
 			double radius = vsg::length(computeBounds.bounds.max - computeBounds.bounds.min) * 0.6;
 			double nearFarRatio = 0.001;
 
@@ -339,9 +340,13 @@ namespace model3d
 
 	void SolidModelWindow::OnLoadModel()
 	{
+		auto filePath = QFileDialog::getOpenFileName(this, tr("Open Image"));
+		if (filePath.isEmpty())
+			return;
+
 		auto options = vsg::Options::create();
 		auto reader = vsgXchange::assimp::create();
-		auto object = reader->read("d:/Develop/data/test.3ds", options).cast<vsg::Node>();
+		auto object = reader->read(filePath.toStdWString(), options).cast<vsg::Node>();
 		if (!object)
 			return;
 		
