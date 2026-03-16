@@ -131,7 +131,7 @@ namespace model3d
 	// Параметры для настройки осей в панели 3D
 	struct AxisParams
 	{
-		int lineAxisLength = 100;
+		double lineAxisLength = 100;
 		int lineAxisWidth = 3;
 		bool isAxisScaling = false;
 		bool areAxisVisible = true;

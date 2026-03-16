@@ -18,6 +18,7 @@ namespace model3d
 
 	vsg::dvec3 PointToVec(CPoint3D const & pt);
 	CPoint3D VecToPoint(vsg::dvec3 const & pt);
+	CPoint3D VecToPoint(vsg::vec3 const& pt);
 
 	CRect3D Box2Rect3D(vsg::dbox const & box);
 }

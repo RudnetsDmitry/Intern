@@ -26,12 +26,16 @@
 #include <vsg/text/Text.h>
 
 #include <numbers>
+#include <io/read.h>
 #include <nodes/StateGroup.h>
 #include <nodes/VertexDraw.h>
 #include <nodes/VertexIndexDraw.h>
 #include <utils/ComputeBounds.h>
 
 #include "Utils/ShaderUtilsVSG.h"
+
+#include <qcoreapplication.h>
+
 
 namespace
 {
@@ -58,7 +62,39 @@ namespace
 }
 namespace model3d
 {
-	vsg::ref_ptr<vsg::Node> CreateAxisNode(AxisParams const & params, CPoint3D const & axisOrg)
+	vsg::ref_ptr<vsg::Text> createTextNode(std::array<float, 4> const& color, std::string const& str_text,
+		CPoint3D const& position, float characterSizeAspectRatio,
+		vsg::ref_ptr<vsg::Font> font)
+	{
+		vsg::ref_ptr<vsg::Text> resText = vsg::Text::create();
+		//resText->setFont("fonts/calibri.ttf");
+
+		auto layout = vsg::StandardLayout::create();
+		//layout->horizontalAlignment = vsg::StandardLayout::RIGHT_ALIGNMENT;
+		//layout->verticalAlignment = vsg::StandardLayout::TOP_ALIGNMENT;
+		layout->color = vsg::vec4(color[0], color[1], color[2], color[3]);
+		layout->position = PointToVec(position);
+
+		//layout->position = vsg::vec3(0.0, 0.0, 0.0);
+		//layout->horizontal = vsg::vec3(1.0, 0.0, 0.0);
+		//layout->vertical = vsg::vec3(0.0, 0.0, 1.0);
+
+		layout->horizontal = layout->position;
+		layout->vertical = vsg::vec3(0.0, 0.0, 1.0);
+
+		resText->text = vsg::stringValue::create(str_text);
+		resText->layout = layout;
+		resText->font = font;
+		//resText->setAxisAlignment(osgText::Text::SCREEN);
+		//resText->setCharacterSize(0.5f * characterSizeAspectRatio);
+		//resText->setEnableDepthWrites(false);		
+		resText->setup();
+
+		return resText;
+	}
+
+	vsg::ref_ptr<vsg::Node> CreateAxisNode(AxisParams const & params, CPoint3D const & axisOrg,
+		bool drawArrows, vsg::ref_ptr<vsg::Font> font)
 	{
 		if (!params.areAxisVisible)
 			return nullptr;
@@ -87,6 +123,8 @@ namespace model3d
 		{
 			// знак оси
 			int axisSign = isPositive ? 1 : -1;
+			bool needDrawArraws = drawArrows && isPositive;
+			bool needDrawText = font && isPositive;
 
 			// настройка стрелок для положительных осей
 			constexpr float arrowAngleDegr = 30.0;
@@ -96,17 +134,18 @@ namespace model3d
 			const float endOfArrowCoordX = params.lineAxisLength - arrowProjectionLength;
 			const float endOfArrowCoordY = sin(DegreesToRadians(arrowAngleDegr)) * arrowLength;
 
-			uint32_t count = 2 + (isPositive ? 4 : 0);
+			uint32_t count = 2 + (needDrawArraws ? 4 : 0);
 			count *= 3;
 			vsg::ref_ptr<vsg::vec3Array> vertices(new vsg::vec3Array(count));
 
 			uint32_t pos = 0;
 			// создаем X ось
 			vertices->at(pos++) = org;
-			vertices->at(pos++) = vsg::vec3(axisSign * params.lineAxisLength, 0.0, 0.0) + org;
+			auto xEnd = vsg::vec3(axisSign * params.lineAxisLength, 0.0, 0.0);
+			vertices->at(pos++) = xEnd;
 
 			// если положительная ось - достроим стрелки
-			if (isPositive)
+			if (needDrawArraws)
 			{
 				vertices->at(pos++) = vsg::vec3(endOfArrowCoordX, -endOfArrowCoordY, 0.0) + org;
 				vertices->at(pos++) = vsg::vec3(params.lineAxisLength, 0.0, 0.0) + org;
@@ -114,12 +153,22 @@ namespace model3d
 				vertices->at(pos++) = vsg::vec3(params.lineAxisLength, 0.0, 0.0) + org;
 			}
 
+			if (needDrawText)
+			{
+				float aspectRation = static_cast<float>(params.lineAxisLength) * 0.2f;
+				float alpha = 0.5f;
+				axis->addChild(createTextNode({ 1.f, 0.f, 0.f, alpha}, "X", 
+					VecToPoint(xEnd), aspectRation, font));
+			}
+
+
 			// создаем Y ось
 			vertices->at(pos++) = org;
-			vertices->at(pos++) = vsg::vec3(0.0, axisSign * -params.lineAxisLength, 0.0) + org;
+			auto yEnd = vsg::vec3(0.0, axisSign * -params.lineAxisLength, 0.0);
+			vertices->at(pos++) = yEnd;
 
 			// если положительная ось - достроим стрелки
-			if (isPositive)
+			if (needDrawArraws)
 			{
 				vertices->at(pos++) = vsg::vec3(-endOfArrowCoordY, -endOfArrowCoordX, 0.0) + org;
 				vertices->at(pos++) = vsg::vec3(0.0, -params.lineAxisLength, 0.0) + org;
@@ -127,11 +176,19 @@ namespace model3d
 				vertices->at(pos++) = vsg::vec3(0.0, -params.lineAxisLength, 0.0) + org;
 			}
 
+			if (needDrawText)
+			{
+				float aspectRation = static_cast<float>(params.lineAxisLength) * 0.2f;
+				float alpha = 0.5f;
+				axis->addChild(createTextNode({ 0.f, 0.8f, 0.f, alpha }, "Y",
+					VecToPoint(yEnd), aspectRation, font));
+			}
+
 			// создаем Z ось
 			vertices->at(pos++) = org;
 			vertices->at(pos++) = vsg::vec3(0.0, 0.0, axisSign * params.lineAxisLength) + org;
 
-			if (isPositive)
+			if (needDrawArraws)
 			{
 				vertices->at(pos++) = vsg::vec3(endOfArrowCoordY, 0.0, endOfArrowCoordX) + org;
 				vertices->at(pos++) = vsg::vec3(0.0, 0.0, params.lineAxisLength) + org;
@@ -139,9 +196,9 @@ namespace model3d
 				vertices->at(pos++) = vsg::vec3(0.0, 0.0, params.lineAxisLength) + org;
 			}
 
-			const int32_t verticesPerAxis = [isPositive]()
+			const int32_t verticesPerAxis = [needDrawArraws]()
 			{
-				return isPositive ? 6 : 2;
+				return needDrawArraws ? 6 : 2;
 			}();
 
 			vsg::ref_ptr<vsg::vec3Array> colors(new vsg::vec3Array(verticesPerAxis * 3));
@@ -255,6 +312,8 @@ namespace model3d
 
 		m_mainLightSource = vsg::createHeadlight();
 		m_rootNode->addChild(m_mainLightSource);
+		QString fontDirPath = QCoreApplication::applicationDirPath() + "/fonts/times.vsgb";
+		m_font = vsg::read_cast<vsg::Font>(fontDirPath.toStdWString(), {});
 	}
 
 	Base3DSystem::~Base3DSystem() = default;
@@ -456,6 +515,7 @@ namespace model3d
 		m_swCoordAxes->addChild(geode);
 
 		m_axisOrg = centerFromBox ?  bb.GetCenter() : CPoint3D(0.0);
+		AxisParams axisParam;
 
 		double xLength = (bb.max.xy.x - bb.min.xy.x) * 0.5;
 		double yLength = (bb.max.xy.y - bb.min.xy.y) * 0.5;
@@ -463,57 +523,11 @@ namespace model3d
 
 		double r = std::max(xLength, yLength);
 		r += r * 0.2;
+		axisParam.lineAxisLength = r;
+		axisParam.isHideNegativeAxis = true;
 
-		// positive axes
-		vsg::ref_ptr<vsg::Geometry> geom = vsg::Geometry::create();
-		geode->addChild(geom);
-
-		vsg::ref_ptr<vsg::dvec3Array> vertices = vsg::dvec3Array::create();
-		int32_t pos = 0;
-
-		auto axisOrg = PointToVec(m_axisOrg);
-		vertices->at(pos++) = axisOrg;
-		auto xEnd = vsg::dvec3(r, .0, 0.0);
-		vertices->at(pos++) = xEnd;
-
-		vertices->at(pos++) = axisOrg;
-		auto yEnd = vsg::dvec3(.0, -r, 0.0);
-		vertices->at(pos++) = yEnd;
-
-		vertices->at(pos++) = axisOrg;
-		auto zEnd = vsg::dvec3(0.0, 0.0, r);
-		vertices->at(pos++) = zEnd;
-
-		vsg::ref_ptr<vsg::vec4Array> colors = vsg::vec4Array::create(6);
-
-		pos = 0;
-
-		vsg::vec4 xColor(1.f, 0.f, 0.f, alpha);
-		colors->at(pos++) = xColor;
-		colors->at(pos++) = xColor;
-
-		vsg::vec4 yColor(0.f, 0.8f, 0.f, alpha);
-		colors->at(pos++) = yColor;
-		colors->at(pos++) = yColor;
-
-		vsg::vec4 zColor(0.f, 0.f, 1.f, alpha);
-		colors->at(pos++) = zColor;
-		colors->at(pos++) = zColor;
-
-		auto attributteArray = vsg::DataList{ vertices };
-		attributteArray.push_back(colors);
-
-		geom->assignArrays(attributteArray);
-		//geom->addPrimitiveSet(new vsg::DrawArrays(vsg::PrimitiveSet::LINES, 0, 6));
-
-		geode->addChild(geom);
-
-		float aspectRation = static_cast<float>(r) * 0.2f;
-
-		geode->addChild(createText(ToArray(xColor), "x", VecToPoint(xEnd), aspectRation));
-		geode->addChild(createText(ToArray(yColor), "y", VecToPoint(yEnd), aspectRation));
-		geode->addChild(createText(ToArray(zColor), "z", VecToPoint(zEnd), aspectRation));
-
+		if (auto newNode = CreateAxisNode(axisParam, m_axisOrg, false, m_font))
+			m_swCoordAxes->addChild(newNode);
 		// grid
 		//geode->addDrawable(createGrid(std::max(xLength, yLength) * 1.2));
 	}
@@ -528,7 +542,7 @@ namespace model3d
 		m_axisOrg = axisOrg;
 		ClearAllChildNodes(*m_swCoordAxes);
 
-		if (auto newNode = CreateAxisNode(m_axisParams, axisOrg))
+		if (auto newNode = CreateAxisNode(m_axisParams, axisOrg, true, nullptr))
 			m_swCoordAxes->addChild(newNode);
 	}
 

@@ -22,6 +22,7 @@ class GeometrySettings;
 
 namespace vsg
 {
+	class Font;
 	class DirectionalLight;
 	class Camera;
 	class MatrixTransform;
@@ -64,6 +65,8 @@ namespace model3d
 
 		// Центр координатных осей
 		CPoint3D m_axisOrg;
+
+		vsg::ref_ptr<vsg::Font> m_font;
 
 	public:
 		Base3DSystem(std::unique_ptr<INodeNameConvertor> nodeConv);

@@ -18,9 +18,20 @@ namespace model3d
 		return {pt.xy.x, pt.xy.y, pt.z};
 	}
 
+	template<class TVec3>
+	CPoint3D TVecToPoint(TVec3 const& pt)
+	{
+		return { pt.x, pt.y, pt.z };
+	}
+
 	CPoint3D VecToPoint(vsg::dvec3 const & pt)
 	{
-		return {pt.x, pt.y, pt.z};
+		return TVecToPoint(pt);
+	}
+
+	CPoint3D VecToPoint(vsg::vec3 const & pt)
+	{
+		return TVecToPoint(pt);
 	}
 
 	CRect3D Box2Rect3D(vsg::dbox const & box)
