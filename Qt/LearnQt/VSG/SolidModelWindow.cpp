@@ -325,9 +325,12 @@ namespace model3d
 		setCentralWidget(vsgWnd);
 		setGeometry(windowTraits.x, windowTraits.y, windowTraits.width, windowTraits.height);
 
-		QToolBar * toolBar = addToolBar(tr("Rebuild"));
-		toolBar->addAction("1", [this]() {OnRebuild(); });
+		QToolBar * toolBar = addToolBar(tr("MainToolbar"));
+		toolBar->addAction("Rebuild", [this]() {OnRebuild(); });
 		toolBar->addAction("LoadModel", [this]() {OnLoadModel(); });
+		auto * hudCameraAct = toolBar->addAction("HudCamera");
+		hudCameraAct->setCheckable(true);
+		connect(hudCameraAct, &QAction::setChecked, [this](bool set) {OnSetHudCamera(set); });
 	}
 
 	SolidModelWindow::~SolidModelWindow() = default;
@@ -355,5 +358,11 @@ namespace model3d
 			model->addChild(true, object);
 		});
 		update();
+	}
+
+	void SolidModelWindow::OnSetHudCamera(bool set)
+	{
+		//https://github.com/vsg-dev/VulkanSceneGraph/discussions/1234
+		//github.com/projectchrono/chrono.git
 	}
 }

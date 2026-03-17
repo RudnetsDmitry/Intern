@@ -99,7 +99,8 @@ namespace model3d
 		vsg::Group * getInteractiveParent() const override;
 		void updateLightState(CPoint3D const & /*org*/, double /*rad*/) override;
 
-		static vsg::ref_ptr<vsg::Text> createText(std::array<float, 4> const & color, std::string const & text, CPoint3D const & position, float characterSizeAspectRatio);
+		vsg::ref_ptr<vsg::Text> createText(std::array<float, 4> const & color,
+			std::string const & text, CPoint3D const & position, float characterSizeAspectRatio);
 		static vsg::ref_ptr<::vsg::Geometry> createGrid(double gridR);
 
 		void recreateAxisForBox(CRect3D const & bb, bool centerFromBox) override;
