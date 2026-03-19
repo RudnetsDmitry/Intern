@@ -97,6 +97,7 @@ namespace model3d
 		bool isAuxNode(vsg::Node const & node) const override;
 		vsg::Camera * getHUDCamera() const override;
 		vsg::Group * getInteractiveParent() const override;
+		vsg::TextGroup * createHudTextGroup() const override;
 		void updateLightState(CPoint3D const & /*org*/, double /*rad*/) override;
 
 		vsg::ref_ptr<vsg::Text> createText(std::array<float, 4> const & color,

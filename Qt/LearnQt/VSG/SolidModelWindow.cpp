@@ -14,6 +14,7 @@
 #include "Platform2VSG.h"
 #include "SolidModelWindow.h"
 
+#include <app/View.h>
 #include <io/read.h>
 
 #include "VsgQtWindow.h"
@@ -223,6 +224,7 @@ namespace model3d
 	{
 		vsgQt::Window * m_vsgWind;
 		vsg::ref_ptr<vsg::Camera> m_camera;
+		vsg::ref_ptr<vsg::Camera> m_hudCamera;
 		vsg::ref_ptr<vsg::Trackball> m_trackball;
 		std::unique_ptr<I3DSystem> m_sys;
 
@@ -251,6 +253,22 @@ namespace model3d
 		vsgQt::Window * GetVsgWindow()
 		{
 			return m_vsgWind;
+		}
+
+		void CreateHudeCamera()
+		{
+			auto hudTextGr = m_sys->createHudTextGroup();
+			if (!hudTextGr)
+				return;
+
+			m_hudCamera = vsg::Camera::create(m_camera->projectionMatrix,
+				vsg::LookAt::create(vsg::dvec3(0.0, 0.0, 8.8), // Eye position
+					vsg::dvec3(0.0, 0.0, 0.0), // Center
+					vsg::dvec3(0.0, 1.0, 0.0)), // Up vector
+				m_camera->viewportState);
+
+			auto hudView = vsg::View::create(m_hudCamera, hudTextGr);
+
 		}
 
 		void RebuildModel(std::function<void (vsg::Switch*)> const & f, bool compile = true)
@@ -362,6 +380,14 @@ namespace model3d
 
 	void SolidModelWindow::OnSetHudCamera(bool set)
 	{
+		if (set)
+		{
+			
+		}
+		else
+		{
+			
+		}
 		//https://github.com/vsg-dev/VulkanSceneGraph/discussions/1234
 		//github.com/projectchrono/chrono.git
 	}

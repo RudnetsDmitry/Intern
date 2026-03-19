@@ -9,7 +9,7 @@
 
 #include "stdafx.h"
 #include "3DSystemBase.h"
-#include "Platform2VSG.h"\
+#include "Platform2VSG.h"
 
 #include <vsg/maths/transform.h>
 #include <vsg/nodes/MatrixTransform.h>
@@ -24,18 +24,19 @@
 #include <vsg/lighting/Light.h>
 #include <vsg/text/StandardLayout.h>
 #include <vsg/text/Text.h>
+#include <vsg/text/TextGroup.h>
 
 #include <numbers>
-#include <io/read.h>
-#include <nodes/StateGroup.h>
-#include <nodes/VertexDraw.h>
-#include <nodes/VertexIndexDraw.h>
-#include <utils/ComputeBounds.h>
+#include <vsg/io/read.h>
+#include <vsg/nodes/StateGroup.h>
+#include <vsg/nodes/VertexDraw.h>
+#include <vsg/nodes/VertexIndexDraw.h>
+#include <vsg/utils/ComputeBounds.h>
+#include <vsg/state/DepthStencilState.h>
 
 #include "Utils/ShaderUtilsVSG.h"
 
 #include <qcoreapplication.h>
-
 
 namespace
 {
@@ -452,6 +453,39 @@ namespace model3d
 	vsg::Group * Base3DSystem::getInteractiveParent() const
 	{
 		return nullptr;
+	}
+
+	vsg::TextGroup * Base3DSystem::createHudTextGroup() const
+	{
+		if (!m_font)
+			return nullptr;
+
+		auto textGroup = vsg::TextGroup::create();
+		{
+			auto layout = vsg::StandardLayout::create();
+			layout->horizontalAlignment = vsg::StandardLayout::CENTER_ALIGNMENT;
+			layout->position = vsg::vec3(0.0, 0.0, 0.0); // Position in front of the camera
+			layout->horizontal = vsg::vec3(1.0, 0.0, 0.0);
+			layout->vertical = vsg::vec3(0.0, 1.0, 0.0);
+			layout->color = vsg::vec4(1.0, 1.0, 1.0, 1.0);
+
+			auto text = vsg::Text::create();
+			text->text = vsg::stringValue::create("Hello, HUD!");
+			text->font = m_font;
+			text->layout = layout;
+			textGroup->addChild(text);
+		}
+
+		// Disable depth testing for the HUD text
+		auto options = vsg::Options::create();
+		auto shaderSet = options->shaderSets["text"] = vsg::createTextShaderSet(options);
+		auto depthStencilState = vsg::DepthStencilState::create();
+		depthStencilState->depthTestEnable = VK_FALSE;
+		shaderSet->defaultGraphicsPipelineStates.emplace_back(depthStencilState);
+
+		// Setup text group
+		textGroup->setup(0, options);
+		return textGroup.get();
 	}
 
 	void Base3DSystem::updateLightState(CPoint3D const& /*org*/, double /*rad*/)

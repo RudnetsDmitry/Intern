@@ -20,6 +20,7 @@
 
 namespace vsg
 {
+	class TextGroup;
 	class Node;
 	class Group;
 	class Camera;
@@ -84,6 +85,7 @@ namespace model3d
 		virtual bool isAuxNode(vsg::Node const & node) const = 0;
 		virtual vsg::Camera * getHUDCamera() const = 0;
 		virtual vsg::Group * getInteractiveParent() const = 0;
+		virtual vsg::TextGroup * createHudTextGroup() const = 0;
 
 		// todo
 		virtual vsg::Group * getRootNode() = 0;
