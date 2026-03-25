@@ -485,7 +485,7 @@ namespace model3d
 
 		// Setup text group
 		textGroup->setup(0, options);
-		return textGroup.get();
+		return textGroup;
 	}
 
 	void Base3DSystem::updateLightState(CPoint3D const& /*org*/, double /*rad*/)

@@ -32,6 +32,6 @@ namespace model3d
 	private:
 		void OnRebuild();
 		void OnLoadModel();
-		void OnSetHudCamera(bool set);
+		void OnSetHudCamera(QAction * act);
 	};
 }

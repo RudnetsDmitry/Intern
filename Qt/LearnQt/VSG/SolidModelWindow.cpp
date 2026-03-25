@@ -20,11 +20,13 @@
 #include "VsgQtWindow.h"
 
 #include <vsg/app/Trackball.h>
+#include <vsg/app/RenderGraph.h>
 #include <vsg/maths/transform.h>
 #include <vsg/nodes/StateGroup.h>
 #include <vsg/nodes/Switch.h>
 #include <vsg/nodes/VertexIndexDraw.h>
 #include <vsg/utils/Builder.h>
+#include <vsg/text/TextGroup.h>
 
 
 #include <vsg/utils/ComputeBounds.h>
@@ -225,8 +227,11 @@ namespace model3d
 		vsgQt::Window * m_vsgWind;
 		vsg::ref_ptr<vsg::Camera> m_camera;
 		vsg::ref_ptr<vsg::Camera> m_hudCamera;
+		vsg::ref_ptr<vsg::TextGroup> m_hudTextGr;
+		vsg::ref_ptr<vsg::View> m_hudView;
 		vsg::ref_ptr<vsg::Trackball> m_trackball;
 		std::unique_ptr<I3DSystem> m_sys;
+		vsg::ref_ptr<vsg::RenderGraph> m_renderGraph;
 
 	public:
 		explicit Impl(QWidget * parent)
@@ -236,6 +241,7 @@ namespace model3d
 			m_vsgWind->initializeWindow();
 
 			m_camera = vsg::Camera::create();
+			m_camera->name = "camera";
 			m_camera->viewMatrix = vsg::LookAt::create();
 			m_trackball = vsg::Trackball::create(m_camera, nullptr);
 			m_trackball->addWindow(*m_vsgWind);
@@ -243,8 +249,11 @@ namespace model3d
 			m_vsgWind->getViewer().addEventHandler(m_trackball);
 			Rebuild(false);
 
+			m_renderGraph = vsg::RenderGraph::create(*m_vsgWind);
 			vsg::ref_ptr<vsg::Group> grptr(m_sys->getRootNode());
-			auto commandGraph = vsg::createCommandGraphForView(*m_vsgWind, m_camera, grptr);
+			m_renderGraph->addChild(vsg::View::create(m_camera, grptr));
+			auto commandGraph = vsg::CommandGraph::create(*m_vsgWind);
+			commandGraph->addChild(m_renderGraph);
 
 			m_vsgWind->getViewer().addRecordAndSubmitTaskAndPresentation({ commandGraph });
 			m_vsgWind->getViewer().compile();
@@ -253,22 +262,6 @@ namespace model3d
 		vsgQt::Window * GetVsgWindow()
 		{
 			return m_vsgWind;
-		}
-
-		void CreateHudeCamera()
-		{
-			auto hudTextGr = m_sys->createHudTextGroup();
-			if (!hudTextGr)
-				return;
-
-			m_hudCamera = vsg::Camera::create(m_camera->projectionMatrix,
-				vsg::LookAt::create(vsg::dvec3(0.0, 0.0, 8.8), // Eye position
-					vsg::dvec3(0.0, 0.0, 0.0), // Center
-					vsg::dvec3(0.0, 1.0, 0.0)), // Up vector
-				m_camera->viewportState);
-
-			auto hudView = vsg::View::create(m_hudCamera, hudTextGr);
-
 		}
 
 		void RebuildModel(std::function<void (vsg::Switch*)> const & f, bool compile = true)
@@ -300,11 +293,8 @@ namespace model3d
 				nearFarRatio * radius, radius / nearFarRatio);
 			m_camera->viewportState = vsg::ViewportState::create(VkExtent2D{ width, height });
 
-			if (!compile)
-				return;
-
-			auto result = m_vsgWind->getViewer().compile();
-			vsg::updateViewer(m_vsgWind->getViewer(), result);
+			if (compile)
+				Compile();
 		}
 
 		void Rebuild(bool compile = true)
@@ -329,6 +319,59 @@ namespace model3d
 					state = 0;
 			}, compile);
 		}
+
+		void AddHudCamera()
+		{
+			CreateHudCamera();
+			if (!m_hudView)
+				return;
+			m_renderGraph->addChild(m_hudView);
+			auto commandGraph = vsg::CommandGraph::create(*m_vsgWind);
+			commandGraph->addChild(m_renderGraph);
+
+			m_vsgWind->getViewer().assignRecordAndSubmitTaskAndPresentation({ commandGraph });
+			Compile();
+		}
+
+		void RemoveHudCamera()
+		{
+			if (!m_hudView)
+				return;
+			std::erase_if(m_renderGraph->children, [this](auto const & child)
+			{
+					return child == m_hudView;
+			});
+			Compile();
+		}
+
+	private:
+		void Compile()
+		{
+			auto result = m_vsgWind->getViewer().compile();
+			vsg::updateViewer(m_vsgWind->getViewer(), result);
+		}
+
+		void CreateHudCamera()
+		{
+			if (m_hudCamera)
+				return;
+
+			auto hudTextGr = m_sys->createHudTextGroup();
+			if (!hudTextGr)
+				return;
+
+			m_hudTextGr = hudTextGr;
+
+			m_hudCamera = vsg::Camera::create(m_camera->projectionMatrix,
+				vsg::LookAt::create(vsg::dvec3(0.0, 0.0, 8.8), // Eye position
+					vsg::dvec3(0.0, 0.0, 0.0), // Center
+					vsg::dvec3(0.0, 1.0, 0.0)), // Up vector
+				m_camera->viewportState);
+			m_hudCamera->name = "hudCamera";
+
+			m_hudView = vsg::View::create(m_hudCamera, m_hudTextGr);
+		}
+
 	};
 
 	SolidModelWindow::SolidModelWindow(QWidget * parent)
@@ -348,7 +391,7 @@ namespace model3d
 		toolBar->addAction("LoadModel", [this]() {OnLoadModel(); });
 		auto * hudCameraAct = toolBar->addAction("HudCamera");
 		hudCameraAct->setCheckable(true);
-		connect(hudCameraAct, &QAction::setChecked, [this](bool set) {OnSetHudCamera(set); });
+		connect(hudCameraAct, &QAction::triggered, [this, hudCameraAct]() {OnSetHudCamera(hudCameraAct); });
 	}
 
 	SolidModelWindow::~SolidModelWindow() = default;
@@ -378,15 +421,15 @@ namespace model3d
 		update();
 	}
 
-	void SolidModelWindow::OnSetHudCamera(bool set)
+	void SolidModelWindow::OnSetHudCamera(QAction* act)
 	{
-		if (set)
+		if (act->isChecked())
 		{
-			
+			m_impl->AddHudCamera();
 		}
 		else
 		{
-			
+			m_impl->RemoveHudCamera();
 		}
 		//https://github.com/vsg-dev/VulkanSceneGraph/discussions/1234
 		//github.com/projectchrono/chrono.git
