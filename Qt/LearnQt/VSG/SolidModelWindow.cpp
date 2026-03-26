@@ -326,10 +326,6 @@ namespace model3d
 			if (!m_hudView)
 				return;
 			m_renderGraph->addChild(m_hudView);
-			auto commandGraph = vsg::CommandGraph::create(*m_vsgWind);
-			commandGraph->addChild(m_renderGraph);
-
-			m_vsgWind->getViewer().assignRecordAndSubmitTaskAndPresentation({ commandGraph });
 			Compile();
 		}
 
@@ -431,6 +427,7 @@ namespace model3d
 		{
 			m_impl->RemoveHudCamera();
 		}
+		update();
 		//https://github.com/vsg-dev/VulkanSceneGraph/discussions/1234
 		//github.com/projectchrono/chrono.git
 	}
