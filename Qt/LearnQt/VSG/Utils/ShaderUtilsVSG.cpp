@@ -13,10 +13,13 @@
 #include <io/Options.h>
 #include <nodes/StateGroup.h>
 #include <utils/GraphicsPipelineConfigurator.h>
+
+#include <vsg/vk/Context.h>
 #include <vsg/utils/SharedObjects.h>
 #include <vsg/state/DepthStencilState.h>
 #include <vsg/utils/ShaderSet.h>
 #include <vsg/state/ShaderStage.h>
+#include <vsg/state/RasterizationState.h>
 
 
 namespace vsg3d
@@ -61,6 +64,40 @@ namespace vsg3d
 				//outColor = texture(texSampler, fragTexCoord);
 				outColor = vec4(fragColor,1);}
 				)"
+		};
+
+		class ExtendedRasterizationState : public vsg::Inherit<vsg::RasterizationState, ExtendedRasterizationState>
+		{
+		public:
+			ExtendedRasterizationState() {}
+			ExtendedRasterizationState(const ExtendedRasterizationState& rs) :
+				Inherit(rs) {
+			}
+
+			void apply(vsg::Context & vsgContext, VkGraphicsPipelineCreateInfo& pipelineInfo) const override
+			{
+				// create and assign the VkPipelineRasterizationStateCreateInfo as usual using the base class that wil assign it to pipelineInfo.pRasterizationState
+				RasterizationState::apply(vsgContext, pipelineInfo);
+
+				/// setup extension feature (stippling) for attachment to pNext below
+				auto rastLineStateCreateInfo = vsgContext.scratchMemory->allocate<VkPipelineRasterizationLineStateCreateInfoEXT>(1);
+				rastLineStateCreateInfo->sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO_EXT;
+				rastLineStateCreateInfo->pNext = nullptr;
+				rastLineStateCreateInfo->lineRasterizationMode = VK_LINE_RASTERIZATION_MODE_DEFAULT_EXT;
+				rastLineStateCreateInfo->stippledLineEnable = VK_TRUE;
+				rastLineStateCreateInfo->lineStippleFactor = 4;
+				rastLineStateCreateInfo->lineStipplePattern = 0b1111111100000000;
+				/*rastLineStateCreateInfo->lineStippleFactor = 2;
+				rastLineStateCreateInfo->lineStipplePattern = 0xAAAA;*/
+
+				// to assign rastLineStateCreateInfo to the pRasterizationState->pNext we have to cast away const first
+				// this is safe as these objects haven't been passed to Vulkan yet
+				auto pRasterizationState = const_cast<VkPipelineRasterizationStateCreateInfo*>(pipelineInfo.pRasterizationState);
+				pRasterizationState->pNext = rastLineStateCreateInfo;
+			}
+
+		protected:
+			virtual ~ExtendedRasterizationState() {}
 		};
 	}
 
@@ -226,7 +263,8 @@ namespace vsg3d
 	vsg::ref_ptr<vsg::StateGroup> createLineStateGroup(vsg::ref_ptr<const vsg::Options> options,
 														VkPrimitiveTopology topology,
 														float line_width,
-														bool skipZbuffer)
+														bool skipZbuffer,
+														bool lineStrip)
 	{
 		vsg::ref_ptr<vsg::SharedObjects> sharedObjects;
 		if (!sharedObjects) 
@@ -248,13 +286,27 @@ namespace vsg3d
 		graphicsPipelineConfig->enableArray("inPosition", VK_VERTEX_INPUT_RATE_VERTEX, 12);
 		graphicsPipelineConfig->enableArray("inColor", VK_VERTEX_INPUT_RATE_VERTEX, 12);
 
-		struct SetPipelineStates : public vsg::Visitor {
-			SetPipelineStates(VkPrimitiveTopology topo, float width) : topology(topo), line_width(width) {}
+		if (lineStrip)
+		{
+			/// apply our custom RasterizationState to the GraphicsPipeline
+			auto rs = ExtendedRasterizationState::create();
+			graphicsPipelineConfig->pipelineStates.push_back(rs);
+		}
+
+		struct SetPipelineStates : public vsg::Visitor
+		{
+			SetPipelineStates(VkPrimitiveTopology topo, float width)
+			: topology(topo)
+			, line_width(width) {}
 
 			void apply(vsg::Object& object) { object.traverse(*this); }
-			void apply(vsg::RasterizationState& rs) { rs.lineWidth = line_width; }
+			void apply(vsg::RasterizationState& rs)
+			{
+				rs.lineWidth = line_width;
+				rs.cullMode = VK_CULL_MODE_NONE;
+			}
 			void apply(vsg::InputAssemblyState& ias) { ias.topology = topology; }
-			void apply(vsg::ColorBlendState& cbs) { cbs.configureAttachments(false); }
+			//void apply(vsg::ColorBlendState& cbs) { cbs.configureAttachments(false); }
 
 			VkPrimitiveTopology topology;
 			float line_width;

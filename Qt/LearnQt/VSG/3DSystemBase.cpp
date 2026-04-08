@@ -140,8 +140,9 @@ namespace model3d
 			const double endOfArrowCoordX = params.lineAxisLength - arrowProjectionLength;
 			const double endOfArrowCoordY = sin(DegreesToRadians(arrowAngleDegr)) * arrowLength;
 
-			uint32_t count = 2 + (needDrawArraws ? 4 : 0);
-			count *= 3;
+			const int32_t verticesPerAxis = 2 + (needDrawArraws ? 4 : 0);;
+			uint32_t const count = verticesPerAxis * 3;
+
 			vsg::ref_ptr<vsg::vec3Array> vertices(new vsg::vec3Array(count));
 
 			uint32_t pos = 0;
@@ -202,13 +203,7 @@ namespace model3d
 				vertices->at(pos++) = vec3_t(0.0, 0.0, params.lineAxisLength) + org;
 			}
 
-			const int32_t verticesPerAxis = [needDrawArraws]()
-			{
-				return needDrawArraws ? 6 : 2;
-			}();
-
-			vsg::ref_ptr<vsg::vec3Array> colors(new vsg::vec3Array(verticesPerAxis * 3));
-			
+			vsg::ref_ptr<vsg::vec3Array> colors(new vsg::vec3Array(count));	
 
 			std::vector<vsg::vec3> axisColors = {
 				vsg::vec3(1.f, 0.f, 0.f),
@@ -224,7 +219,9 @@ namespace model3d
 					colors->at(pos++) = axisColors[i];
 			}
 
-			auto stategraph = vsg3d::createLineStateGroup(nullptr, VK_PRIMITIVE_TOPOLOGY_LINE_LIST, params.lineAxisWidth);
+			//auto stategraph = vsg3d::createLineStateGroup(nullptr, VK_PRIMITIVE_TOPOLOGY_LINE_LIST, params.lineAxisWidth);
+			auto stategraph = vsg3d::createLineStateGroup(nullptr, VK_PRIMITIVE_TOPOLOGY_LINE_LIST, params.lineAxisWidth,
+				false, true);
 
 			auto attributteArray = vsg::DataList{vertices};
 			attributteArray.push_back(colors);

@@ -335,7 +335,7 @@ namespace model3d
 				return;
 			std::erase_if(m_renderGraph->children, [this](auto const & child)
 			{
-					return child == m_hudView;
+				return child == m_hudView;
 			});
 			Compile();
 		}
@@ -367,7 +367,6 @@ namespace model3d
 
 			m_hudView = vsg::View::create(m_hudCamera, m_hudTextGr);
 		}
-
 	};
 
 	SolidModelWindow::SolidModelWindow(QWidget * parent)
