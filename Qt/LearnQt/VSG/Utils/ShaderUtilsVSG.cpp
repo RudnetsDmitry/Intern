@@ -66,12 +66,18 @@ namespace vsg3d
 				)"
 		};
 
-		class ExtendedRasterizationState : public vsg::Inherit<vsg::RasterizationState, ExtendedRasterizationState>
+		class LineStippleRasterizationState : public vsg::Inherit<vsg::RasterizationState, LineStippleRasterizationState>
 		{
+			LineStippleInfo m_info;
 		public:
-			ExtendedRasterizationState() {}
-			ExtendedRasterizationState(const ExtendedRasterizationState& rs) :
-				Inherit(rs) {
+			explicit LineStippleRasterizationState(LineStippleInfo info)
+				: m_info(std::move(info))
+			{}
+
+			LineStippleRasterizationState(const LineStippleRasterizationState& rs, LineStippleInfo info)
+				: Inherit(rs)
+				, m_info(std::move(info))
+			{
 			}
 
 			void apply(vsg::Context & vsgContext, VkGraphicsPipelineCreateInfo& pipelineInfo) const override
@@ -85,8 +91,8 @@ namespace vsg3d
 				rastLineStateCreateInfo->pNext = nullptr;
 				rastLineStateCreateInfo->lineRasterizationMode = VK_LINE_RASTERIZATION_MODE_DEFAULT_EXT;
 				rastLineStateCreateInfo->stippledLineEnable = VK_TRUE;
-				rastLineStateCreateInfo->lineStippleFactor = 4;
-				rastLineStateCreateInfo->lineStipplePattern = 0b1111111100000000;
+				rastLineStateCreateInfo->lineStippleFactor = m_info.lineStippleFactor;
+				rastLineStateCreateInfo->lineStipplePattern = m_info.lineStipplePattern;
 				/*rastLineStateCreateInfo->lineStippleFactor = 2;
 				rastLineStateCreateInfo->lineStipplePattern = 0xAAAA;*/
 
@@ -97,7 +103,7 @@ namespace vsg3d
 			}
 
 		protected:
-			virtual ~ExtendedRasterizationState() {}
+			~LineStippleRasterizationState() override = default;
 		};
 	}
 
@@ -264,7 +270,7 @@ namespace vsg3d
 														VkPrimitiveTopology topology,
 														float line_width,
 														bool skipZbuffer,
-														bool lineStrip)
+														std::optional<LineStippleInfo> lineStipple)
 	{
 		vsg::ref_ptr<vsg::SharedObjects> sharedObjects;
 		if (!sharedObjects) 
@@ -286,10 +292,10 @@ namespace vsg3d
 		graphicsPipelineConfig->enableArray("inPosition", VK_VERTEX_INPUT_RATE_VERTEX, 12);
 		graphicsPipelineConfig->enableArray("inColor", VK_VERTEX_INPUT_RATE_VERTEX, 12);
 
-		if (lineStrip)
+		if (lineStipple)
 		{
 			/// apply our custom RasterizationState to the GraphicsPipeline
-			auto rs = ExtendedRasterizationState::create();
+			auto rs = LineStippleRasterizationState::create(*lineStipple);
 			graphicsPipelineConfig->pipelineStates.push_back(rs);
 		}
 

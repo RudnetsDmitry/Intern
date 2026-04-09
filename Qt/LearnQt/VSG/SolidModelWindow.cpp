@@ -275,7 +275,7 @@ namespace model3d
 			vsg::ComputeBounds computeBounds;
 			m_sys->getModelNode()->accept(computeBounds);
 			vsg::dvec3 centre = (computeBounds.bounds.min + computeBounds.bounds.max) * 0.5;
-			m_sys->recreateAxisForBox(Box2Rect3D(computeBounds.bounds), true);
+			m_sys->recreateAxisForBox(Box2Rect3D(computeBounds.bounds), true, false);
 			double radius = vsg::length(computeBounds.bounds.max - computeBounds.bounds.min) * 0.6;
 			double nearFarRatio = 0.001;
 

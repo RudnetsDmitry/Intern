@@ -193,7 +193,8 @@ namespace model3d
 
 			// создаем Z ось
 			vertices->at(pos++) = org;
-			vertices->at(pos++) = vec3_t(0.0, 0.0, toAxisSign(params.lineAxisLength)) + org;
+			auto zEnd = vec3_t(0.0, 0.0, toAxisSign(params.lineAxisLength)) + org;
+			vertices->at(pos++) = zEnd;
 
 			if (needDrawArraws)
 			{
@@ -201,6 +202,14 @@ namespace model3d
 				vertices->at(pos++) = vec3_t(0.0, 0.0, params.lineAxisLength) + org;
 				vertices->at(pos++) = vec3_t(-endOfArrowCoordY, 0.0, endOfArrowCoordX) + org;
 				vertices->at(pos++) = vec3_t(0.0, 0.0, params.lineAxisLength) + org;
+			}
+
+			if (needDrawText)
+			{
+				float aspectRation = static_cast<float>(params.lineAxisLength) * 0.2f;
+				float alpha = 0.5f;
+				axis->addChild(createTextNode({ 0.f, 0.f, 1.f, alpha }, "Z",
+					VecToPoint(zEnd), aspectRation, font, { .5, 0.5, 0.0 }));
 			}
 
 			vsg::ref_ptr<vsg::vec3Array> colors(new vsg::vec3Array(count));	
@@ -219,9 +228,12 @@ namespace model3d
 					colors->at(pos++) = axisColors[i];
 			}
 
-			//auto stategraph = vsg3d::createLineStateGroup(nullptr, VK_PRIMITIVE_TOPOLOGY_LINE_LIST, params.lineAxisWidth);
+			std::optional<vsg3d::LineStippleInfo> lineStipple;
+			if (!isPositive)
+				/// LineStipple(2, 0xAAAA)
+				lineStipple = {2, 0b1111111100000000 };
 			auto stategraph = vsg3d::createLineStateGroup(nullptr, VK_PRIMITIVE_TOPOLOGY_LINE_LIST, params.lineAxisWidth,
-				false, true);
+				false, lineStipple);
 
 			auto attributteArray = vsg::DataList{vertices};
 			attributteArray.push_back(colors);
@@ -234,15 +246,6 @@ namespace model3d
 			stategraph->addChild(vd);	
 
 			axis->addChild(stategraph);
-
-			//geom->addPrimitiveSet(new vsg::DrawArrays(vsg::PrimitiveSet::LINES, 0, verticesPerAxis * 3));
-
-			//if (!isPositive)
-			//{
-			//	// сделать отрицательные оси пунктиром
-			//	vsg::ref_ptr<vsg::StateSet> stateset_negative = geom->getOrCreateStateSet();
-			//	stateset_negative->setAttributeAndModes(new vsg::LineStipple(2, 0xAAAA), vsg::StateAttribute::ON);
-			//}
 		};
 
 		// положительные оси
@@ -532,7 +535,7 @@ namespace model3d
 		return nullptr;
 	}
 
-	void Base3DSystem::recreateAxisForBox(CRect3D const & bb, bool centerFromBox)
+	void Base3DSystem::recreateAxisForBox(CRect3D const & bb, bool centerFromBox, bool hideNegativeAxis)
 	{
 		ClearAllChildNodes(*m_swCoordAxes);
 
@@ -550,7 +553,7 @@ namespace model3d
 		double r = std::max(xLength, yLength);
 		r += r * 0.2;
 		axisParam.lineAxisLength = r;
-		axisParam.isHideNegativeAxis = true;
+		axisParam.isHideNegativeAxis = hideNegativeAxis;
 
 		if (auto newNode = CreateAxisNode(axisParam, m_axisOrg, false, m_font))
 			m_swCoordAxes->addChild(newNode);

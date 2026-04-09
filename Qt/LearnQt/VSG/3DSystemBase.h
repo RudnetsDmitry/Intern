@@ -104,7 +104,7 @@ namespace model3d
 			std::string const & text, CPoint3D const & position, float characterSizeAspectRatio);
 		static vsg::ref_ptr<::vsg::Geometry> createGrid(double gridR);
 
-		void recreateAxisForBox(CRect3D const & bb, bool centerFromBox) override;
+		void recreateAxisForBox(CRect3D const & bb, bool centerFromBox, bool hideNegativeAxis = true) override;
 		void recreateAxis(CPoint3D const& org = CPoint3D(.0)) override;
 		CPoint3D const & getAxisOrg() const override;
 

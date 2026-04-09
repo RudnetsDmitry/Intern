@@ -9,6 +9,7 @@
 
 #pragma once
 #include <memory>
+#include <optional>
 #include <state/material.h>
 
 
@@ -19,6 +20,11 @@ namespace vsg
 }
 
 namespace vsg3d {
+	struct LineStippleInfo
+	{
+		uint32_t	lineStippleFactor;
+		uint16_t	lineStipplePattern;
+	};
 
 	//vsg::ref_ptr<vsg::ShaderSet> createPbrShaderSet(vsg::ref_ptr<const vsg::Options> options);
 
@@ -26,7 +32,7 @@ namespace vsg3d {
 														VkPrimitiveTopology topology,
 														float line_width,
 														bool skipZbuffer = false,
-														bool lineStrip = false);
+														std::optional<LineStippleInfo> lineStipple = {});
 
 	//vsg::ref_ptr<vsg::StateGroup> createPbrStateGroup(vsg::ref_ptr<const vsg::Options> options,
 	//                                                  std::shared_ptr<ChVisualMaterial> material,

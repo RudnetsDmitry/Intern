@@ -106,7 +106,7 @@ namespace model3d
 		virtual std::wstring entityInfo(std::vector<size_t> const & entityId) const = 0;
 
 		virtual void recreateAxis(CPoint3D const & org = CPoint3D(.0)) = 0;
-		virtual void recreateAxisForBox(CRect3D const &, bool centerFromBox) = 0;
+		virtual void recreateAxisForBox(CRect3D const &, bool centerFromBox, bool hideNegativeAxis = true) = 0;
 		virtual void updateLightState(CPoint3D const & org, double rad) = 0;
 		virtual CPoint3D const & getAxisOrg() const = 0;
 
