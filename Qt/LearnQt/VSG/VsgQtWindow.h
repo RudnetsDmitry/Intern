@@ -49,6 +49,9 @@ namespace vsgQt
 		Viewer & getViewer();
 		Viewer const & getViewer() const;
 
+		QColor clearColor() const;
+		void setClearColor(QColor color);
+
 	protected:
 		void cleanup();
 

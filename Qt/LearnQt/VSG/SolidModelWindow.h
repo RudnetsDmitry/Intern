@@ -33,5 +33,6 @@ namespace model3d
 		void OnRebuild();
 		void OnLoadModel();
 		void OnSetHudCamera(QAction * act);
+		void OnSetClearColor();
 	};
 }

@@ -88,6 +88,29 @@ namespace vsgQt
 		return *m_viewer;
 	}
 
+	QColor Window::clearColor() const
+	{
+		/*
+		 * if (_traits && (_traits->swapchainPreferences.surfaceFormat.format == VK_FORMAT_B8G8R8A8_SRGB || _traits->swapchainPreferences.surfaceFormat.format == VK_FORMAT_B8G8R8_SRGB))
+{
+    _clearColor = sRGB_to_linear(_clearColor);
+}
+		 */
+		if (!m_windowAdapter)
+			return QColor();
+		auto const & color = m_windowAdapter->clearColor();
+		QColor res;
+		res.setRgbF(color.x, color.y, color.z);
+		return res;
+	}
+
+	void Window::setClearColor(QColor color)
+	{
+		if (m_windowAdapter)
+			m_windowAdapter->clearColor() = vsg::vec4(color.redF(), color.greenF(),
+			color.blueF(), 1.0f);
+	}
+
 	void Window::cleanup()
 	{
 		// remove links to all the VSG related classes.

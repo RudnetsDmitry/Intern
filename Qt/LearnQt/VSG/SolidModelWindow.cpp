@@ -37,6 +37,7 @@
 
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QFileDialog>
+#include <QtWidgets/QColorDialog>
 
 namespace
 {
@@ -387,6 +388,7 @@ namespace model3d
 		auto * hudCameraAct = toolBar->addAction("HudCamera");
 		hudCameraAct->setCheckable(true);
 		connect(hudCameraAct, &QAction::triggered, [this, hudCameraAct]() {OnSetHudCamera(hudCameraAct); });
+		toolBar->addAction("SetClearColor", [this]() {OnSetClearColor(); });
 	}
 
 	SolidModelWindow::~SolidModelWindow() = default;
@@ -429,5 +431,14 @@ namespace model3d
 		update();
 		//https://github.com/vsg-dev/VulkanSceneGraph/discussions/1234
 		//github.com/projectchrono/chrono.git
+	}
+
+	void SolidModelWindow::OnSetClearColor()
+	{
+		auto color = QColorDialog::getColor(m_impl->GetVsgWindow()->clearColor(), this);
+		if (color == QColor())
+			return;
+		m_impl->GetVsgWindow()->setClearColor(color);
+		update();
 	}
 }
