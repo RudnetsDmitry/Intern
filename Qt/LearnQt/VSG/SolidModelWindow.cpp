@@ -265,6 +265,22 @@ namespace model3d
 			return m_vsgWind;
 		}
 
+		vsgQt::Window const * GetVsgWindow() const
+		{
+			return m_vsgWind;
+		}
+
+		QColor GetClearColor() const
+		{
+			return m_vsgWind->clearQColor();
+		}
+
+		void SetClearColor(QColor color)
+		{
+			m_vsgWind->setClearQColor(color);
+			UpdateClearColor();
+		}
+
 		void RebuildModel(std::function<void (vsg::Switch*)> const & f, bool compile = true)
 		{
 			m_vsgWind->getViewer().deviceWaitIdle();
@@ -341,7 +357,14 @@ namespace model3d
 			Compile();
 		}
 
+
 	private:
+		void UpdateClearColor()
+		{
+			// set up the clearValues based on the RenderPass's attachments.
+			m_renderGraph->setClearValues(m_vsgWind->clearColor(), VkClearDepthStencilValue{ 0.0f, 0 });
+		}
+
 		void Compile()
 		{
 			auto result = m_vsgWind->getViewer().compile();
@@ -435,10 +458,10 @@ namespace model3d
 
 	void SolidModelWindow::OnSetClearColor()
 	{
-		auto color = QColorDialog::getColor(m_impl->GetVsgWindow()->clearColor(), this);
+		auto color = QColorDialog::getColor(m_impl->GetClearColor(), this);
 		if (color == QColor())
 			return;
-		m_impl->GetVsgWindow()->setClearColor(color);
+		m_impl->SetClearColor(color);
 		update();
 	}
 }

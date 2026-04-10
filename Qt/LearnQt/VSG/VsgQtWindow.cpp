@@ -88,27 +88,46 @@ namespace vsgQt
 		return *m_viewer;
 	}
 
-	QColor Window::clearColor() const
+	namespace
 	{
-		/*
-		 * if (_traits && (_traits->swapchainPreferences.surfaceFormat.format == VK_FORMAT_B8G8R8A8_SRGB || _traits->swapchainPreferences.surfaceFormat.format == VK_FORMAT_B8G8R8_SRGB))
-{
-    _clearColor = sRGB_to_linear(_clearColor);
-}
-		 */
+		bool NeedConvertLinearWithSRGB(vsg::WindowTraits const & traits)
+		{
+			switch (traits.swapchainPreferences.surfaceFormat.format)
+			{
+			case VK_FORMAT_B8G8R8A8_SRGB:
+			case VK_FORMAT_B8G8R8_SRGB:
+				return true;
+			default:
+				return false;
+			}
+		}
+	}
+
+	QColor Window::clearQColor() const
+	{
 		if (!m_windowAdapter)
-			return QColor();
-		auto const & color = m_windowAdapter->clearColor();
+			return {};
+		auto color = m_windowAdapter->clearColor();
+		if (NeedConvertLinearWithSRGB(*m_traits))
+			color = vsg::linear_to_sRGB(color);
 		QColor res;
 		res.setRgbF(color.x, color.y, color.z);
 		return res;
 	}
 
-	void Window::setClearColor(QColor color)
+	void Window::setClearQColor(QColor color)
 	{
-		if (m_windowAdapter)
-			m_windowAdapter->clearColor() = vsg::vec4(color.redF(), color.greenF(),
+		auto v4color = vsg::vec4(color.redF(), color.greenF(),
 			color.blueF(), 1.0f);
+		if (NeedConvertLinearWithSRGB(*m_traits))
+			v4color = vsg::sRGB_to_linear(v4color);
+
+		m_windowAdapter->clearColor() = v4color;
+	}
+
+	vsg::vec4 Window::clearColor() const
+	{
+		return m_windowAdapter->clearColor();
 	}
 
 	void Window::cleanup()
