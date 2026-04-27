@@ -38,9 +38,113 @@
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QColorDialog>
+#include <utils/LineSegmentIntersector.h>
 
 namespace
 {
+	class IntersectionHandler : public vsg::Inherit<vsg::Visitor, IntersectionHandler>
+	{
+	public:
+		IntersectionHandler(vsg::Node * scene,
+			vsg::ref_ptr<vsg::Camera> camera
+		)
+		: m_scene(scene)
+		, m_camera(std::move(camera))
+		{
+		}
+
+		void apply(vsg::ButtonPressEvent & buttonPressEvent) override
+		{
+			intersection(buttonPressEvent);
+		}
+
+		void clear()
+		{
+			m_selectedNode = nullptr;
+		}
+
+		void selectNode(vsg::Node const * node = nullptr)
+		{
+			if (m_selectedNode)
+				setColor(const_cast<vsg::Node*>(m_selectedNode), default_color);
+			m_selectedNode = node;
+			if (m_selectedNode)
+				setColor(const_cast<vsg::Node*>(m_selectedNode), selected_color);
+		}
+
+		void intersection(vsg::PointerEvent & pointerEvent)
+		{
+			auto intersector = vsg::LineSegmentIntersector::create(*m_camera, pointerEvent.x, pointerEvent.y);
+			m_scene->accept(*intersector);
+			//fmt::print("Intersected {} objects\n", intersector->intersections.size());
+			if (intersector->intersections.empty())
+				return;
+
+			// sort the intersections front to back
+			std::sort(intersector->intersections.begin(),
+				intersector->intersections.end(),
+				[](auto& lhs, auto& rhs) { return lhs->ratio < rhs->ratio; });
+
+
+			auto& intersection = intersector->intersections[0];
+			for (const vsg::Node* node : intersection->nodePath)
+			{
+				std::string name;
+				//            std::cout << "className=" << node->className();
+				node->getValue("name", name);
+				selectNode(node);
+			}
+		}
+
+		void setColor(vsg::Node * node, vsg::vec4 const & color)
+		{
+			struct ChangeColor : public vsg::Visitor
+			{
+				ChangeColor(vsg::vec4 const & color) : m_color(color) {}
+				void apply(vsg::Object & object) override
+				{
+					object.traverse(*this);
+				}
+
+				void apply(vsg::StateGroup & sg) override
+				{
+					sg.traverse(*this);
+				}
+
+				void apply(vsg::VertexIndexDraw & vid) override
+				{
+					for (auto & buffer : vid.arrays)
+					{
+						auto data = buffer->data;
+
+						if (data->is_compatible(typeid(vsg::vec4Array)))
+						{
+							// Change the color to green
+							(*(vsg::vec4*)(data->dataPointer(0)))
+								= m_color;
+							//fmt::print("Changed color to ({},{},{},{})\n",
+							//	_color.r, _color.g, _color.b, _color.a
+							//);
+							data->dirty();
+						}
+					}
+				}
+				vsg::vec4 m_color;
+			};
+
+			ChangeColor cc(color);
+			node->accept(cc);
+		}
+
+		static constexpr vsg::vec4 default_color = vsg::vec4{ 0.5, 0.5, 0.5, 1.0 }; // Default color
+		static constexpr vsg::vec4 selected_color = vsg::vec4{ 1.0, 0, 0, 1.0 }; // Select color
+
+		vsg::Node const* m_selectedNode = nullptr;
+		vsg::ref_ptr<vsg::Node> m_scene;
+		vsg::ref_ptr<vsg::Camera> m_camera;
+		std::set<vsg::Node*> m_objectNodes;
+	};
+
 	vsg::ref_ptr<vsg::Node> createArrow(vsg::vec3 pos, vsg::vec3 dir, vsg::vec4 color)
 	{
 		vsg::ref_ptr<vsg::Group> arrow = vsg::Group::create();
@@ -99,6 +203,16 @@ namespace
 		gizmo->addChild(sphere);
 
 		return gizmo;
+	}
+
+	vsg::ref_ptr<vsg::Node> CreateBox()
+	{
+		vsg::GeometryInfo geomInfo;
+		vsg::StateInfo stateInfo;
+		vsg::Builder builder;
+		geomInfo.color = vsg::vec4{ 0, 1, 1, 1 };
+		auto box = builder.createBox(geomInfo, stateInfo);
+		return box;
 	}
 
 	std::string VERT{ R"(
@@ -231,6 +345,7 @@ namespace model3d
 		vsg::ref_ptr<vsg::TextGroup> m_hudTextGr;
 		vsg::ref_ptr<vsg::View> m_hudView;
 		vsg::ref_ptr<vsg::Trackball> m_trackball;
+		vsg::ref_ptr<IntersectionHandler> m_intersectionHandler;
 		std::unique_ptr<I3DSystem> m_sys;
 		vsg::ref_ptr<vsg::RenderGraph> m_renderGraph;
 
@@ -248,6 +363,10 @@ namespace model3d
 			m_trackball->addWindow(*m_vsgWind);
 
 			m_vsgWind->getViewer().addEventHandler(m_trackball);
+
+			m_intersectionHandler = IntersectionHandler::create(m_sys->getModelNode(), m_camera);
+			m_vsgWind->getViewer().addEventHandler(m_intersectionHandler);
+
 			Rebuild(false);
 
 			m_renderGraph = vsg::RenderGraph::create(*m_vsgWind);
@@ -283,6 +402,7 @@ namespace model3d
 
 		void RebuildModel(std::function<void (vsg::Switch*)> const & f, bool compile = true)
 		{
+			m_intersectionHandler->clear();
 			m_vsgWind->getViewer().deviceWaitIdle();
 			m_sys->clearModelNode();
 
@@ -316,7 +436,7 @@ namespace model3d
 
 		void Rebuild(bool compile = true)
 		{
-			RebuildModel([](vsg::Switch* model)
+			RebuildModel([](vsg::Switch * model)
 			{
 				static int state = 0;
 				switch (state)
@@ -412,6 +532,10 @@ namespace model3d
 		hudCameraAct->setCheckable(true);
 		connect(hudCameraAct, &QAction::triggered, [this, hudCameraAct]() {OnSetHudCamera(hudCameraAct); });
 		toolBar->addAction("SetClearColor", [this]() {OnSetClearColor(); });
+		toolBar->addAction("BuildBox", [this]()
+		{
+			OnBuild("");
+		});
 	}
 
 	SolidModelWindow::~SolidModelWindow() = default;
@@ -462,6 +586,15 @@ namespace model3d
 		if (color == QColor())
 			return;
 		m_impl->SetClearColor(color);
+		update();
+	}
+
+	void SolidModelWindow::OnBuild(std::string_view cmd)
+	{
+		m_impl->RebuildModel([cmd](vsg::Switch* model)
+			{
+				model->addChild(true, CreateBox());
+			});
 		update();
 	}
 }

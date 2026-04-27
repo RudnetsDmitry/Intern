@@ -34,5 +34,6 @@ namespace model3d
 		void OnLoadModel();
 		void OnSetHudCamera(QAction * act);
 		void OnSetClearColor();
+		void OnBuild(std::string_view cmd);
 	};
 }
