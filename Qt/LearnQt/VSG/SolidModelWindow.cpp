@@ -16,6 +16,7 @@
 
 #include <app/View.h>
 #include <io/read.h>
+#include <vsg/nodes/MatrixTransform.h>
 
 #include "VsgQtWindow.h"
 
@@ -42,6 +43,33 @@
 
 namespace
 {
+	struct ChangeDynamicProperty : public vsg::Visitor
+	{
+		void apply(vsg::Object& object) override
+		{
+			object.traverse(*this);
+		}
+
+		void apply(vsg::VertexIndexDraw& vid) override
+		{
+			for (auto& buffer : vid.arrays)
+			{
+				auto data = buffer->data;
+
+				if (data->is_compatible(typeid(vsg::vec4Array))) 
+				{
+					if (!m_processData.insert(data.get()).second)
+						return;
+
+					// Change the property to dynamic
+					data->properties.dataVariance = vsg::DYNAMIC_DATA;
+					data->dirty();
+				}
+			}
+		}
+		std::set<void*> m_processData;
+	};
+
 	class IntersectionHandler : public vsg::Inherit<vsg::Visitor, IntersectionHandler>
 	{
 	public:
@@ -58,6 +86,17 @@ namespace
 			intersection(buttonPressEvent);
 		}
 
+		void apply(vsg::KeyReleaseEvent & keyReleaseEvent) override
+		{
+			if (keyReleaseEvent.keyBase == vsg::KEY_Escape)
+				selectNode(nullptr);
+		}
+
+		void apply(vsg::KeyPressEvent & keyReleaseEvent) override
+		{
+			if (keyReleaseEvent.keyBase == vsg::KEY_Escape)
+				selectNode(nullptr);
+		}
 		void clear()
 		{
 			m_selectedNode = nullptr;
@@ -66,10 +105,15 @@ namespace
 		void selectNode(vsg::Node const * node = nullptr)
 		{
 			if (m_selectedNode)
-				setColor(const_cast<vsg::Node*>(m_selectedNode), default_color);
+			{
+				if (m_selectedNode == node)
+					return;
+
+				setColor(const_cast<vsg::Node*>(m_selectedNode), m_prevColor);
+			}
 			m_selectedNode = node;
 			if (m_selectedNode)
-				setColor(const_cast<vsg::Node*>(m_selectedNode), selected_color);
+				setColor(const_cast<vsg::Node*>(m_selectedNode), selected_color, &m_prevColor);
 		}
 
 		void intersection(vsg::PointerEvent & pointerEvent)
@@ -87,20 +131,30 @@ namespace
 
 
 			auto& intersection = intersector->intersections[0];
-			for (const vsg::Node* node : intersection->nodePath)
+			for (const vsg::Node * node : intersection->nodePath)
 			{
-				std::string name;
+				std::string typeName;
 				//            std::cout << "className=" << node->className();
-				node->getValue("name", name);
-				selectNode(node);
+				node->getValue("type", typeName);
+				if (typeName == "obj")
+				{
+					selectNode(node);
+					return;
+				}
 			}
 		}
 
-		void setColor(vsg::Node * node, vsg::vec4 const & color)
+		void setColor(vsg::Node * node, vsg::vec3 const & color,
+			vsg::vec3 * curColor = nullptr)
 		{
 			struct ChangeColor : public vsg::Visitor
 			{
-				ChangeColor(vsg::vec4 const & color) : m_color(color) {}
+				ChangeColor(vsg::vec3 const & color,
+									 vsg::vec3 * curColor)
+				: m_color(color)
+				, m_curColor(curColor)
+				{}
+				
 				void apply(vsg::Object & object) override
 				{
 					object.traverse(*this);
@@ -119,30 +173,45 @@ namespace
 
 						if (data->is_compatible(typeid(vsg::vec4Array)))
 						{
+							if (!m_processData.insert(data.get()).second)
+								return;
+
 							// Change the color to green
-							(*(vsg::vec4*)(data->dataPointer(0)))
-								= m_color;
+							auto & color = *(vsg::vec4*)(data->dataPointer(0));
+							if (m_curColor)
+								*m_curColor = { color.x, color.y, color.z };
+							color = vsg::vec4{ m_color.x, m_color.y, m_color.z, 1.0 };
 							//fmt::print("Changed color to ({},{},{},{})\n",
 							//	_color.r, _color.g, _color.b, _color.a
 							//);
 							data->dirty();
 						}
+						else if (data->is_compatible(typeid(vsg::vec3Array)))
+						{
+							/*auto & color = *(vsg::vec3*)(data->dataPointer(0));
+							if (m_curColor)
+								*m_curColor = color;
+							color = m_color;
+							data->dirty();*/
+						}
 					}
 				}
-				vsg::vec4 m_color;
+				vsg::vec3 m_color;
+				vsg::vec3 * m_curColor = nullptr;
+				std::set<void*> m_processData;
 			};
 
-			ChangeColor cc(color);
+			ChangeColor cc(color, curColor);
 			node->accept(cc);
 		}
 
-		static constexpr vsg::vec4 default_color = vsg::vec4{ 0.5, 0.5, 0.5, 1.0 }; // Default color
-		static constexpr vsg::vec4 selected_color = vsg::vec4{ 1.0, 0, 0, 1.0 }; // Select color
+		static constexpr vsg::vec3 default_color = vsg::vec3{ 0.5, 0.5, 0.5 }; // Default color
+		static constexpr vsg::vec3 selected_color = vsg::vec3{ 1.0, 0, 0 }; // Select color
 
 		vsg::Node const* m_selectedNode = nullptr;
+		vsg::vec3 m_prevColor;
 		vsg::ref_ptr<vsg::Node> m_scene;
 		vsg::ref_ptr<vsg::Camera> m_camera;
-		std::set<vsg::Node*> m_objectNodes;
 	};
 
 	vsg::ref_ptr<vsg::Node> createArrow(vsg::vec3 pos, vsg::vec3 dir, vsg::vec4 color)
@@ -212,7 +281,40 @@ namespace
 		vsg::Builder builder;
 		geomInfo.color = vsg::vec4{ 0, 1, 1, 1 };
 		auto box = builder.createBox(geomInfo, stateInfo);
-		return box;
+		vsg::ComputeBounds computeBounds;
+		computeBounds.apply(*box);
+		float radius = vsg::length(computeBounds.bounds.max - computeBounds.bounds.min);
+
+		auto switchNode = vsg::Switch::create();
+
+		{
+			auto transform = vsg::MatrixTransform::create();
+			transform->setValue("type", "obj");
+			transform->addChild(box);
+			vsg::visit<ChangeDynamicProperty>(transform);
+			switchNode->addChild(true, transform);
+
+		}
+
+		{
+			auto transform = vsg::MatrixTransform::create();
+			transform->setValue("type", "obj");
+			transform->matrix = vsg::translate(3.0f * radius, 0.0f, 0.0f);
+			transform->addChild(box);
+			vsg::visit<ChangeDynamicProperty>(transform);
+			switchNode->addChild(true, transform);
+		}
+
+		{
+			auto transform = vsg::MatrixTransform::create();
+			transform->setValue("type", "obj");
+			transform->matrix = vsg::translate(-3.0f * radius, 0.0f, 0.0f);
+			transform->addChild(box);
+			vsg::visit<ChangeDynamicProperty>(transform);
+			switchNode->addChild(true, transform);
+		}
+
+		return switchNode;
 	}
 
 	std::string VERT{ R"(

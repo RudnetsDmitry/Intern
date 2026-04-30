@@ -17,8 +17,6 @@
 #include <vsg/nodes/Switch.h>
 #include <vsg/utils/Builder.h>
 
-#include <vsg/commands/SetLineWidth.h>
-#include <vsg/commands/Commands.h>
 #include <vsg/nodes/Group.h>
 #include <vsg/lighting/DirectionalLight.h>
 #include <vsg/lighting/Light.h>
@@ -30,7 +28,6 @@
 #include <vsg/io/read.h>
 #include <vsg/nodes/StateGroup.h>
 #include <vsg/nodes/VertexDraw.h>
-#include <vsg/nodes/VertexIndexDraw.h>
 #include <vsg/utils/ComputeBounds.h>
 #include <vsg/state/DepthStencilState.h>
 
