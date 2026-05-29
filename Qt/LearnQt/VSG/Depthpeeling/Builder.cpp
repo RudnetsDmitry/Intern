@@ -1,3 +1,4 @@
+﻿#include "stdafx.h"
 #include "Builder.h"
 
 #include "PipelineConfigurator.h"

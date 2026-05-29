@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
-    <LibsPath>d:\vcpkg\installed\x64-windows</LibsPath>
+    <LibsPath>k:\vcpkg\installed\x64-windows</LibsPath>
     <!-- <BoostLibsPath>$(LibsPath)\boost\boost_dir</BoostLibsPath> -->
   </PropertyGroup>
   <PropertyGroup>
@@ -19,6 +19,7 @@
     <ClCompile>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalOptions>/bigobj /utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <PreprocessorDefinitions>QT_NO_DEPRECATED_WARNINGS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>

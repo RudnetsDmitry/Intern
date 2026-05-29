@@ -24,8 +24,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 namespace vsgQt
 {
 	Window::Window(QWidget* parent)
-	:	base_t(parent),
-		m_keyboardMap(KeyboardMap::create())
+	:	base_t(parent)
+	, m_keyboardMap(KeyboardMap::create())
+	, m_traits(vsg::WindowTraits::create())
+
 	{
 		m_viewer = vsgQt::Viewer::create();
 		m_viewer->addEventHandler(vsg::CloseHandler::create(m_viewer));
@@ -40,9 +42,6 @@ namespace vsgQt
 	{
 		if (m_windowAdapter)
 			return;
-
-		if (!m_traits)
-			m_traits = vsg::WindowTraits::create();
 
 #if defined(VK_USE_PLATFORM_WIN32_KHR)
 		m_traits->nativeWindow = reinterpret_cast<HWND>(winId());

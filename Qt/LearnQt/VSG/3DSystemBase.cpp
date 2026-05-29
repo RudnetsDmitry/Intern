@@ -315,8 +315,8 @@ namespace model3d
 
 		m_mainLightSource = vsg::createHeadlight();
 		m_rootNode->addChild(m_mainLightSource);
-		//QString fontDirPath = QCoreApplication::applicationDirPath() + "/fonts/times.vsgb";
-		QString fontDirPath = QCoreApplication::applicationDirPath() + "/fonts/OpenSans-Bold.vsgb";
+		QString fontDirPath = QCoreApplication::applicationDirPath() + "/fonts/times.vsgb";
+		//QString fontDirPath = QCoreApplication::applicationDirPath() + "/fonts/OpenSans-Bold.vsgb";
 		m_font = vsg::read_cast<vsg::Font>(fontDirPath.toStdWString(), {});
 	}
 

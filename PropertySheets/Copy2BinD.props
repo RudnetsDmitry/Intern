@@ -36,18 +36,19 @@
 				
 				xcopy /y /d "$(LibsDebugPath)\bin\libcrypto-3-x64.dll" "$(TargetDir)"
 				xcopy /y /d "$(LibsDebugPath)\bin\zstd.dll" "$(TargetDir)"
-				xcopy /y /d "$(LibsDebugPath)\bin\icudtd72.dll" "$(TargetDir)"
 				xcopy /y /d "$(LibsDebugPath)\bin\brotlidec.dll" "$(TargetDir)"
 				xcopy /y /d "$(LibsDebugPath)\bin\bz2d.dll" "$(TargetDir)"
 				xcopy /y /d "$(LibsDebugPath)\bin\brotlicommon.dll" "$(TargetDir)"
 				
 				xcopy /y /d "$(LibsDebugPath)\bin\vsg-17d.dll" "$(TargetDir)"
 				xcopy /y /d "$(LibsDebugPath)\bin\vsgXchanged.dll" "$(TargetDir)"
-				xcopy /y /d "$(LibsDebugPath)\bin\assimp-vc143-mtd.dll" "$(TargetDir)"	
+				xcopy /y /d "$(LibsDebugPath)\bin\assimp-vc145-mtd.dll" "$(TargetDir)"	
 				xcopy /y /d "$(LibsDebugPath)\bin\poly2tri.dll" "$(TargetDir)"
 				xcopy /y /d "$(LibsDebugPath)\bin\kubazip.dll" "$(TargetDir)"
 				xcopy /y /d "$(LibsDebugPath)\bin\minizip.dll" "$(TargetDir)"
 				xcopy /y /d "$(LibsDebugPath)\bin\pugixml.dll" "$(TargetDir)"			
+				
+				xcopy /y /d "$(LibsDebugPath)\bin\zd.dll" "$(TargetDir)"
 				
 				</Command>
     </PostBuildEvent>

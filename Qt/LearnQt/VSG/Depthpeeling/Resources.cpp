@@ -1,3 +1,4 @@
+﻿#include "stdafx.h"
 #include "Resources.h"
 
 #include "Bindings.h"

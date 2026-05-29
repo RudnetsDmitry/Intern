@@ -34,11 +34,15 @@
 #include <vsg/utils/GraphicsPipelineConfigurator.h>
 
 #include <vsgXchange/assimp.h>
+#include <vsgXchange/all.h>
 
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QColorDialog>
+#include <state/material.h>
 #include <utils/LineSegmentIntersector.h>
+
+#include "Depthpeeling/Builder.h"
 
 namespace
 {
@@ -418,6 +422,164 @@ void main() { color = vec4(0.6, 0.6, 0.6, 1.0); }
 
 		return stateGroup;
 	}
+
+	namespace opaque
+	{
+		vsg::ref_ptr<vsg::Node> createBox(vsg::oit::depthpeeling::Builder & builder,
+			vsg::ref_ptr<vsg::Data> texture, vsg::vec4 color, vsg::vec3 offset)
+		{
+			using namespace vsg;
+
+			vsg::ref_ptr<vsg::Data> positions;
+
+			auto colors = vsg::vec4Array::create(1, color);
+
+			const vsg::vec3 dx{ 1.0f, 0.0f, 0.0f };
+			const vsg::vec3 dy{ 0.0f, 1.0f, 0.0f };
+			const vsg::vec3 dz{ 0.0f, 0.0f, 1.0f };
+			const auto origin = offset - dx * 0.5f - dy * 0.5f - dz * 0.5f;
+
+			auto [t_origin, t_scale, t_top] = vsg::vec3{ 0.0f, 1.0f, 1.0f }.value;
+
+			vsg::vec3 v000(origin);
+			vsg::vec3 v100(origin + dx);
+			vsg::vec3 v110(origin + dx + dy);
+			vsg::vec3 v010(origin + dy);
+			vsg::vec3 v001(origin + dz);
+			vsg::vec3 v101(origin + dx + dz);
+			vsg::vec3 v111(origin + dx + dy + dz);
+			vsg::vec3 v011(origin + dy + dz);
+
+			vsg::vec2 t00(0.0f, t_top);
+			vsg::vec2 t01(0.0f, t_origin);
+			vsg::vec2 t10(1.0f, t_top);
+			vsg::vec2 t11(1.0f, t_origin);
+
+			vsg::ref_ptr<vsg::vec3Array> vertices;
+			vsg::ref_ptr<vsg::vec3Array> normals;
+			vsg::ref_ptr<vsg::vec2Array> texcoords;
+			vsg::ref_ptr<vsg::ushortArray> indices;
+
+			vsg::vec3 n0 = vsg::normalize(vsg::cross(dx, dz));
+			vsg::vec3 n1 = vsg::normalize(vsg::cross(dy, dz));
+			vsg::vec3 n2 = -n0;
+			vsg::vec3 n3 = -n1;
+			vsg::vec3 n4 = vsg::normalize(vsg::cross(dy, dx));
+			vsg::vec3 n5 = -n4;
+
+			// set up vertex and index arrays
+			vertices = vsg::vec3Array::create(
+				{ v000, v100, v101, v001,   // front
+				 v100, v110, v111, v101,   // right
+				 v110, v010, v011, v111,   // far
+				 v010, v000, v001, v011,   // left
+				 v010, v110, v100, v000,   // bottom
+				 v001, v101, v111, v011 }); // top
+
+			normals = vsg::vec3Array::create(
+				{ n0, n0, n0, n0,
+				 n1, n1, n1, n1,
+				 n2, n2, n2, n2,
+				 n3, n3, n3, n3,
+				 n4, n4, n4, n4,
+				 n5, n5, n5, n5 });
+
+			texcoords = vsg::vec2Array::create(
+				{ t00, t10, t11, t01,
+				 t00, t10, t11, t01,
+				 t00, t10, t11, t01,
+				 t00, t10, t11, t01,
+				 t00, t10, t11, t01,
+				 t00, t10, t11, t01 });
+
+			indices = vsg::ushortArray::create(
+				{ 0, 1, 2, 0, 2, 3,
+				 4, 5, 6, 4, 6, 7,
+				 8, 9, 10, 8, 10, 11,
+				 12, 13, 14, 12, 14, 15,
+				 16, 17, 18, 16, 18, 19,
+				 20, 21, 22, 20, 22, 23 });
+
+			auto vid = vsg::VertexIndexDraw::create();
+
+			vsg::DataList arrays;
+			arrays.push_back(vertices);
+			if (normals)
+				arrays.push_back(normals);
+			if (texcoords)
+				arrays.push_back(texcoords);
+			if (colors)
+				arrays.push_back(colors);
+			if (positions)
+				arrays.push_back(positions);
+			vid->assignArrays(arrays);
+
+			vid->assignIndices(indices);
+			vid->indexCount = static_cast<uint32_t>(indices->size());
+			vid->instanceCount = 1;
+
+			auto box = vsg::StateGroup::create();
+			box->add(builder.getOrCreateMaterialBinding([&texture](auto& descriptorConfigurator, auto& options)
+			{
+				auto material = vsg::PhongMaterialValue::create();
+				material->value().alphaMaskCutoff = 0.95f;
+
+				descriptorConfigurator.assignDescriptor("material", material);
+				descriptorConfigurator.assignDescriptor("texCoordIndices", vsg::TexCoordIndicesValue::create());
+
+				auto sampler = vsg::Sampler::create();
+				sampler->addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+				sampler->addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+				if (options.valid() && options->sharedObjects.valid())
+				{
+					options->sharedObjects->share(sampler);
+				}
+
+				descriptorConfigurator.assignTexture("diffuseMap", texture, sampler);
+			}));
+
+			box->addChild(vid);
+			return box;
+		}
+
+		vsg::ref_ptr<vsg::Group> createScene(vsg::oit::depthpeeling::Builder & builder, vsg::ref_ptr<vsg::Data> texture, bool largeScene)
+		{
+			auto scene = vsg::Group::create();
+
+			static const std::array<vsg::vec4, 5> colors = { {
+				vsg::vec4(1.0, 1.0, 0.0, 1.0),
+				vsg::vec4(0.0, 1.0, 1.0, 1.0),
+				vsg::vec4(1.0, 0.0, 0.0, 0.5),
+				vsg::vec4(0.0, 1.0, 0.0, 0.5),
+				vsg::vec4(0.0, 0.0, 1.0, 0.5)} };
+
+			if (largeScene)
+			{
+				auto object = 0u;
+				for (auto z = -3; z <= 3; ++z)
+				{
+					for (auto x = -3; x <= 3; ++x)
+					{
+						for (auto y = -3; y <= 3; ++y, ++object)
+						{
+							scene->addChild(createBox(
+								builder, texture, colors[object % colors.size()], vsg::vec3(static_cast<float>(x) * 1.5f, static_cast<float>(y) * 1.5f, static_cast<float>(z) * 1.5f)));
+						}
+					}
+				}
+			}
+			else
+			{
+				scene->addChild(createBox(builder, texture, colors[0], vsg::vec3(1.25, 0.0, 0.0)));
+				scene->addChild(createBox(builder, texture, colors[1], vsg::vec3(0.0, -1.25, 0.0)));
+				scene->addChild(createBox(builder, texture, colors[2], vsg::vec3(-1.25, 0.0, 0.0)));
+				scene->addChild(createBox(builder, texture, colors[3], vsg::vec3(0.0, 0.0, 0.0)));
+				scene->addChild(createBox(builder, texture, colors[4], vsg::vec3(0.0, 1.25, 0.0)));
+			}
+
+			return scene;
+		}
+	}
 }
 
 namespace 
@@ -441,6 +603,7 @@ namespace model3d
 	class SolidModelWindow::Impl
 	{
 		vsgQt::Window * m_vsgWind;
+		vsg::ref_ptr<vsg::Options> m_options;
 		vsg::ref_ptr<vsg::Camera> m_camera;
 		vsg::ref_ptr<vsg::Camera> m_hudCamera;
 		vsg::ref_ptr<vsg::TextGroup> m_hudTextGr;
@@ -449,12 +612,20 @@ namespace model3d
 		vsg::ref_ptr<IntersectionHandler> m_intersectionHandler;
 		std::unique_ptr<I3DSystem> m_sys;
 		vsg::ref_ptr<vsg::RenderGraph> m_renderGraph;
+		vsg::ref_ptr<vsg::oit::depthpeeling::Builder> m_builder;
 
 	public:
 		explicit Impl(QWidget * parent)
 			: m_vsgWind(new vsgQt::Window(parent))
 			, m_sys(MakeBase3DSystem(std::make_unique<NodeNameConverter>()))
 		{
+			m_options = vsg::Options::create();
+			m_options->add(vsgXchange::all::create());
+			m_options->paths.emplace_back(QCoreApplication::applicationDirPath().toStdWString());
+
+			m_options->sharedObjects = vsg::SharedObjects::create();
+
+			SetupTraits(m_vsgWind->getTraits());
 			m_vsgWind->initializeWindow();
 
 			m_camera = vsg::Camera::create();
@@ -465,18 +636,48 @@ namespace model3d
 
 			m_vsgWind->getViewer().addEventHandler(m_trackball);
 
-			m_intersectionHandler = IntersectionHandler::create(m_sys->getModelNode(), m_camera);
-			m_vsgWind->getViewer().addEventHandler(m_intersectionHandler);
+			//m_intersectionHandler = IntersectionHandler::create(m_sys->getModelNode(), m_camera);
+			//m_vsgWind->getViewer().addEventHandler(m_intersectionHandler);
 
-			Rebuild(false);
+			m_builder = vsg::oit::depthpeeling::Builder::create(
+				vsg::oit::depthpeeling::Builder::Settings::create(*m_vsgWind, m_options));
 
-			m_renderGraph = vsg::RenderGraph::create(*m_vsgWind);
+			vsg::ref_ptr<vsg::ubvec4Array2D> texture = vsg::read_cast<vsg::ubvec4Array2D>("textures/wood.png", m_options);
+			if (!texture || texture->empty())
+				return;
+
+			auto scene = opaque::createScene(*m_builder, texture, false);
+			RebuildModel([&](vsg::Switch* model)
+				{
+					model->addChild(true, scene);
+				}, false);
+
+			
+			//Rebuild(false);
+
+			 // assign the camera and scenes to the builder - NOTE: the same scene can be used for both the opaque and transparency
+			m_builder->setCamera(m_camera);
+			m_builder->setScene(vsg::oit::depthpeeling::Builder::Pass::Opaque, scene);
+			m_builder->setScene(vsg::oit::depthpeeling::Builder::Pass::Transparency, scene);
+
+			// create the needed render graphs used for depth peeling 
+			auto renderGraphs = m_builder->createRenderGraphs();
+
+			// create command graph and assign the render graphs to it
+			auto commandGraph = vsg::CommandGraph::create(*m_vsgWind);
+			commandGraph->addChild(renderGraphs.opaque);
+			commandGraph->addChild(renderGraphs.transparency);
+			m_vsgWind->getViewer().assignRecordAndSubmitTaskAndPresentation({ commandGraph });
+			
+			
+			/*m_renderGraph = vsg::RenderGraph::create(*m_vsgWind);
 			vsg::ref_ptr<vsg::Group> grptr(m_sys->getRootNode());
 			m_renderGraph->addChild(vsg::View::create(m_camera, grptr));
 			auto commandGraph = vsg::CommandGraph::create(*m_vsgWind);
 			commandGraph->addChild(m_renderGraph);
 
-			m_vsgWind->getViewer().addRecordAndSubmitTaskAndPresentation({ commandGraph });
+			m_vsgWind->getViewer().addRecordAndSubmitTaskAndPresentation({ commandGraph }); */
+
 			m_vsgWind->getViewer().compile();
 		}
 
@@ -503,7 +704,8 @@ namespace model3d
 
 		void RebuildModel(std::function<void (vsg::Switch*)> const & f, bool compile = true)
 		{
-			m_intersectionHandler->clear();
+			//m_intersectionHandler->clear();
+
 			m_vsgWind->getViewer().deviceWaitIdle();
 			m_sys->clearModelNode();
 
@@ -580,6 +782,19 @@ namespace model3d
 
 
 	private:
+		void SetupTraits(vsg::WindowTraits & traits)
+		{
+			// NOTE:
+			// depth peeling requires the use of input attachments to read back the depth and color information from previous peels, 
+			// so we need to ensure that the swapchain image usage and depth image usage include VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT
+			// and we also need to ensure that the depth image usage includes VK_IMAGE_USAGE_TRANSFER_SRC_BIT so that we can use
+			// the depth image in transparency passes to reject fragments that are behind the nearest opaque fragments.
+			traits.swapchainPreferences.imageUsage |=
+				(VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT);
+			traits.depthImageUsage |=
+				(VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT);
+		}
+
 		void UpdateClearColor()
 		{
 			// set up the clearValues based on the RenderPass's attachments.

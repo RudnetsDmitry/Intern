@@ -1,3 +1,4 @@
+﻿#include "stdafx.h"
 #include "PipelineConfigurator.h"
 
 using namespace vsg::oit::depthpeeling;

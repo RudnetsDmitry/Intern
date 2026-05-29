@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Label="UserMacros">
-    <LibsPath>D:\vcpkg\installed\x64-windows</LibsPath>
+    <LibsPath>k:\vcpkg\installed\x64-windows</LibsPath>
     <LibsDebugPath>$(LibsPath)\debug</LibsDebugPath>
     <IncludePath>$(LibsPath)\include</IncludePath>
   </PropertyGroup>
@@ -17,7 +17,7 @@
 	  <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalOptions>/Zc:__cplusplus /bigobj /utf-8 %(AdditionalOptions)</AdditionalOptions>
-      <PreprocessorDefinitions>_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>QT_NO_DEPRECATED_WARNINGS=1;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(LibsPath)\lib;$(LibsPath)\debug\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>

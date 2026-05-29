@@ -1,3 +1,4 @@
+﻿#include "stdafx.h"
 #include "ShaderSet.h"
 
 #include <vsg/io/read.h>

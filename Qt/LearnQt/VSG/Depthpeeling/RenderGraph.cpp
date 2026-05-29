@@ -1,3 +1,4 @@
+﻿#include "stdafx.h"
 #include "RenderGraph.h"
 
 #include "Bindings.h"
