@@ -33,8 +33,7 @@
 #include <vsg/utils/ComputeBounds.h>
 #include <vsg/utils/GraphicsPipelineConfigurator.h>
 
-#include <vsgXchange/models.h>
-#include <vsgXchange/all.h>
+#include <vsgXchange/assimp.h>
 
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QFileDialog>

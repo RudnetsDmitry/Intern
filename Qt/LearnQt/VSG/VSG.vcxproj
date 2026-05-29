@@ -91,6 +91,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="3DStructures.h" />
+    <ClInclude Include="Depthpeeling\Bindings.h" />
+    <ClInclude Include="Depthpeeling\Builder.h" />
+    <ClInclude Include="Depthpeeling\PipelineConfigurator.h" />
+    <ClInclude Include="Depthpeeling\RenderGraph.h" />
+    <ClInclude Include="Depthpeeling\Resources.h" />
+    <ClInclude Include="Depthpeeling\ShaderSet.h" />
     <ClInclude Include="I3DSystem.h" />
     <ClInclude Include="3DSystemBase.h" />
     <ClInclude Include="ExportFunctions.h" />
@@ -112,6 +118,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="3DSystemBase.cpp" />
+    <ClCompile Include="Depthpeeling\Bindings.cpp" />
+    <ClCompile Include="Depthpeeling\Builder.cpp" />
+    <ClCompile Include="Depthpeeling\PipelineConfigurator.cpp" />
+    <ClCompile Include="Depthpeeling\RenderGraph.cpp" />
+    <ClCompile Include="Depthpeeling\Resources.cpp" />
+    <ClCompile Include="Depthpeeling\ShaderSet.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="ExportFunctions.cpp" />
     <ClCompile Include="KeyboardMap.cpp" />

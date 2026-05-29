@@ -28,6 +28,9 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{7d05ad24-b57d-4e85-84ec-6dd0a384f83e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Depthpeeling">
+      <UniqueIdentifier>{0639b370-c340-4408-9b79-847f16e7a666}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -90,6 +93,24 @@
     <ClInclude Include="Utils\PbrShader.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="Depthpeeling\Bindings.h">
+      <Filter>Depthpeeling</Filter>
+    </ClInclude>
+    <ClInclude Include="Depthpeeling\Builder.h">
+      <Filter>Depthpeeling</Filter>
+    </ClInclude>
+    <ClInclude Include="Depthpeeling\PipelineConfigurator.h">
+      <Filter>Depthpeeling</Filter>
+    </ClInclude>
+    <ClInclude Include="Depthpeeling\RenderGraph.h">
+      <Filter>Depthpeeling</Filter>
+    </ClInclude>
+    <ClInclude Include="Depthpeeling\Resources.h">
+      <Filter>Depthpeeling</Filter>
+    </ClInclude>
+    <ClInclude Include="Depthpeeling\ShaderSet.h">
+      <Filter>Depthpeeling</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -148,6 +169,24 @@
     </ClCompile>
     <ClCompile Include="Utils\ShaderUtilsVSG.cpp">
       <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Depthpeeling\Bindings.cpp">
+      <Filter>Depthpeeling</Filter>
+    </ClCompile>
+    <ClCompile Include="Depthpeeling\Builder.cpp">
+      <Filter>Depthpeeling</Filter>
+    </ClCompile>
+    <ClCompile Include="Depthpeeling\PipelineConfigurator.cpp">
+      <Filter>Depthpeeling</Filter>
+    </ClCompile>
+    <ClCompile Include="Depthpeeling\RenderGraph.cpp">
+      <Filter>Depthpeeling</Filter>
+    </ClCompile>
+    <ClCompile Include="Depthpeeling\Resources.cpp">
+      <Filter>Depthpeeling</Filter>
+    </ClCompile>
+    <ClCompile Include="Depthpeeling\ShaderSet.cpp">
+      <Filter>Depthpeeling</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
