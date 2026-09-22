@@ -430,8 +430,6 @@ void main() { color = vec4(0.6, 0.6, 0.6, 1.0); }
 		{
 			using namespace vsg;
 
-			vsg::ref_ptr<vsg::Data> positions;
-
 			auto colors = vsg::vec4Array::create(1, color);
 
 			const vsg::vec3 dx{ 1.0f, 0.0f, 0.0f };
@@ -455,11 +453,6 @@ void main() { color = vec4(0.6, 0.6, 0.6, 1.0); }
 			vsg::vec2 t10(1.0f, t_top);
 			vsg::vec2 t11(1.0f, t_origin);
 
-			vsg::ref_ptr<vsg::vec3Array> vertices;
-			vsg::ref_ptr<vsg::vec3Array> normals;
-			vsg::ref_ptr<vsg::vec2Array> texcoords;
-			vsg::ref_ptr<vsg::ushortArray> indices;
-
 			vsg::vec3 n0 = vsg::normalize(vsg::cross(dx, dz));
 			vsg::vec3 n1 = vsg::normalize(vsg::cross(dy, dz));
 			vsg::vec3 n2 = -n0;
@@ -468,7 +461,7 @@ void main() { color = vec4(0.6, 0.6, 0.6, 1.0); }
 			vsg::vec3 n5 = -n4;
 
 			// set up vertex and index arrays
-			vertices = vsg::vec3Array::create(
+			auto vertices = vsg::vec3Array::create(
 				{ v000, v100, v101, v001,   // front
 				 v100, v110, v111, v101,   // right
 				 v110, v010, v011, v111,   // far
@@ -476,7 +469,7 @@ void main() { color = vec4(0.6, 0.6, 0.6, 1.0); }
 				 v010, v110, v100, v000,   // bottom
 				 v001, v101, v111, v011 }); // top
 
-			normals = vsg::vec3Array::create(
+			auto normals = vsg::vec3Array::create(
 				{ n0, n0, n0, n0,
 				 n1, n1, n1, n1,
 				 n2, n2, n2, n2,
@@ -484,7 +477,7 @@ void main() { color = vec4(0.6, 0.6, 0.6, 1.0); }
 				 n4, n4, n4, n4,
 				 n5, n5, n5, n5 });
 
-			texcoords = vsg::vec2Array::create(
+			auto texcoords = vsg::vec2Array::create(
 				{ t00, t10, t11, t01,
 				 t00, t10, t11, t01,
 				 t00, t10, t11, t01,
@@ -492,7 +485,7 @@ void main() { color = vec4(0.6, 0.6, 0.6, 1.0); }
 				 t00, t10, t11, t01,
 				 t00, t10, t11, t01 });
 
-			indices = vsg::ushortArray::create(
+			auto indices = vsg::ushortArray::create(
 				{ 0, 1, 2, 0, 2, 3,
 				 4, 5, 6, 4, 6, 7,
 				 8, 9, 10, 8, 10, 11,
@@ -503,15 +496,10 @@ void main() { color = vec4(0.6, 0.6, 0.6, 1.0); }
 			auto vid = vsg::VertexIndexDraw::create();
 
 			vsg::DataList arrays;
-			arrays.push_back(vertices);
-			if (normals)
-				arrays.push_back(normals);
-			if (texcoords)
-				arrays.push_back(texcoords);
-			if (colors)
-				arrays.push_back(colors);
-			if (positions)
-				arrays.push_back(positions);
+			arrays.emplace_back(vertices);
+			arrays.emplace_back(normals);
+			arrays.emplace_back(texcoords);
+			arrays.emplace_back(colors);
 			vid->assignArrays(arrays);
 
 			vid->assignIndices(indices);
@@ -519,7 +507,8 @@ void main() { color = vec4(0.6, 0.6, 0.6, 1.0); }
 			vid->instanceCount = 1;
 
 			auto box = vsg::StateGroup::create();
-			box->add(builder.getOrCreateMaterialBinding([&texture](auto& descriptorConfigurator, auto& options)
+			box->add(builder.getOrCreateMaterialBinding([&texture](auto& descriptorConfigurator, auto& options,
+				vsg::GraphicsPipelineConfigurator& gpConfigurator)
 			{
 				auto material = vsg::PhongMaterialValue::create();
 				material->value().alphaMaskCutoff = 0.95f;
@@ -535,6 +524,12 @@ void main() { color = vec4(0.6, 0.6, 0.6, 1.0); }
 					options->sharedObjects->share(sampler);
 				}
 
+				if (!texture)
+				{
+					gpConfigurator.shaderHints->defines.insert("VSG_EMPTY_DIFFUSE_MAP");
+					descriptorConfigurator.defines.insert("VSG_EMPTY_DIFFUSE_MAP");
+				}
+
 				descriptorConfigurator.assignTexture("diffuseMap", texture, sampler);
 			}));
 
@@ -547,11 +542,19 @@ void main() { color = vec4(0.6, 0.6, 0.6, 1.0); }
 			auto scene = vsg::Group::create();
 
 			static const std::array<vsg::vec4, 5> colors = { {
-				vsg::vec4(1.0, 1.0, 0.0, 1.0),
-				vsg::vec4(0.0, 1.0, 1.0, 1.0),
+				vsg::vec4(1.0, 1.0, 1.0, 1.0),
+				
+				vsg::vec4(1.0, 0.0, 0.0, 1.0),
+				vsg::vec4(.0, 1.0, 1.0, .5),
+				vsg::vec4(.0, 1.0, .0, .4),
+				vsg::vec4(.0, 1.0, .0, .1)
+
+				/*vsg::vec4(0.0, 1.0, 1.0, 1.0),
 				vsg::vec4(1.0, 0.0, 0.0, 0.5),
 				vsg::vec4(0.0, 1.0, 0.0, 0.5),
-				vsg::vec4(0.0, 0.0, 1.0, 0.5)} };
+				vsg::vec4(0.0, 0.0, 1.0, 0.5)*/ } };
+
+			vsg::ref_ptr<vsg::Data> emptyTexture;
 
 			if (largeScene)
 			{
@@ -571,8 +574,8 @@ void main() { color = vec4(0.6, 0.6, 0.6, 1.0); }
 			else
 			{
 				scene->addChild(createBox(builder, texture, colors[0], vsg::vec3(1.25, 0.0, 0.0)));
-				scene->addChild(createBox(builder, texture, colors[1], vsg::vec3(0.0, -1.25, 0.0)));
-				scene->addChild(createBox(builder, texture, colors[2], vsg::vec3(-1.25, 0.0, 0.0)));
+				scene->addChild(createBox(builder, emptyTexture, colors[1], vsg::vec3(0.0, -1.25, 0.0)));
+				scene->addChild(createBox(builder, emptyTexture, colors[2], vsg::vec3(-1.25, 0.0, 0.0)));
 				scene->addChild(createBox(builder, texture, colors[3], vsg::vec3(0.0, 0.0, 0.0)));
 				scene->addChild(createBox(builder, texture, colors[4], vsg::vec3(0.0, 1.25, 0.0)));
 			}
@@ -636,11 +639,11 @@ namespace model3d
 
 			m_vsgWind->getViewer().addEventHandler(m_trackball);
 
-			//m_intersectionHandler = IntersectionHandler::create(m_sys->getModelNode(), m_camera);
-			//m_vsgWind->getViewer().addEventHandler(m_intersectionHandler);
+			m_intersectionHandler = IntersectionHandler::create(m_sys->getModelNode(), m_camera);
+			m_vsgWind->getViewer().addEventHandler(m_intersectionHandler);
 
 			m_builder = vsg::oit::depthpeeling::Builder::create(
-				vsg::oit::depthpeeling::Builder::Settings::create(*m_vsgWind, m_options));
+				vsg::oit::depthpeeling::Builder::Settings::create(*m_vsgWind, m_options, vsg::oit::depthpeeling::ShadingModel::Flat));
 
 			vsg::ref_ptr<vsg::ubvec4Array2D> texture = vsg::read_cast<vsg::ubvec4Array2D>("textures/wood.png", m_options);
 			if (!texture || texture->empty())

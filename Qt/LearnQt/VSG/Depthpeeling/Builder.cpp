@@ -77,7 +77,7 @@ ref_ptr<BindDescriptorSet> Builder::getOrCreateMaterialBinding(MaterialConfigura
     auto graphicsPipelineConfigurator = OpaquePipelineConfigurator::getOrCreate(_settings->shadingModel, _settings->options);
     DescriptorConfigurator descriptorConfigurator{ graphicsPipelineConfigurator->shaderSet };
 
-    configurator(descriptorConfigurator, _settings->options);
+    configurator(descriptorConfigurator, _settings->options, *graphicsPipelineConfigurator);
 
     auto& materialDescriptorBinding = graphicsPipelineConfigurator->shaderSet->getDescriptorBinding("material");
     auto binding = vsg::BindDescriptorSet::create(VK_PIPELINE_BIND_POINT_GRAPHICS,

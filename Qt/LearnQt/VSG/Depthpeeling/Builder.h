@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "RenderGraph.h"
 #include "ShaderSet.h"
@@ -57,7 +57,7 @@ namespace vsg::oit::depthpeeling {
         void setScene(Pass pass, ref_ptr<Node> scene);
         ref_ptr<Node> getScene(Pass pass) const;
 
-        using MaterialConfigurator = std::function<void(DescriptorConfigurator&, ref_ptr<Options>&)>;
+        using MaterialConfigurator = std::function<void(DescriptorConfigurator&, ref_ptr<Options>&, vsg::GraphicsPipelineConfigurator&)>;
         ref_ptr<BindDescriptorSet> getOrCreateMaterialBinding(MaterialConfigurator configurator, bool share = true) const;
 
     private:
