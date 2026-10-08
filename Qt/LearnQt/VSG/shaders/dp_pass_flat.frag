@@ -50,6 +50,11 @@ layout(set = MATERIAL_DESCRIPTOR_SET, binding = 11) uniform TexCoordIndices
     int mrMap;
 } texCoordIndices;
 
+layout(set = MATERIAL_DESCRIPTOR_SET, binding = 12) uniform TexVsColor
+{
+   uint value;
+} texVsColor;
+
 layout(location = 2) in vec4 vertexColor;
 layout(location = 4) in vec2 texCoord[VSG_TEXCOORD_COUNT];
 
@@ -82,16 +87,23 @@ void main()
 
 #ifdef VSG_DIFFUSE_MAP
     #ifdef VSG_GREYSCALE_DIFFUSE_MAP
-        float v = texture(diffuseMap, texCoordDiffuse);
-        diffuseColor *= vec4(v, v, v, 1);
+		if (texVsColor.value == 0)
+		{
+			float v = texture(diffuseMap, texCoordDiffuse);
+			diffuseColor *= vec4(v, v, v, 1);
+		}
     #else
-        diffuseColor *= texture(diffuseMap, texCoordDiffuse);
+		if (texVsColor.value == 0)
+			diffuseColor *= texture(diffuseMap, texCoordDiffuse);
     #endif
 #endif
 
 #ifdef VSG_DETAIL_MAP
-    vec4 detailColor = texture(detailMap, texCoord[texCoordIndices.detailMap].st);
-    diffuseColor.rgb = mix(diffuseColor.rgb, detailColor.rgb, detailColor.a);
+	if (texVsColor.value == 0)
+	{
+		vec4 detailColor = texture(detailMap, texCoord[texCoordIndices.detailMap].st);
+		diffuseColor.rgb = mix(diffuseColor.rgb, detailColor.rgb, detailColor.a);
+	}    
 #endif
 
 

@@ -90,6 +90,7 @@ void configureSharedBindings(GraphicsPipelineConfigurator& configurator, ref_ptr
 
     configurator.enableDescriptor("material");
     configurator.enableDescriptor("texCoordIndices");
+    configurator.enableDescriptor("texVsColor");
 
     configurator.enableTexture("diffuseMap");
 

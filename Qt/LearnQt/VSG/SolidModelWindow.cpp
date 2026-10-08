@@ -524,11 +524,11 @@ void main() { color = vec4(0.6, 0.6, 0.6, 1.0); }
 					options->sharedObjects->share(sampler);
 				}
 
-				if (!texture)
-				{
-					gpConfigurator.shaderHints->defines.insert("VSG_EMPTY_DIFFUSE_MAP");
-					descriptorConfigurator.defines.insert("VSG_EMPTY_DIFFUSE_MAP");
-				}
+				constexpr auto MaterialDescriptorSet = 1;
+				uint textureVsColor = texture ? 0 : 1;
+				gpConfigurator.shaderSet->addDescriptorBinding("texVsColor", "", MaterialDescriptorSet, 12,
+						VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1, VK_SHADER_STAGE_FRAGMENT_BIT, vsg::uintValue::create(textureVsColor));
+
 
 				descriptorConfigurator.assignTexture("diffuseMap", texture, sampler);
 			}));
