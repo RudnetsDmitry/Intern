@@ -87,19 +87,19 @@ void main()
 
 #ifdef VSG_DIFFUSE_MAP
     #ifdef VSG_GREYSCALE_DIFFUSE_MAP
-		if (texVsColor.value == 0)
+		if (texVsColor.value == 1)
 		{
 			float v = texture(diffuseMap, texCoordDiffuse);
 			diffuseColor *= vec4(v, v, v, 1);
 		}
     #else
-		if (texVsColor.value == 0)
+		if (texVsColor.value == 1)
 			diffuseColor *= texture(diffuseMap, texCoordDiffuse);
     #endif
 #endif
 
 #ifdef VSG_DETAIL_MAP
-	if (texVsColor.value == 0)
+	if (texVsColor.value == 1)
 	{
 		vec4 detailColor = texture(detailMap, texCoord[texCoordIndices.detailMap].st);
 		diffuseColor.rgb = mix(diffuseColor.rgb, detailColor.rgb, detailColor.a);

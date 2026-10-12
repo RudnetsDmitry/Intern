@@ -94,6 +94,9 @@ ref_ptr<ShaderSet> createShadingShaderSet(ShadingModel model, ref_ptr<Options> o
         "texCoordIndices", "", MaterialDescriptorSet, 11, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1,
         VK_SHADER_STAGE_FRAGMENT_BIT, TexCoordIndicesValue::create(), CoordinateSpace::LINEAR);
 
+    shaderSet->addDescriptorBinding("texVsColor", "", MaterialDescriptorSet, 12,
+        VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1, VK_SHADER_STAGE_FRAGMENT_BIT, vsg::uintValue::create());
+
    shaderSet->addDescriptorBinding("jointMatrices", "VSG_SKINNING", MaterialDescriptorSet, 12,
         VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1,
         VK_SHADER_STAGE_VERTEX_BIT, mat4Value::create());

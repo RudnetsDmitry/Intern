@@ -514,7 +514,8 @@ void main() { color = vec4(0.6, 0.6, 0.6, 1.0); }
 				material->value().alphaMaskCutoff = 0.95f;
 
 				descriptorConfigurator.assignDescriptor("material", material);
-				descriptorConfigurator.assignDescriptor("texCoordIndices", vsg::TexCoordIndicesValue::create());
+				//if (texture)
+					descriptorConfigurator.assignDescriptor("texCoordIndices", vsg::TexCoordIndicesValue::create());
 
 				auto sampler = vsg::Sampler::create();
 				sampler->addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
@@ -524,13 +525,11 @@ void main() { color = vec4(0.6, 0.6, 0.6, 1.0); }
 					options->sharedObjects->share(sampler);
 				}
 
-				constexpr auto MaterialDescriptorSet = 1;
-				uint textureVsColor = texture ? 0 : 1;
-				gpConfigurator.shaderSet->addDescriptorBinding("texVsColor", "", MaterialDescriptorSet, 12,
-						VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1, VK_SHADER_STAGE_FRAGMENT_BIT, vsg::uintValue::create(textureVsColor));
-
-
-				descriptorConfigurator.assignTexture("diffuseMap", texture, sampler);
+				uint textureVsColor = texture ? 1 : 0;
+				descriptorConfigurator.assignDescriptor("texVsColor", vsg::uintValue::create(textureVsColor));
+				
+				//if (texture)
+					descriptorConfigurator.assignTexture("diffuseMap", texture, sampler);
 			}));
 
 			box->addChild(vid);
