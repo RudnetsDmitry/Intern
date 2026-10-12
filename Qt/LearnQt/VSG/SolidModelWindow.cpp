@@ -432,9 +432,11 @@ void main() { color = vec4(0.6, 0.6, 0.6, 1.0); }
 
 			auto colors = vsg::vec4Array::create(1, color);
 
-			const vsg::vec3 dx{ 1.0f, 0.0f, 0.0f };
-			const vsg::vec3 dy{ 0.0f, 1.0f, 0.0f };
-			const vsg::vec3 dz{ 0.0f, 0.0f, 1.0f };
+			float firstCoord = 7.0f;
+
+			const vsg::vec3 dx{ firstCoord, 0.0f, 0.0f };
+			const vsg::vec3 dy{ 0.0f, firstCoord * 2.5f, 0.0f };
+			const vsg::vec3 dz{ 0.0f, 0.0f, firstCoord };
 			const auto origin = offset - dx * 0.5f - dy * 0.5f - dz * 0.5f;
 
 			auto [t_origin, t_scale, t_top] = vsg::vec3{ 0.0f, 1.0f, 1.0f }.value;
@@ -572,11 +574,12 @@ void main() { color = vec4(0.6, 0.6, 0.6, 1.0); }
 			}
 			else
 			{
-				scene->addChild(createBox(builder, texture, colors[0], vsg::vec3(1.25, 0.0, 0.0)));
-				scene->addChild(createBox(builder, emptyTexture, colors[1], vsg::vec3(0.0, -1.25, 0.0)));
-				scene->addChild(createBox(builder, emptyTexture, colors[2], vsg::vec3(-1.25, 0.0, 0.0)));
+				float offset = 1.25 * 14.0;
+				scene->addChild(createBox(builder, texture, colors[0], vsg::vec3(offset, 0.0, 0.0)));
+				scene->addChild(createBox(builder, emptyTexture, colors[1], vsg::vec3(0.0, -offset, 0.0)));
+				scene->addChild(createBox(builder, emptyTexture, colors[2], vsg::vec3(-offset, 0.0, 0.0)));
 				scene->addChild(createBox(builder, texture, colors[3], vsg::vec3(0.0, 0.0, 0.0)));
-				scene->addChild(createBox(builder, texture, colors[4], vsg::vec3(0.0, 1.25, 0.0)));
+				scene->addChild(createBox(builder, texture, colors[4], vsg::vec3(0.0, offset, 0.0)));
 			}
 
 			return scene;
