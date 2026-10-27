@@ -509,36 +509,39 @@ void main() { color = vec4(0.6, 0.6, 0.6, 1.0); }
 			vid->instanceCount = 1;
 
 			auto box = vsg::StateGroup::create();
-			box->add(builder.getOrCreateMaterialBinding([&texture](auto& descriptorConfigurator, auto& options,
-				vsg::GraphicsPipelineConfigurator& gpConfigurator)
+			box->add(builder.getOrCreateMaterialBinding([&texture](auto& descriptorConfigurator, auto& options)
 			{
 				auto material = vsg::PhongMaterialValue::create();
 				material->value().alphaMaskCutoff = 0.95f;
 
 				descriptorConfigurator.assignDescriptor("material", material);
-				//if (texture)
+				if (texture)
 					descriptorConfigurator.assignDescriptor("texCoordIndices", vsg::TexCoordIndicesValue::create());
 
-				auto sampler = vsg::Sampler::create();
-				sampler->addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-				sampler->addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-				if (options.valid() && options->sharedObjects.valid())
+				vsg::ref_ptr<vsg::Sampler> sampler;
+				if (texture)
 				{
-					options->sharedObjects->share(sampler);
+					sampler = vsg::Sampler::create();
+					sampler->addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+					sampler->addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+					if (options.valid() && options->sharedObjects.valid())
+					{
+						options->sharedObjects->share(sampler);
+					}
 				}
 
 				uint textureVsColor = texture ? 1 : 0;
 				descriptorConfigurator.assignDescriptor("texVsColor", vsg::uintValue::create(textureVsColor));
-				
-				//if (texture)
-					descriptorConfigurator.assignTexture("diffuseMap", texture, sampler);
+				descriptorConfigurator.assignTexture("diffuseMap", texture, sampler);
 			}));
 
 			box->addChild(vid);
+			box->setValue("type", "obj");
 			return box;
 		}
 
-		vsg::ref_ptr<vsg::Group> createScene(vsg::oit::depthpeeling::Builder & builder, vsg::ref_ptr<vsg::Data> texture, bool largeScene)
+		vsg::ref_ptr<vsg::Group> createScene(vsg::oit::depthpeeling::Builder & builder, 
+			std::vector<vsg::ref_ptr<vsg::ubvec4Array2D>> const & textures, bool largeScene)
 		{
 			auto scene = vsg::Group::create();
 
@@ -557,6 +560,15 @@ void main() { color = vec4(0.6, 0.6, 0.6, 1.0); }
 
 			vsg::ref_ptr<vsg::Data> emptyTexture;
 
+			int i = 0;
+			auto getTexture = [&i, &textures, &emptyTexture]() -> vsg::ref_ptr<vsg::Data>
+			{
+				if (i < static_cast<int>(textures.size()))
+					return textures[i++];
+				i = 0;
+				return emptyTexture;
+			};
+
 			if (largeScene)
 			{
 				auto object = 0u;
@@ -567,7 +579,7 @@ void main() { color = vec4(0.6, 0.6, 0.6, 1.0); }
 						for (auto y = -3; y <= 3; ++y, ++object)
 						{
 							scene->addChild(createBox(
-								builder, texture, colors[object % colors.size()], vsg::vec3(static_cast<float>(x) * 1.5f, static_cast<float>(y) * 1.5f, static_cast<float>(z) * 1.5f)));
+								builder, getTexture(), colors[object % colors.size()], vsg::vec3(static_cast<float>(x) * 1.5f, static_cast<float>(y) * 1.5f, static_cast<float>(z) * 1.5f)));
 						}
 					}
 				}
@@ -575,11 +587,11 @@ void main() { color = vec4(0.6, 0.6, 0.6, 1.0); }
 			else
 			{
 				float offset = 1.25 * 14.0;
-				scene->addChild(createBox(builder, texture, colors[0], vsg::vec3(offset, 0.0, 0.0)));
-				scene->addChild(createBox(builder, emptyTexture, colors[1], vsg::vec3(0.0, -offset, 0.0)));
-				scene->addChild(createBox(builder, emptyTexture, colors[2], vsg::vec3(-offset, 0.0, 0.0)));
-				scene->addChild(createBox(builder, texture, colors[3], vsg::vec3(0.0, 0.0, 0.0)));
-				scene->addChild(createBox(builder, texture, colors[4], vsg::vec3(0.0, offset, 0.0)));
+				scene->addChild(createBox(builder, getTexture(), colors[0], vsg::vec3(offset, 0.0, 0.0)));
+				scene->addChild(createBox(builder, getTexture(), colors[1], vsg::vec3(0.0, -offset, 0.0)));
+				scene->addChild(createBox(builder, getTexture(), colors[2], vsg::vec3(-offset, 0.0, 0.0)));
+				scene->addChild(createBox(builder, getTexture(), colors[3], vsg::vec3(0.0, 0.0, 0.0)));
+				scene->addChild(createBox(builder, getTexture(), colors[4], vsg::vec3(0.0, offset, 0.0)));
 			}
 
 			return scene;
@@ -602,6 +614,8 @@ namespace
 			return {};
 		}
 	};
+
+
 }
 namespace model3d
 {
@@ -647,15 +661,21 @@ namespace model3d
 			m_builder = vsg::oit::depthpeeling::Builder::create(
 				vsg::oit::depthpeeling::Builder::Settings::create(*m_vsgWind, m_options, vsg::oit::depthpeeling::ShadingModel::Flat));
 
-			vsg::ref_ptr<vsg::ubvec4Array2D> texture = vsg::read_cast<vsg::ubvec4Array2D>("textures/wood.png", m_options);
-			if (!texture || texture->empty())
-				return;
+			std::vector<vsg::ref_ptr<vsg::ubvec4Array2D>> textures;
+			auto loadTextures = [&](std::string_view path)
+			{
+				vsg::ref_ptr<vsg::ubvec4Array2D> texture = vsg::read_cast<vsg::ubvec4Array2D>(path.data(), m_options);
+				if (texture && !texture->empty())
+					textures.emplace_back(std::move(texture));
+			};
+			loadTextures("textures/wood.png");
+			loadTextures("textures/Noise.png");
 
-			auto scene = opaque::createScene(*m_builder, texture, false);
+			auto scene = opaque::createScene(*m_builder, textures, false);
 			RebuildModel([&](vsg::Switch* model)
-				{
+			{
 					model->addChild(true, scene);
-				}, false);
+			}, false);
 
 			
 			//Rebuild(false);
@@ -673,7 +693,7 @@ namespace model3d
 			commandGraph->addChild(renderGraphs.opaque);
 			commandGraph->addChild(renderGraphs.transparency);
 			m_vsgWind->getViewer().assignRecordAndSubmitTaskAndPresentation({ commandGraph });
-			
+
 			
 			/*m_renderGraph = vsg::RenderGraph::create(*m_vsgWind);
 			vsg::ref_ptr<vsg::Group> grptr(m_sys->getRootNode());

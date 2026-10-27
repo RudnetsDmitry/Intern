@@ -57,7 +57,7 @@ namespace vsg::oit::depthpeeling {
         void setScene(Pass pass, ref_ptr<Node> scene);
         ref_ptr<Node> getScene(Pass pass) const;
 
-        using MaterialConfigurator = std::function<void(DescriptorConfigurator&, ref_ptr<Options>&, vsg::GraphicsPipelineConfigurator&)>;
+        using MaterialConfigurator = std::function<void(DescriptorConfigurator&, ref_ptr<Options>&)>;
         ref_ptr<BindDescriptorSet> getOrCreateMaterialBinding(MaterialConfigurator configurator, bool share = true) const;
 
     private:
