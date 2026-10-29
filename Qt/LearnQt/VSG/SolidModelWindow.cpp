@@ -716,7 +716,7 @@ namespace model3d
 			commandGraph->addChild(renderGraphs.opaque);
 			commandGraph->addChild(renderGraphs.transparency);
 			m_vsgWind->getViewer().assignRecordAndSubmitTaskAndPresentation({ commandGraph });
-
+			m_renderGraph = renderGraphs.opaque;
 			
 			/*m_renderGraph = vsg::RenderGraph::create(*m_vsgWind);
 			vsg::ref_ptr<vsg::Group> grptr(m_sys->getRootNode());
