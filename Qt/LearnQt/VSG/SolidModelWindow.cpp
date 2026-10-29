@@ -76,11 +76,11 @@ namespace
 	class IntersectionHandler : public vsg::Inherit<vsg::Visitor, IntersectionHandler>
 	{
 	public:
-		IntersectionHandler(vsg::Node * scene,
-			vsg::ref_ptr<vsg::Camera> camera
-		)
+		IntersectionHandler(vsg::Node * scene, vsg::ref_ptr<vsg::Camera> camera,
+			vsg::Viewer * viewer)
 		: m_scene(scene)
 		, m_camera(std::move(camera))
+		, m_viewer(viewer)
 		{
 		}
 
@@ -107,16 +107,30 @@ namespace
 
 		void selectNode(vsg::Node const * node = nullptr)
 		{
+			std::set<vsg::ref_ptr<vsg::BufferInfo>> biSet;
+
 			if (m_selectedNode)
 			{
 				if (m_selectedNode == node)
 					return;
 
-				setColor(const_cast<vsg::Node*>(m_selectedNode), m_prevColor);
+				setColor(const_cast<vsg::Node*>(m_selectedNode), &m_prevColor, biSet);
 			}
 			m_selectedNode = node;
 			if (m_selectedNode)
-				setColor(const_cast<vsg::Node*>(m_selectedNode), selected_color, &m_prevColor);
+				setColor(const_cast<vsg::Node*>(m_selectedNode), /*selected_color*/nullptr, biSet, &m_prevColor);
+
+			if (!biSet.empty())
+			{
+				for (auto& tasks : m_viewer->recordAndSubmitTasks)
+				{
+					auto transferTask = tasks->transferTask;
+					for (auto & bufferInfo : biSet)
+					{
+						transferTask->assign(vsg::BufferInfoList{ bufferInfo });
+					}
+				}
+			}
 		}
 
 		void intersection(vsg::PointerEvent & pointerEvent)
@@ -147,15 +161,18 @@ namespace
 			}
 		}
 
-		void setColor(vsg::Node * node, vsg::vec3 const & color,
-			vsg::vec3 * curColor = nullptr)
+		void setColor(vsg::Node * node, vsg::vec4 const * color,
+					std::set<vsg::ref_ptr<vsg::BufferInfo>> & biSet,
+					vsg::vec4 * curColor = nullptr)
 		{
 			struct ChangeColor : public vsg::Visitor
 			{
-				ChangeColor(vsg::vec3 const & color,
-									 vsg::vec3 * curColor)
+				ChangeColor(vsg::vec4 const * color,
+							vsg::vec4 * curColor,
+							std::set<vsg::ref_ptr<vsg::BufferInfo>> & biSet)
 				: m_color(color)
 				, m_curColor(curColor)
+				, m_biSet(biSet)
 				{}
 				
 				void apply(vsg::Object & object) override
@@ -182,12 +199,16 @@ namespace
 							// Change the color to green
 							auto & color = *(vsg::vec4*)(data->dataPointer(0));
 							if (m_curColor)
-								*m_curColor = { color.x, color.y, color.z };
-							color = vsg::vec4{ m_color.x, m_color.y, m_color.z, 1.0 };
+								*m_curColor = color;
+							if (m_color)
+								color = *m_color;
+							else
+								color.a = 0.3f;
 							//fmt::print("Changed color to ({},{},{},{})\n",
 							//	_color.r, _color.g, _color.b, _color.a
 							//);
 							data->dirty();
+							m_biSet.insert(buffer);
 						}
 						else if (data->is_compatible(typeid(vsg::vec3Array)))
 						{
@@ -199,22 +220,24 @@ namespace
 						}
 					}
 				}
-				vsg::vec3 m_color;
-				vsg::vec3 * m_curColor = nullptr;
+				vsg::vec4 const * m_color = nullptr;
+				vsg::vec4 * m_curColor = nullptr;
 				std::set<void*> m_processData;
+				std::set<vsg::ref_ptr<vsg::BufferInfo>> & m_biSet;
 			};
 
-			ChangeColor cc(color, curColor);
+			ChangeColor cc(color, curColor, biSet);
 			node->accept(cc);
 		}
 
-		static constexpr vsg::vec3 default_color = vsg::vec3{ 0.5, 0.5, 0.5 }; // Default color
-		static constexpr vsg::vec3 selected_color = vsg::vec3{ 1.0, 0, 0 }; // Select color
+		static constexpr vsg::vec4 default_color = vsg::vec4{ 0.5, 0.5, 0.5, 1.0 }; // Default color
+		static constexpr vsg::vec4 selected_color = vsg::vec4{ 1.0, 0, 0 , 1.0}; // Select color
 
 		vsg::Node const* m_selectedNode = nullptr;
-		vsg::vec3 m_prevColor;
+		vsg::vec4 m_prevColor;
 		vsg::ref_ptr<vsg::Node> m_scene;
 		vsg::ref_ptr<vsg::Camera> m_camera;
+		vsg::Viewer * m_viewer;
 	};
 
 	vsg::ref_ptr<vsg::Node> createArrow(vsg::vec3 pos, vsg::vec3 dir, vsg::vec4 color)
@@ -549,9 +572,9 @@ void main() { color = vec4(0.6, 0.6, 0.6, 1.0); }
 				vsg::vec4(1.0, 1.0, 1.0, 1.0),
 				
 				vsg::vec4(1.0, 0.0, 0.0, 1.0),
-				vsg::vec4(.0, 1.0, 1.0, .5),
-				vsg::vec4(.0, 1.0, .0, .4),
-				vsg::vec4(.0, 1.0, .0, .1)
+				vsg::vec4(.0, 1.0, 1.0, 1.0),
+				vsg::vec4(.0, 1.0, .0, 1.0),
+				vsg::vec4(.0, 1.0, .0, 1.0)
 
 				/*vsg::vec4(0.0, 1.0, 1.0, 1.0),
 				vsg::vec4(1.0, 0.0, 0.0, 0.5),
@@ -655,7 +678,7 @@ namespace model3d
 
 			m_vsgWind->getViewer().addEventHandler(m_trackball);
 
-			m_intersectionHandler = IntersectionHandler::create(m_sys->getModelNode(), m_camera);
+			m_intersectionHandler = IntersectionHandler::create(m_sys->getModelNode(), m_camera, &m_vsgWind->getViewer());
 			m_vsgWind->getViewer().addEventHandler(m_intersectionHandler);
 
 			m_builder = vsg::oit::depthpeeling::Builder::create(
